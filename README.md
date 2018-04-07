@@ -1,5 +1,7 @@
 ## Go tim
 
+[![Join the chat at https://gitter.im/tim-coin/tim](https://badges.gitter.im/tim-coin/tim.svg)](https://gitter.im/tim-coin/tim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Official golang implementation of the tim protocol.
 
 [![API Reference](
