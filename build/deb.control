@@ -4,15 +4,15 @@ Priority: extra
 Maintainer: {{.Author}}
 Build-Depends: debhelper (>= 8.0.0), golang-1.9
 Standards-Version: 3.9.5
-Homepage: https://ethereum.org
+Homepage: https://tim.org
 Vcs-Git: git://github.com/tim-coin/tim.git
 Vcs-Browser: https://github.com/tim-coin/tim
 
 Package: {{.Name}}
 Architecture: any
 Depends: ${misc:Depends}, {{.ExeList}}
-Description: Meta-package to install geth and other tools
- Meta-package to install geth and other tools
+Description: Meta-package to install timd and other tools
+ Meta-package to install timd and other tools
 
 {{range .Executables}}
 Package: {{$.ExeName .}}

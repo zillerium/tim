@@ -7,7 +7,7 @@ package termui
 // GridBufferer introduces a Bufferer that can be manipulated by Grid.
 type GridBufferer interface {
 	Bufferer
-	GetHeight() int
+	timdeight() int
 	SetWidth(int)
 	SetX(int)
 	SetY(int)
@@ -73,8 +73,8 @@ func (r *Row) assignWidth(w int) {
 // return r's total height.
 func (r *Row) solveHeight() int {
 	if r.isRenderableLeaf() {
-		r.Height = r.Widget.GetHeight()
-		return r.Widget.GetHeight()
+		r.Height = r.Widget.timdeight()
+		return r.Widget.timdeight()
 	}
 
 	maxh := 0
@@ -83,7 +83,7 @@ func (r *Row) solveHeight() int {
 			nh := c.solveHeight()
 			// when embed rows in Cols, row widgets stack up
 			if r.Widget != nil {
-				nh += r.Widget.GetHeight()
+				nh += r.Widget.timdeight()
 			}
 			if nh > maxh {
 				maxh = nh
@@ -122,15 +122,15 @@ func (r *Row) assignY(y int) {
 	for i := range r.Cols {
 		acc := 0
 		if r.Widget != nil {
-			acc = r.Widget.GetHeight()
+			acc = r.Widget.timdeight()
 		}
 		r.Cols[i].assignY(y + acc)
 	}
 
 }
 
-// GetHeight implements GridBufferer interface.
-func (r Row) GetHeight() int {
+// timdeight implements GridBufferer interface.
+func (r Row) timdeight() int {
 	return r.Height
 }
 
@@ -262,7 +262,7 @@ func (g *Grid) Align() {
 		r.SetX(g.X)
 		r.SetY(g.Y + h)
 		r.calcLayout()
-		h += r.GetHeight()
+		h += r.timdeight()
 	}
 }
 

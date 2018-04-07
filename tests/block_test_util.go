@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package tests implements execution of Ethereum JSON tests.
+// Package tests implements execution of tim JSON tests.
 package tests
 
 import (
@@ -27,12 +27,12 @@ import (
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/common/hexutil"
 	"github.com/tim-coin/tim/common/math"
-	"github.com/tim-coin/tim/consensus/ethash"
+	"github.com/tim-coin/tim/consensus/thash"
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/core/vm"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/params"
 	"github.com/tim-coin/tim/rlp"
 )
@@ -98,7 +98,7 @@ func (t *BlockTest) Run() error {
 	}
 
 	// import pre accounts & construct test genesis block & state root
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	gblock, err := t.genesis(config).Commit(db)
 	if err != nil {
 		return err
@@ -110,7 +110,7 @@ func (t *BlockTest) Run() error {
 		return fmt.Errorf("genesis block state root does not match test: computed=%x, test=%x", gblock.Root().Bytes()[:6], t.json.Genesis.StateRoot[:6])
 	}
 
-	chain, err := core.NewBlockChain(db, config, ethash.NewShared(), vm.Config{})
+	chain, err := core.NewBlockChain(db, config, thash.NewShared(), vm.Config{})
 	if err != nil {
 		return err
 	}

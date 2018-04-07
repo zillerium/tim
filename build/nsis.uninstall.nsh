@@ -17,12 +17,12 @@ Section "Uninstall"
   rmDir "$SMPROGRAMS\${APPNAME}"
 
   # Firewall - remove rules if exists
-  SimpleFC::AdvRemoveRule "Geth incoming peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth outgoing peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth UDP discovery (UDP:30303)"
+  SimpleFC::AdvRemoveRule "timd incoming peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "timd outgoing peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "timd UDP discovery (UDP:30303)"
 
   # Remove IPC endpoint (https://github.com/tim-coin/EIPs/issues/147)
-  ${un.EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\geth.ipc"
+  ${un.EnvVarUpdate} $0 "tim_SOCKET" "R" "HKLM" "\\.\pipe\timd.ipc"
 
   # Remove install directory from PATH
   Push "$INSTDIR"

@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package geth contains the simplified mobile APIs to tim.
+// Package timd contains the simplified mobile APIs to tim.
 //
-// The scope of this package is *not* to allow writing a custom Ethereum client
+// The scope of this package is *not* to allow writing a custom tim client
 // with pieces plucked from tim, rather to allow writing native dapps on
 // mobile platforms. Keep this in mind when using or extending this package!
 //
@@ -58,4 +58,4 @@
 // Note, a panic *cannot* cross over language boundaries, instead will result in
 // an undebuggable SEGFAULT in the process. For error handling only ever use error
 // returns, which may be the only or the second return.
-package geth
+package timd

@@ -16,7 +16,7 @@
 
 // Contains perverted wrappers to allow crossing over empty interfaces.
 
-package geth
+package timd
 
 import (
 	"errors"
@@ -50,8 +50,8 @@ func (i *Interface) SetBinary(binary []byte)       { b := common.CopyBytes(binar
 func (i *Interface) SetBinaries(binaries [][]byte) { i.object = &binaries }
 func (i *Interface) SetAddress(address *Address)   { i.object = &address.address }
 func (i *Interface) SetAddresses(addrs *Addresses) { i.object = &addrs.addresses }
-func (i *Interface) SetHash(hash *Hash)            { i.object = &hash.hash }
-func (i *Interface) SetHashes(hashes *Hashes)      { i.object = &hashes.hashes }
+func (i *Interface) Sthash(hash *Hash)            { i.object = &hash.hash }
+func (i *Interface) Sthashes(hashes *Hashes)      { i.object = &hashes.hashes }
 func (i *Interface) SetInt8(n int8)                { i.object = &n }
 func (i *Interface) SetInt16(n int16)              { i.object = &n }
 func (i *Interface) SetInt32(n int32)              { i.object = &n }
@@ -92,8 +92,8 @@ func (i *Interface) GetBinary() []byte        { return *i.object.(*[]byte) }
 func (i *Interface) GetBinaries() [][]byte    { return *i.object.(*[][]byte) }
 func (i *Interface) GetAddress() *Address     { return &Address{*i.object.(*common.Address)} }
 func (i *Interface) GetAddresses() *Addresses { return &Addresses{*i.object.(*[]common.Address)} }
-func (i *Interface) GetHash() *Hash           { return &Hash{*i.object.(*common.Hash)} }
-func (i *Interface) GetHashes() *Hashes       { return &Hashes{*i.object.(*[]common.Hash)} }
+func (i *Interface) timdash() *Hash           { return &Hash{*i.object.(*common.Hash)} }
+func (i *Interface) timdashes() *Hashes       { return &Hashes{*i.object.(*[]common.Hash)} }
 func (i *Interface) GetInt8() int8            { return *i.object.(*int8) }
 func (i *Interface) GetInt16() int16          { return *i.object.(*int16) }
 func (i *Interface) GetInt32() int32          { return *i.object.(*int32) }

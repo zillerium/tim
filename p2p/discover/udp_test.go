@@ -236,8 +236,8 @@ func TestUDP_findnode(t *testing.T) {
 	// put a few nodes into the table. their exact
 	// distribution shouldn't matter much, although we need to
 	// take care not to overflow any bucket.
-	targetHash := crypto.Keccak256Hash(testTarget[:])
-	nodes := &nodesByDistance{target: targetHash}
+	tartimdash := crypto.Keccak256Hash(testTarget[:])
+	nodes := &nodesByDistance{target: tartimdash}
 	for i := 0; i < bucketSize; i++ {
 		nodes.push(nodeAtDistance(test.table.self.sha, i+2), bucketSize)
 	}
@@ -253,7 +253,7 @@ func TestUDP_findnode(t *testing.T) {
 	))
 	// check that closest neighbors are returned.
 	test.packetIn(nil, findnodePacket, &findnode{Target: testTarget, Expiration: futureExp})
-	expected := test.table.closest(targetHash, bucketSize)
+	expected := test.table.closest(tartimdash, bucketSize)
 
 	waitNeighbors := func(want []*Node) {
 		test.waitPacketOut(func(p *neighbors) {

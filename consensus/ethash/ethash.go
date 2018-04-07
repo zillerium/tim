@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package ethash implements the ethash proof-of-work consensus engine.
-package ethash
+// Package thash implements the thash proof-of-work consensus engine.
+package thash
 
 import (
 	"errors"
@@ -44,8 +44,8 @@ var (
 	// maxUint256 is a big integer representing 2^256-1
 	maxUint256 = new(big.Int).Exp(big.NewInt(2), big.NewInt(256), big.NewInt(0))
 
-	// sharedEthash is a full instance that can be shared between multiple users.
-	sharedEthash = New("", 3, 0, "", 1, 0)
+	// sharedthash is a full instance that can be shared between multiple users.
+	sharedthash = New("", 3, 0, "", 1, 0)
 
 	// algorithmRevision is the data structure version used for file naming.
 	algorithmRevision = 23
@@ -142,7 +142,7 @@ func memoryMapAndGenerate(path string, size uint64, generator func(buffer []uint
 	return memoryMap(path)
 }
 
-// cache wraps an ethash cache with some metadata to allow easier concurrent use.
+// cache wraps an thash cache with some metadata to allow easier concurrent use.
 type cache struct {
 	epoch uint64 // Epoch for which this cache is relevant
 
@@ -185,15 +185,15 @@ func (c *cache) generate(dir string, limit int, test bool) {
 		var err error
 		c.dump, c.mmap, c.cache, err = memoryMap(path)
 		if err == nil {
-			logger.Debug("Loaded old ethash cache from disk")
+			logger.Debug("Loaded old thash cache from disk")
 			return
 		}
-		logger.Debug("Failed to load old ethash cache", "err", err)
+		logger.Debug("Failed to load old thash cache", "err", err)
 
 		// No previous cache available, create a new cache file to fill
 		c.dump, c.mmap, c.cache, err = memoryMapAndGenerate(path, size, func(buffer []uint32) { generateCache(buffer, c.epoch, seed) })
 		if err != nil {
-			logger.Error("Failed to generate mapped ethash cache", "err", err)
+			logger.Error("Failed to generate mapped thash cache", "err", err)
 
 			c.cache = make([]uint32, size/4)
 			generateCache(c.cache, c.epoch, seed)
@@ -219,7 +219,7 @@ func (c *cache) release() {
 	}
 }
 
-// dataset wraps an ethash dataset with some metadata to allow easier concurrent use.
+// dataset wraps an thash dataset with some metadata to allow easier concurrent use.
 type dataset struct {
 	epoch uint64 // Epoch for which this cache is relevant
 
@@ -269,10 +269,10 @@ func (d *dataset) generate(dir string, limit int, test bool) {
 		var err error
 		d.dump, d.mmap, d.dataset, err = memoryMap(path)
 		if err == nil {
-			logger.Debug("Loaded old ethash dataset from disk")
+			logger.Debug("Loaded old thash dataset from disk")
 			return
 		}
-		logger.Debug("Failed to load old ethash dataset", "err", err)
+		logger.Debug("Failed to load old thash dataset", "err", err)
 
 		// No previous dataset available, create a new dataset file to fill
 		cache := make([]uint32, csize/4)
@@ -280,7 +280,7 @@ func (d *dataset) generate(dir string, limit int, test bool) {
 
 		d.dump, d.mmap, d.dataset, err = memoryMapAndGenerate(path, dsize, func(buffer []uint32) { generateDataset(buffer, d.epoch, cache) })
 		if err != nil {
-			logger.Error("Failed to generate mapped ethash dataset", "err", err)
+			logger.Error("Failed to generate mapped thash dataset", "err", err)
 
 			d.dataset = make([]uint32, dsize/2)
 			generateDataset(d.dataset, d.epoch, cache)
@@ -306,23 +306,23 @@ func (d *dataset) release() {
 	}
 }
 
-// MakeCache generates a new ethash cache and optionally stores it to disk.
+// MakeCache generates a new thash cache and optionally stores it to disk.
 func MakeCache(block uint64, dir string) {
 	c := cache{epoch: block / epochLength}
 	c.generate(dir, math.MaxInt32, false)
 	c.release()
 }
 
-// MakeDataset generates a new ethash dataset and optionally stores it to disk.
+// MakeDataset generates a new thash dataset and optionally stores it to disk.
 func MakeDataset(block uint64, dir string) {
 	d := dataset{epoch: block / epochLength}
 	d.generate(dir, math.MaxInt32, false)
 	d.release()
 }
 
-// Ethash is a consensus engine based on proot-of-work implementing the ethash
+// thash is a consensus engine based on proot-of-work implementing the thash
 // algorithm.
-type Ethash struct {
+type thash struct {
 	cachedir     string // Data directory to store the verification caches
 	cachesinmem  int    // Number of caches to keep in memory
 	cachesondisk int    // Number of caches to keep on disk
@@ -343,7 +343,7 @@ type Ethash struct {
 
 	// The fields below are hooks for testing
 	tester    bool          // Flag whether to use a smaller test dataset
-	shared    *Ethash       // Shared PoW verifier to avoid cache regeneration
+	shared    *thash       // Shared PoW verifier to avoid cache regeneration
 	fakeMode  bool          // Flag whether to disable PoW checking
 	fakeFull  bool          // Flag whether to disable all consensus rules
 	fakeFail  uint64        // Block number which fails PoW check even in fake mode
@@ -352,19 +352,19 @@ type Ethash struct {
 	lock sync.Mutex // Ensures thread safety for the in-memory caches and mining fields
 }
 
-// New creates a full sized ethash PoW scheme.
-func New(cachedir string, cachesinmem, cachesondisk int, dagdir string, dagsinmem, dagsondisk int) *Ethash {
+// New creates a full sized thash PoW scheme.
+func New(cachedir string, cachesinmem, cachesondisk int, dagdir string, dagsinmem, dagsondisk int) *thash {
 	if cachesinmem <= 0 {
-		log.Warn("One ethash cache must always be in memory", "requested", cachesinmem)
+		log.Warn("One thash cache must always be in memory", "requested", cachesinmem)
 		cachesinmem = 1
 	}
 	if cachedir != "" && cachesondisk > 0 {
-		log.Info("Disk storage enabled for ethash caches", "dir", cachedir, "count", cachesondisk)
+		log.Info("Disk storage enabled for thash caches", "dir", cachedir, "count", cachesondisk)
 	}
 	if dagdir != "" && dagsondisk > 0 {
-		log.Info("Disk storage enabled for ethash DAGs", "dir", dagdir, "count", dagsondisk)
+		log.Info("Disk storage enabled for thash DAGs", "dir", dagdir, "count", dagsondisk)
 	}
-	return &Ethash{
+	return &thash{
 		cachedir:     cachedir,
 		cachesinmem:  cachesinmem,
 		cachesondisk: cachesondisk,
@@ -378,10 +378,10 @@ func New(cachedir string, cachesinmem, cachesondisk int, dagdir string, dagsinme
 	}
 }
 
-// NewTester creates a small sized ethash PoW scheme useful only for testing
+// NewTester creates a small sized thash PoW scheme useful only for testing
 // purposes.
-func NewTester() *Ethash {
-	return &Ethash{
+func NewTester() *thash {
+	return &thash{
 		cachesinmem: 1,
 		caches:      make(map[uint64]*cache),
 		datasets:    make(map[uint64]*dataset),
@@ -391,89 +391,89 @@ func NewTester() *Ethash {
 	}
 }
 
-// NewFaker creates a ethash consensus engine with a fake PoW scheme that accepts
-// all blocks' seal as valid, though they still have to conform to the Ethereum
+// NewFaker creates a thash consensus engine with a fake PoW scheme that accepts
+// all blocks' seal as valid, though they still have to conform to the tim
 // consensus rules.
-func NewFaker() *Ethash {
-	return &Ethash{fakeMode: true}
+func NewFaker() *thash {
+	return &thash{fakeMode: true}
 }
 
-// NewFakeFailer creates a ethash consensus engine with a fake PoW scheme that
+// NewFakeFailer creates a thash consensus engine with a fake PoW scheme that
 // accepts all blocks as valid apart from the single one specified, though they
-// still have to conform to the Ethereum consensus rules.
-func NewFakeFailer(fail uint64) *Ethash {
-	return &Ethash{fakeMode: true, fakeFail: fail}
+// still have to conform to the tim consensus rules.
+func NewFakeFailer(fail uint64) *thash {
+	return &thash{fakeMode: true, fakeFail: fail}
 }
 
-// NewFakeDelayer creates a ethash consensus engine with a fake PoW scheme that
+// NewFakeDelayer creates a thash consensus engine with a fake PoW scheme that
 // accepts all blocks as valid, but delays verifications by some time, though
-// they still have to conform to the Ethereum consensus rules.
-func NewFakeDelayer(delay time.Duration) *Ethash {
-	return &Ethash{fakeMode: true, fakeDelay: delay}
+// they still have to conform to the tim consensus rules.
+func NewFakeDelayer(delay time.Duration) *thash {
+	return &thash{fakeMode: true, fakeDelay: delay}
 }
 
-// NewFullFaker creates an ethash consensus engine with a full fake scheme that
+// NewFullFaker creates an thash consensus engine with a full fake scheme that
 // accepts all blocks as valid, without checking any consensus rules whatsoever.
-func NewFullFaker() *Ethash {
-	return &Ethash{fakeMode: true, fakeFull: true}
+func NewFullFaker() *thash {
+	return &thash{fakeMode: true, fakeFull: true}
 }
 
-// NewShared creates a full sized ethash PoW shared between all requesters running
+// NewShared creates a full sized thash PoW shared between all requesters running
 // in the same process.
-func NewShared() *Ethash {
-	return &Ethash{shared: sharedEthash}
+func NewShared() *thash {
+	return &thash{shared: sharedthash}
 }
 
 // cache tries to retrieve a verification cache for the specified block number
 // by first checking against a list of in-memory caches, then against caches
 // stored on disk, and finally generating one if none can be found.
-func (ethash *Ethash) cache(block uint64) []uint32 {
+func (thash *thash) cache(block uint64) []uint32 {
 	epoch := block / epochLength
 
 	// If we have a PoW for that epoch, use that
-	ethash.lock.Lock()
+	thash.lock.Lock()
 
-	current, future := ethash.caches[epoch], (*cache)(nil)
+	current, future := thash.caches[epoch], (*cache)(nil)
 	if current == nil {
 		// No in-memory cache, evict the oldest if the cache limit was reached
-		for len(ethash.caches) > 0 && len(ethash.caches) >= ethash.cachesinmem {
+		for len(thash.caches) > 0 && len(thash.caches) >= thash.cachesinmem {
 			var evict *cache
-			for _, cache := range ethash.caches {
+			for _, cache := range thash.caches {
 				if evict == nil || evict.used.After(cache.used) {
 					evict = cache
 				}
 			}
-			delete(ethash.caches, evict.epoch)
+			delete(thash.caches, evict.epoch)
 			evict.release()
 
-			log.Trace("Evicted ethash cache", "epoch", evict.epoch, "used", evict.used)
+			log.Trace("Evicted thash cache", "epoch", evict.epoch, "used", evict.used)
 		}
 		// If we have the new cache pre-generated, use that, otherwise create a new one
-		if ethash.fcache != nil && ethash.fcache.epoch == epoch {
+		if thash.fcache != nil && thash.fcache.epoch == epoch {
 			log.Trace("Using pre-generated cache", "epoch", epoch)
-			current, ethash.fcache = ethash.fcache, nil
+			current, thash.fcache = thash.fcache, nil
 		} else {
-			log.Trace("Requiring new ethash cache", "epoch", epoch)
+			log.Trace("Requiring new thash cache", "epoch", epoch)
 			current = &cache{epoch: epoch}
 		}
-		ethash.caches[epoch] = current
+		thash.caches[epoch] = current
 
 		// If we just used up the future cache, or need a refresh, regenerate
-		if ethash.fcache == nil || ethash.fcache.epoch <= epoch {
-			if ethash.fcache != nil {
-				ethash.fcache.release()
+		if thash.fcache == nil || thash.fcache.epoch <= epoch {
+			if thash.fcache != nil {
+				thash.fcache.release()
 			}
-			log.Trace("Requiring new future ethash cache", "epoch", epoch+1)
+			log.Trace("Requiring new future thash cache", "epoch", epoch+1)
 			future = &cache{epoch: epoch + 1}
-			ethash.fcache = future
+			thash.fcache = future
 		}
 		// New current cache, set its initial timestamp
 		current.used = time.Now()
 	}
-	ethash.lock.Unlock()
+	thash.lock.Unlock()
 
 	// Wait for generation finish, bump the timestamp and finalize the cache
-	current.generate(ethash.cachedir, ethash.cachesondisk, ethash.tester)
+	current.generate(thash.cachedir, thash.cachesondisk, thash.tester)
 
 	current.lock.Lock()
 	current.used = time.Now()
@@ -481,7 +481,7 @@ func (ethash *Ethash) cache(block uint64) []uint32 {
 
 	// If we exhausted the future cache, now's a good time to regenerate it
 	if future != nil {
-		go future.generate(ethash.cachedir, ethash.cachesondisk, ethash.tester)
+		go future.generate(thash.cachedir, thash.cachesondisk, thash.tester)
 	}
 	return current.cache
 }
@@ -489,54 +489,54 @@ func (ethash *Ethash) cache(block uint64) []uint32 {
 // dataset tries to retrieve a mining dataset for the specified block number
 // by first checking against a list of in-memory datasets, then against DAGs
 // stored on disk, and finally generating one if none can be found.
-func (ethash *Ethash) dataset(block uint64) []uint32 {
+func (thash *thash) dataset(block uint64) []uint32 {
 	epoch := block / epochLength
 
 	// If we have a PoW for that epoch, use that
-	ethash.lock.Lock()
+	thash.lock.Lock()
 
-	current, future := ethash.datasets[epoch], (*dataset)(nil)
+	current, future := thash.datasets[epoch], (*dataset)(nil)
 	if current == nil {
 		// No in-memory dataset, evict the oldest if the dataset limit was reached
-		for len(ethash.datasets) > 0 && len(ethash.datasets) >= ethash.dagsinmem {
+		for len(thash.datasets) > 0 && len(thash.datasets) >= thash.dagsinmem {
 			var evict *dataset
-			for _, dataset := range ethash.datasets {
+			for _, dataset := range thash.datasets {
 				if evict == nil || evict.used.After(dataset.used) {
 					evict = dataset
 				}
 			}
-			delete(ethash.datasets, evict.epoch)
+			delete(thash.datasets, evict.epoch)
 			evict.release()
 
-			log.Trace("Evicted ethash dataset", "epoch", evict.epoch, "used", evict.used)
+			log.Trace("Evicted thash dataset", "epoch", evict.epoch, "used", evict.used)
 		}
 		// If we have the new cache pre-generated, use that, otherwise create a new one
-		if ethash.fdataset != nil && ethash.fdataset.epoch == epoch {
+		if thash.fdataset != nil && thash.fdataset.epoch == epoch {
 			log.Trace("Using pre-generated dataset", "epoch", epoch)
-			current = &dataset{epoch: ethash.fdataset.epoch} // Reload from disk
-			ethash.fdataset = nil
+			current = &dataset{epoch: thash.fdataset.epoch} // Reload from disk
+			thash.fdataset = nil
 		} else {
-			log.Trace("Requiring new ethash dataset", "epoch", epoch)
+			log.Trace("Requiring new thash dataset", "epoch", epoch)
 			current = &dataset{epoch: epoch}
 		}
-		ethash.datasets[epoch] = current
+		thash.datasets[epoch] = current
 
 		// If we just used up the future dataset, or need a refresh, regenerate
-		if ethash.fdataset == nil || ethash.fdataset.epoch <= epoch {
-			if ethash.fdataset != nil {
-				ethash.fdataset.release()
+		if thash.fdataset == nil || thash.fdataset.epoch <= epoch {
+			if thash.fdataset != nil {
+				thash.fdataset.release()
 			}
-			log.Trace("Requiring new future ethash dataset", "epoch", epoch+1)
+			log.Trace("Requiring new future thash dataset", "epoch", epoch+1)
 			future = &dataset{epoch: epoch + 1}
-			ethash.fdataset = future
+			thash.fdataset = future
 		}
 		// New current dataset, set its initial timestamp
 		current.used = time.Now()
 	}
-	ethash.lock.Unlock()
+	thash.lock.Unlock()
 
 	// Wait for generation finish, bump the timestamp and finalize the cache
-	current.generate(ethash.dagdir, ethash.dagsondisk, ethash.tester)
+	current.generate(thash.dagdir, thash.dagsondisk, thash.tester)
 
 	current.lock.Lock()
 	current.used = time.Now()
@@ -544,18 +544,18 @@ func (ethash *Ethash) dataset(block uint64) []uint32 {
 
 	// If we exhausted the future dataset, now's a good time to regenerate it
 	if future != nil {
-		go future.generate(ethash.dagdir, ethash.dagsondisk, ethash.tester)
+		go future.generate(thash.dagdir, thash.dagsondisk, thash.tester)
 	}
 	return current.dataset
 }
 
 // Threads returns the number of mining threads currently enabled. This doesn't
 // necessarily mean that mining is running!
-func (ethash *Ethash) Threads() int {
-	ethash.lock.Lock()
-	defer ethash.lock.Unlock()
+func (thash *thash) Threads() int {
+	thash.lock.Lock()
+	defer thash.lock.Unlock()
 
-	return ethash.threads
+	return thash.threads
 }
 
 // SetThreads updates the number of mining threads currently enabled. Calling
@@ -563,32 +563,32 @@ func (ethash *Ethash) Threads() int {
 // specified, the miner will use all cores of the machine. Setting a thread
 // count below zero is allowed and will cause the miner to idle, without any
 // work being done.
-func (ethash *Ethash) SetThreads(threads int) {
-	ethash.lock.Lock()
-	defer ethash.lock.Unlock()
+func (thash *thash) SetThreads(threads int) {
+	thash.lock.Lock()
+	defer thash.lock.Unlock()
 
 	// If we're running a shared PoW, set the thread count on that instead
-	if ethash.shared != nil {
-		ethash.shared.SetThreads(threads)
+	if thash.shared != nil {
+		thash.shared.SetThreads(threads)
 		return
 	}
 	// Update the threads and ping any running seal to pull in any changes
-	ethash.threads = threads
+	thash.threads = threads
 	select {
-	case ethash.update <- struct{}{}:
+	case thash.update <- struct{}{}:
 	default:
 	}
 }
 
 // Hashrate implements PoW, returning the measured rate of the search invocations
 // per second over the last minute.
-func (ethash *Ethash) Hashrate() float64 {
-	return ethash.hashrate.Rate1()
+func (thash *thash) Hashrate() float64 {
+	return thash.hashrate.Rate1()
 }
 
 // APIs implements consensus.Engine, returning the user facing RPC APIs. Currently
 // that is empty.
-func (ethash *Ethash) APIs(chain consensus.ChainReader) []rpc.API {
+func (thash *thash) APIs(chain consensus.ChainReader) []rpc.API {
 	return nil
 }
 

@@ -28,7 +28,7 @@ import (
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/crypto"
 	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/light"
 	"github.com/tim-coin/tim/p2p"
 	"github.com/tim-coin/tim/params"
@@ -68,7 +68,7 @@ func TestGetBlockHeadersLes1(t *testing.T) { testGetBlockHeaders(t, 1) }
 func TestGetBlockHeadersLes2(t *testing.T) { testGetBlockHeaders(t, 2) }
 
 func testGetBlockHeaders(t *testing.T, protocol int) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	pm := newTestProtocolManagerMust(t, false, downloader.MaxHashFetch+15, nil, nil, nil, db)
 	bc := pm.blockchain.(*core.BlockChain)
 	peer, _ := newTestPeer(t, "peer", protocol, pm, true)
@@ -181,7 +181,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 		// Collect the headers to expect in the response
 		headers := []*types.Header{}
 		for _, hash := range tt.expect {
-			headers = append(headers, bc.GetHeaderByHash(hash))
+			headers = append(headers, bc.timdeaderByHash(hash))
 		}
 		// Send the hash request and verify the response
 		reqID++
@@ -199,7 +199,7 @@ func TestGetBlockBodiesLes1(t *testing.T) { testGetBlockBodies(t, 1) }
 func TestGetBlockBodiesLes2(t *testing.T) { testGetBlockBodies(t, 2) }
 
 func testGetBlockBodies(t *testing.T, protocol int) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	pm := newTestProtocolManagerMust(t, false, downloader.MaxBlockFetch+15, nil, nil, nil, db)
 	bc := pm.blockchain.(*core.BlockChain)
 	peer, _ := newTestPeer(t, "peer", protocol, pm, true)
@@ -278,7 +278,7 @@ func TestGetCodeLes2(t *testing.T) { testGetCode(t, 2) }
 
 func testGetCode(t *testing.T, protocol int) {
 	// Assemble the test environment
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	pm := newTestProtocolManagerMust(t, false, 4, testChainGen, nil, nil, db)
 	bc := pm.blockchain.(*core.BlockChain)
 	peer, _ := newTestPeer(t, "peer", protocol, pm, true)
@@ -288,7 +288,7 @@ func testGetCode(t *testing.T, protocol int) {
 	var codes [][]byte
 
 	for i := uint64(0); i <= bc.CurrentBlock().NumberU64(); i++ {
-		header := bc.GetHeaderByNumber(i)
+		header := bc.timdeaderByNumber(i)
 		req := &CodeReq{
 			BHash:  header.Hash(),
 			AccKey: crypto.Keccak256(testContractAddr[:]),
@@ -313,7 +313,7 @@ func TestGetReceiptLes2(t *testing.T) { testGetReceipt(t, 2) }
 
 func testGetReceipt(t *testing.T, protocol int) {
 	// Assemble the test environment
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	pm := newTestProtocolManagerMust(t, false, 4, testChainGen, nil, nil, db)
 	bc := pm.blockchain.(*core.BlockChain)
 	peer, _ := newTestPeer(t, "peer", protocol, pm, true)
@@ -342,7 +342,7 @@ func TestGetProofsLes2(t *testing.T) { testGetProofs(t, 2) }
 
 func testGetProofs(t *testing.T, protocol int) {
 	// Assemble the test environment
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	pm := newTestProtocolManagerMust(t, false, 4, testChainGen, nil, nil, db)
 	bc := pm.blockchain.(*core.BlockChain)
 	peer, _ := newTestPeer(t, "peer", protocol, pm, true)
@@ -356,7 +356,7 @@ func testGetProofs(t *testing.T, protocol int) {
 
 	accounts := []common.Address{testBankAddress, acc1Addr, acc2Addr, {}}
 	for i := uint64(0); i <= bc.CurrentBlock().NumberU64(); i++ {
-		header := bc.GetHeaderByNumber(i)
+		header := bc.timdeaderByNumber(i)
 		root := header.Root
 		trie, _ := trie.New(root, db)
 
@@ -413,7 +413,7 @@ func testGetProofs(t *testing.T, protocol int) {
 }
 
 func TestTransactionStatusLes2(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	pm := newTestProtocolManagerMust(t, false, 0, nil, nil, nil, db)
 	chain := pm.blockchain.(*core.BlockChain)
 	txpool := core.NewTxPool(core.DefaultTxPoolConfig, params.TestChainConfig, chain)

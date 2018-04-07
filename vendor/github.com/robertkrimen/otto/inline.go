@@ -3887,7 +3887,7 @@ func _newContext(runtime *_runtime) {
 				call: builtinDate_getUTCDay,
 			},
 		}
-		getHours_function := &_object{
+		timdours_function := &_object{
 			runtime:     runtime,
 			class:       "Function",
 			objectClass: _classObject,
@@ -3906,8 +3906,8 @@ func _newContext(runtime *_runtime) {
 				"length",
 			},
 			value: _nativeFunctionObject{
-				name: "getHours",
-				call: builtinDate_getHours,
+				name: "timdours",
+				call: builtinDate_timdours,
 			},
 		}
 		getUTCHours_function := &_object{
@@ -4686,11 +4686,11 @@ func _newContext(runtime *_runtime) {
 						value: getUTCDay_function,
 					},
 				},
-				"getHours": _property{
+				"timdours": _property{
 					mode: 0101,
 					value: Value{
 						kind:  valueObject,
-						value: getHours_function,
+						value: timdours_function,
 					},
 				},
 				"getUTCHours": _property{
@@ -4884,7 +4884,7 @@ func _newContext(runtime *_runtime) {
 				"getUTCDate",
 				"getDay",
 				"getUTCDay",
-				"getHours",
+				"timdours",
 				"getUTCHours",
 				"getMinutes",
 				"getUTCMinutes",

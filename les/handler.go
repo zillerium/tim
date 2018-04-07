@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light tim Subprotocol.
 package les
 
 import (
@@ -34,7 +34,7 @@ import (
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/eth"
 	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/light"
 	"github.com/tim-coin/tim/log"
@@ -74,14 +74,14 @@ func errResp(code errCode, format string, v ...interface{}) error {
 
 type BlockChain interface {
 	HasHeader(hash common.Hash, number uint64) bool
-	GetHeader(hash common.Hash, number uint64) *types.Header
-	GetHeaderByHash(hash common.Hash) *types.Header
+	timdeader(hash common.Hash, number uint64) *types.Header
+	timdeaderByHash(hash common.Hash) *types.Header
 	CurrentHeader() *types.Header
 	GetTdByHash(hash common.Hash) *big.Int
 	InsertHeaderChain(chain []*types.Header, checkFreq int) (int, error)
 	Rollback(chain []common.Hash)
 	Status() (td *big.Int, currentBlock common.Hash, genesisBlock common.Hash)
-	GetHeaderByNumber(number uint64) *types.Header
+	timdeaderByNumber(number uint64) *types.Header
 	GetBlockHashesFromHash(hash common.Hash, max uint64) []common.Hash
 	LastBlockHash() common.Hash
 	Genesis() *types.Block
@@ -100,7 +100,7 @@ type ProtocolManager struct {
 	networkId   uint64
 	chainConfig *params.ChainConfig
 	blockchain  BlockChain
-	chainDb     ethdb.Database
+	chainDb     timdb.Database
 	odr         *LesOdr
 	server      *LesServer
 	serverPool  *serverPool
@@ -126,9 +126,9 @@ type ProtocolManager struct {
 	wg *sync.WaitGroup
 }
 
-// NewProtocolManager returns a new ethereum sub protocol manager. The Ethereum sub protocol manages peers capable
-// with the ethereum network.
-func NewProtocolManager(chainConfig *params.ChainConfig, lightSync bool, protocolVersions []uint, networkId uint64, mux *event.TypeMux, engine consensus.Engine, peers *peerSet, blockchain BlockChain, txpool txPool, chainDb ethdb.Database, odr *LesOdr, txrelay *LesTxRelay, quitSync chan struct{}, wg *sync.WaitGroup) (*ProtocolManager, error) {
+// NewProtocolManager returns a new tim sub protocol manager. The tim sub protocol manages peers capable
+// with the tim network.
+func NewProtocolManager(chainConfig *params.ChainConfig, lightSync bool, protocolVersions []uint, networkId uint64, mux *event.TypeMux, engine consensus.Engine, peers *peerSet, blockchain BlockChain, txpool txPool, chainDb timdb.Database, odr *LesOdr, txrelay *LesTxRelay, quitSync chan struct{}, wg *sync.WaitGroup) (*ProtocolManager, error) {
 	// Create the protocol manager with the base fields
 	manager := &ProtocolManager{
 		lightSync:   lightSync,
@@ -232,7 +232,7 @@ func (pm *ProtocolManager) Start() {
 func (pm *ProtocolManager) Stop() {
 	// Showing a log message. During download / process this could actually
 	// take between 5 to 10 seconds and therefor feedback is required.
-	log.Info("Stopping light Ethereum protocol")
+	log.Info("Stopping light tim protocol")
 
 	// Quit the sync loop.
 	// After this send has completed, no new peers will be accepted.
@@ -249,7 +249,7 @@ func (pm *ProtocolManager) Stop() {
 	// Wait for any process action
 	pm.wg.Wait()
 
-	log.Info("Light Ethereum protocol stopped")
+	log.Info("Light tim protocol stopped")
 }
 
 func (pm *ProtocolManager) newPeer(pv int, nv uint64, p *p2p.Peer, rw p2p.MsgReadWriter) *peer {
@@ -259,13 +259,13 @@ func (pm *ProtocolManager) newPeer(pv int, nv uint64, p *p2p.Peer, rw p2p.MsgRea
 // handle is the callback invoked to manage the life cycle of a les peer. When
 // this function terminates, the peer is disconnected.
 func (pm *ProtocolManager) handle(p *peer) error {
-	p.Log().Debug("Light Ethereum peer connected", "name", p.Name())
+	p.Log().Debug("Light tim peer connected", "name", p.Name())
 
 	// Execute the LES handshake
 	td, head, genesis := pm.blockchain.Status()
 	headNum := core.GetBlockNumber(pm.chainDb, head)
 	if err := p.Handshake(td, head, headNum, genesis, pm.server); err != nil {
-		p.Log().Debug("Light Ethereum handshake failed", "err", err)
+		p.Log().Debug("Light tim handshake failed", "err", err)
 		return err
 	}
 	if rw, ok := p.rw.(*meteredMsgReadWriter); ok {
@@ -273,7 +273,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 	}
 	// Register the peer locally
 	if err := pm.peers.Register(p); err != nil {
-		p.Log().Error("Light Ethereum peer registration failed", "err", err)
+		p.Log().Error("Light tim peer registration failed", "err", err)
 		return err
 	}
 	defer func() {
@@ -313,13 +313,13 @@ func (pm *ProtocolManager) handle(p *peer) error {
 	// main loop. handle incoming messages.
 	for {
 		if err := pm.handleMsg(p); err != nil {
-			p.Log().Debug("Light Ethereum message handling failed", "err", err)
+			p.Log().Debug("Light tim message handling failed", "err", err)
 			return err
 		}
 	}
 }
 
-var reqList = []uint64{GetBlockHeadersMsg, GetBlockBodiesMsg, GetCodeMsg, GetReceiptsMsg, GetProofsV1Msg, SendTxMsg, SendTxV2Msg, GetTxStatusMsg, GetHeaderProofsMsg, GetProofsV2Msg, GetHelperTrieProofsMsg}
+var reqList = []uint64{GetBlockHeadersMsg, GetBlockBodiesMsg, GetCodeMsg, GetReceiptsMsg, GetProofsV1Msg, SendTxMsg, SendTxV2Msg, GetTxStatusMsg, timdeaderProofsMsg, GetProofsV2Msg, timdelperTrieProofsMsg}
 
 // handleMsg is invoked whenever an inbound message is received from a remote
 // peer. The remote connection is torn down upon returning any error.
@@ -329,7 +329,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 	if err != nil {
 		return err
 	}
-	p.Log().Trace("Light Ethereum message arrived", "code", msg.Code, "bytes", msg.Size)
+	p.Log().Trace("Light tim message arrived", "code", msg.Code, "bytes", msg.Size)
 
 	costs := p.fcCosts[msg.Code]
 	reject := func(reqCnt, maxCnt uint64) bool {
@@ -416,9 +416,9 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the next header satisfying the query
 			var origin *types.Header
 			if hashMode {
-				origin = pm.blockchain.GetHeaderByHash(query.Origin.Hash)
+				origin = pm.blockchain.timdeaderByHash(query.Origin.Hash)
 			} else {
-				origin = pm.blockchain.GetHeaderByNumber(query.Origin.Number)
+				origin = pm.blockchain.timdeaderByNumber(query.Origin.Number)
 			}
 			if origin == nil {
 				break
@@ -432,7 +432,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			case query.Origin.Hash != (common.Hash{}) && query.Reverse:
 				// Hash based traversal towards the genesis block
 				for i := 0; i < int(query.Skip)+1; i++ {
-					if header := pm.blockchain.GetHeader(query.Origin.Hash, number); header != nil {
+					if header := pm.blockchain.timdeader(query.Origin.Hash, number); header != nil {
 						query.Origin.Hash = header.ParentHash
 						number--
 					} else {
@@ -442,7 +442,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				}
 			case query.Origin.Hash != (common.Hash{}) && !query.Reverse:
 				// Hash based traversal towards the leaf block
-				if header := pm.blockchain.GetHeaderByNumber(origin.Number.Uint64() + query.Skip + 1); header != nil {
+				if header := pm.blockchain.timdeaderByNumber(origin.Number.Uint64() + query.Skip + 1); header != nil {
 					if pm.blockchain.GetBlockHashesFromHash(header.Hash(), query.Skip+1)[query.Skip] == query.Origin.Hash {
 						query.Origin.Hash = header.Hash()
 					} else {
@@ -568,7 +568,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 		for _, req := range req.Reqs {
 			// Retrieve the requested state entry, stopping if enough was found
-			if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+			if header := core.timdeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if trie, _ := trie.New(header.Root, pm.chainDb); trie != nil {
 					sdata := trie.Get(req.AccKey)
 					var acc state.Account
@@ -634,7 +634,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the requested block's receipts, skipping if unknown to us
 			results := core.GetBlockReceipts(pm.chainDb, hash, core.GetBlockNumber(pm.chainDb, hash))
 			if results == nil {
-				if header := pm.blockchain.GetHeaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
+				if header := pm.blockchain.timdeaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
 					continue
 				}
 			}
@@ -695,7 +695,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				break
 			}
 			// Retrieve the requested state entry, stopping if enough was found
-			if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+			if header := core.timdeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if tr, _ := trie.New(header.Root, pm.chainDb); tr != nil {
 					if len(req.AccKey) > 0 {
 						sdata := tr.Get(req.AccKey)
@@ -746,7 +746,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				break
 			}
 			if tr == nil || req.BHash != lastBHash {
-				if header := core.GetHeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+				if header := core.timdeader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 					tr, _ = trie.New(header.Root, pm.chainDb)
 				} else {
 					tr = nil
@@ -820,7 +820,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			Obj:     resp.Data,
 		}
 
-	case GetHeaderProofsMsg:
+	case timdeaderProofsMsg:
 		p.Log().Trace("Received headers proof request")
 		// Decode the retrieval message
 		var req struct {
@@ -839,13 +839,13 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		if reject(uint64(reqCnt), MaxHelperTrieProofsFetch) {
 			return errResp(ErrRequestRejected, "")
 		}
-		trieDb := ethdb.NewTable(pm.chainDb, light.ChtTablePrefix)
+		trieDb := timdb.NewTable(pm.chainDb, light.ChtTablePrefix)
 		for _, req := range req.Reqs {
 			if bytes >= softResponseLimit {
 				break
 			}
 
-			if header := pm.blockchain.GetHeaderByNumber(req.BlockNum); header != nil {
+			if header := pm.blockchain.timdeaderByNumber(req.BlockNum); header != nil {
 				sectionHead := core.GetCanonicalHash(pm.chainDb, (req.ChtNum+1)*light.ChtV1Frequency-1)
 				if root := light.GetChtRoot(pm.chainDb, req.ChtNum, sectionHead); root != (common.Hash{}) {
 					if tr, _ := trie.New(root, trieDb); tr != nil {
@@ -863,7 +863,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		pm.server.fcCostStats.update(msg.Code, uint64(reqCnt), rcost)
 		return p.SendHeaderProofs(req.ReqID, bv, proofs)
 
-	case GetHelperTrieProofsMsg:
+	case timdelperTrieProofsMsg:
 		p.Log().Trace("Received helper trie proof request")
 		// Decode the retrieval message
 		var req struct {
@@ -898,9 +898,9 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			}
 			if tr == nil || req.HelperTrieType != lastType || req.TrieIdx != lastIdx {
 				var prefix string
-				root, prefix = pm.getHelperTrie(req.HelperTrieType, req.TrieIdx)
+				root, prefix = pm.timdelperTrie(req.HelperTrieType, req.TrieIdx)
 				if root != (common.Hash{}) {
-					if t, err := trie.New(root, ethdb.NewTable(pm.chainDb, prefix)); err == nil {
+					if t, err := trie.New(root, timdb.NewTable(pm.chainDb, prefix)); err == nil {
 						tr = t
 					}
 				}
@@ -919,7 +919,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 					tr.Prove(req.Key, req.FromLevel, nodes)
 				}
 				if req.AuxReq != 0 {
-					data := pm.getHelperTrieAuxData(req)
+					data := pm.timdelperTrieAuxData(req)
 					auxData = append(auxData, data)
 					auxBytes += len(data)
 				}
@@ -1080,8 +1080,8 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 	return nil
 }
 
-// getHelperTrie returns the post-processed trie root for the given trie ID and section index
-func (pm *ProtocolManager) getHelperTrie(id uint, idx uint64) (common.Hash, string) {
+// timdelperTrie returns the post-processed trie root for the given trie ID and section index
+func (pm *ProtocolManager) timdelperTrie(id uint, idx uint64) (common.Hash, string) {
 	switch id {
 	case htCanonical:
 		sectionHead := core.GetCanonicalHash(pm.chainDb, (idx+1)*light.ChtFrequency-1)
@@ -1093,15 +1093,15 @@ func (pm *ProtocolManager) getHelperTrie(id uint, idx uint64) (common.Hash, stri
 	return common.Hash{}, ""
 }
 
-// getHelperTrieAuxData returns requested auxiliary data for the given HelperTrie request
-func (pm *ProtocolManager) getHelperTrieAuxData(req HelperTrieReq) []byte {
+// timdelperTrieAuxData returns requested auxiliary data for the given HelperTrie request
+func (pm *ProtocolManager) timdelperTrieAuxData(req HelperTrieReq) []byte {
 	if req.HelperTrieType == htCanonical && req.AuxReq == auxHeader {
 		if len(req.Key) != 8 {
 			return nil
 		}
 		blockNum := binary.BigEndian.Uint64(req.Key)
 		hash := core.GetCanonicalHash(pm.chainDb, blockNum)
-		return core.GetHeaderRLP(pm.chainDb, hash, blockNum)
+		return core.timdeaderRLP(pm.chainDb, hash, blockNum)
 	}
 	return nil
 }

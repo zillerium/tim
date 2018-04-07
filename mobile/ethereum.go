@@ -16,20 +16,20 @@
 
 // Contains all the wrappers from the tim root package.
 
-package geth
+package timd
 
 import (
 	"errors"
 	"math/big"
 
-	ethereum "github.com/tim-coin/tim"
+	tim "github.com/tim-coin/tim"
 	"github.com/tim-coin/tim/common"
 )
 
 // Subscription represents an event subscription where events are
 // delivered on a data channel.
 type Subscription struct {
-	sub ethereum.Subscription
+	sub tim.Subscription
 }
 
 // Unsubscribe cancels the sending of events to the data channel
@@ -40,7 +40,7 @@ func (s *Subscription) Unsubscribe() {
 
 // CallMsg contains parameters for contract calls.
 type CallMsg struct {
-	msg ethereum.CallMsg
+	msg tim.CallMsg
 }
 
 // NewCallMsg creates an empty contract call parameter list.
@@ -73,14 +73,14 @@ func (msg *CallMsg) SetTo(address *Address) {
 }
 
 // SyncProgress gives progress indications when the node is synchronising with
-// the Ethereum network.
+// the tim network.
 type SyncProgress struct {
-	progress ethereum.SyncProgress
+	progress tim.SyncProgress
 }
 
 func (p *SyncProgress) GetStartingBlock() int64 { return int64(p.progress.StartingBlock) }
 func (p *SyncProgress) GetCurrentBlock() int64  { return int64(p.progress.CurrentBlock) }
-func (p *SyncProgress) GetHighestBlock() int64  { return int64(p.progress.HighestBlock) }
+func (p *SyncProgress) timdighestBlock() int64  { return int64(p.progress.HighestBlock) }
 func (p *SyncProgress) GetPulledStates() int64  { return int64(p.progress.PulledStates) }
 func (p *SyncProgress) GetKnownStates() int64   { return int64(p.progress.KnownStates) }
 
@@ -128,7 +128,7 @@ func (t *Topics) Append(topics *Hashes) {
 
 // FilterQuery contains options for contact log filtering.
 type FilterQuery struct {
-	query ethereum.FilterQuery
+	query tim.FilterQuery
 }
 
 // NewFilterQuery creates an empty filter query for contact log filtering.

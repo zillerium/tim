@@ -922,7 +922,7 @@ const (
 	PTRACE_GETCRUNCHREGS             = 0x19
 	PTRACE_GETEVENTMSG               = 0x4201
 	PTRACE_GETFPREGS                 = 0xe
-	PTRACE_GETHBPREGS                = 0x1d
+	PTRACE_timdBPREGS                = 0x1d
 	PTRACE_GETREGS                   = 0xc
 	PTRACE_GETREGSET                 = 0x4204
 	PTRACE_GETSIGINFO                = 0x4202

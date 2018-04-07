@@ -23,7 +23,7 @@ import (
 
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/common/math"
-	"github.com/tim-coin/tim/consensus/ethash"
+	"github.com/tim-coin/tim/consensus/thash"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/params"
 )
@@ -57,7 +57,7 @@ func (test *DifficultyTest) Run(config *params.ChainConfig) error {
 		UncleHash:  test.UncleHash,
 	}
 
-	actual := ethash.CalcDifficulty(config, test.CurrentTimestamp.Uint64(), parent)
+	actual := thash.CalcDifficulty(config, test.CurrentTimestamp.Uint64(), parent)
 	exp := test.CurrentDifficulty
 
 	if actual.Cmp(exp) != 0 {

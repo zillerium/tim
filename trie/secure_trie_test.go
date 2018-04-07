@@ -24,19 +24,19 @@ import (
 
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/crypto"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 )
 
 func newEmptySecure() *SecureTrie {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	trie, _ := NewSecure(common.Hash{}, db, 0)
 	return trie
 }
 
 // makeTestSecureTrie creates a large enough secure trie for testing.
-func makeTestSecureTrie() (ethdb.Database, *SecureTrie, map[string][]byte) {
+func makeTestSecureTrie() (timdb.Database, *SecureTrie, map[string][]byte) {
 	// Create an empty trie
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	trie, _ := NewSecure(common.Hash{}, db, 0)
 
 	// Fill it with some arbitrary data

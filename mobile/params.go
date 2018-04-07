@@ -16,7 +16,7 @@
 
 // Contains all the wrappers from the params package.
 
-package geth
+package timd
 
 import (
 	"encoding/json"
@@ -26,13 +26,13 @@ import (
 	"github.com/tim-coin/tim/params"
 )
 
-// MainnetGenesis returns the JSON spec to use for the main Ethereum network. It
+// MainnetGenesis returns the JSON spec to use for the main tim network. It
 // is actually empty since that defaults to the hard coded binary genesis block.
 func MainnetGenesis() string {
 	return ""
 }
 
-// TestnetGenesis returns the JSON spec to use for the Ethereum test network.
+// TestnetGenesis returns the JSON spec to use for the tim test network.
 func TestnetGenesis() string {
 	enc, err := json.Marshal(core.DefaultTestnetGenesisBlock())
 	if err != nil {

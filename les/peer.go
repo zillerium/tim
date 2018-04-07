@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light tim Subprotocol.
 package les
 
 import (
@@ -298,9 +298,9 @@ func (p *peer) RequestHelperTrieProofs(reqID, cost uint64, reqs []HelperTrieReq)
 			// convert HelperTrie request to old CHT request
 			reqsV1[i] = ChtReq{ChtNum: (req.TrieIdx+1)*(light.ChtFrequency/light.ChtV1Frequency) - 1, BlockNum: blockNum, FromLevel: req.FromLevel}
 		}
-		return sendRequest(p.rw, GetHeaderProofsMsg, reqID, cost, reqsV1)
+		return sendRequest(p.rw, timdeaderProofsMsg, reqID, cost, reqsV1)
 	case lpv2:
-		return sendRequest(p.rw, GetHelperTrieProofsMsg, reqID, cost, reqs)
+		return sendRequest(p.rw, timdelperTrieProofsMsg, reqID, cost, reqs)
 	default:
 		panic(nil)
 	}
@@ -511,7 +511,7 @@ type peerSetNotify interface {
 }
 
 // peerSet represents the collection of active peers currently participating in
-// the Light Ethereum sub-protocol.
+// the Light tim sub-protocol.
 type peerSet struct {
 	peers      map[string]*peer
 	lock       sync.RWMutex

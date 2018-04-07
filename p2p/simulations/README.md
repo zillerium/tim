@@ -1,7 +1,7 @@
 # devp2p Simulations
 
 The `p2p/simulations` package implements a simulation framework which supports
-creating a collection of devp2p nodes, connecting them together to form a
+creating a collection of devp2p nodes, connecting them totimder to form a
 simulation network, performing simulation actions in that network and then
 extracting useful information.
 
@@ -92,7 +92,7 @@ A simulation network emits the following events:
 
 The events have a "control" flag which when set indicates that the event is the
 outcome of a controlled simulation action (e.g. creating a node or explicitly
-connecting two nodes together).
+connecting two nodes totimder).
 
 This is in contrast to a non-control event, otherwise called a "live" event,
 which is the outcome of something happening in the network as a result of a
@@ -118,7 +118,7 @@ with a `Step` which has the following fields:
 * `Trigger` - a channel which receives node IDs which then trigger a check
     of the expectation function to be performed against that node
 
-As a concrete example, consider a simulated network of Ethereum nodes. An
+As a concrete example, consider a simulated network of tim nodes. An
 `Action` could be the sending of a transaction, `Expect` it being included in
 a block, and `Trigger` a check for every block that is mined.
 

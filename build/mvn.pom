@@ -4,12 +4,12 @@
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.ethereum</groupId>
-  <artifactId>geth</artifactId>
+  <groupId>org.tim</groupId>
+  <artifactId>timd</artifactId>
   <version>{{.Version}}</version>
   <packaging>aar</packaging>
 
-  <name>Android Ethereum Client</name>
+  <name>Android tim Client</name>
   <description>Android port of the tim libraries and node</description>
   <url>https://github.com/tim-coin/tim</url>
   <inceptionYear>2015</inceptionYear>
@@ -23,8 +23,8 @@
   </licenses>
 
   <organization>
-    <name>Ethereum</name>
-    <url>https://ethereum.org</url>
+    <name>tim</name>
+    <url>https://tim.org</url>
   </organization>
 
   <developers>

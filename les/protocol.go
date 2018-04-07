@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light tim Subprotocol.
 package les
 
 import (
@@ -69,12 +69,12 @@ const (
 	GetCodeMsg         = 0x0a
 	CodeMsg            = 0x0b
 	SendTxMsg          = 0x0c
-	GetHeaderProofsMsg = 0x0d
+	timdeaderProofsMsg = 0x0d
 	HeaderProofsMsg    = 0x0e
 	// Protocol messages belonging to LPV2
 	GetProofsV2Msg         = 0x0f
 	ProofsV2Msg            = 0x10
-	GetHelperTrieProofsMsg = 0x11
+	timdelperTrieProofsMsg = 0x11
 	HelperTrieProofsMsg    = 0x12
 	SendTxV2Msg            = 0x13
 	GetTxStatusMsg         = 0x14

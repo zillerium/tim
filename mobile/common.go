@@ -16,7 +16,7 @@
 
 // Contains all the wrappers from the common package.
 
-package geth
+package timd
 
 import (
 	"encoding/hex"
@@ -81,8 +81,8 @@ func (h *Hash) SetHex(hash string) error {
 	return nil
 }
 
-// GetHex retrieves the hex string representation of the hash.
-func (h *Hash) GetHex() string {
+// timdex retrieves the hex string representation of the hash.
+func (h *Hash) timdex() string {
 	return h.hash.Hex()
 }
 
@@ -128,7 +128,7 @@ func (h *Hashes) Append(hash *Hash) {
 	h.hashes = append(h.hashes, hash.hash)
 }
 
-// Address represents the 20 byte address of an Ethereum account.
+// Address represents the 20 byte address of an tim account.
 type Address struct {
 	address common.Address
 }
@@ -182,8 +182,8 @@ func (a *Address) SetHex(address string) error {
 	return nil
 }
 
-// GetHex retrieves the hex string representation of the address.
-func (a *Address) GetHex() string {
+// timdex retrieves the hex string representation of the address.
+func (a *Address) timdex() string {
 	return a.address.Hex()
 }
 

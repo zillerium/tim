@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package rle implements the run-length encoding used for Ethereum data.
+// Package rle implements the run-length encoding used for tim data.
 package rle
 
 import (

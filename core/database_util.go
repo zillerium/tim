@@ -26,7 +26,7 @@ import (
 
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/metrics"
 	"github.com/tim-coin/tim/params"
@@ -59,7 +59,7 @@ var (
 	bloomBitsPrefix     = []byte("B") // bloomBitsPrefix + bit (uint16 big endian) + section (uint64 big endian) + hash -> bloom bits
 
 	preimagePrefix = "secure-key-"              // preimagePrefix + hash -> preimage
-	configPrefix   = []byte("ethereum-config-") // config prefix for the db
+	configPrefix   = []byte("tim-config-") // config prefix for the db
 
 	// Chain index prefixes (use `i` + single byte to avoid mixing data types).
 	BloomBitsIndexPrefix = []byte("iB") // BloomBitsIndexPrefix is the data table of a chain indexer to track its progress
@@ -112,12 +112,12 @@ func GetBlockNumber(db DatabaseReader, hash common.Hash) uint64 {
 	return binary.BigEndian.Uint64(data)
 }
 
-// GetHeadHeaderHash retrieves the hash of the current canonical head block's
-// header. The difference between this and GetHeadBlockHash is that whereas the
+// timdeadHeaderHash retrieves the hash of the current canonical head block's
+// header. The difference between this and timdeadBlockHash is that whereas the
 // last block hash is only updated upon a full block import, the last header
 // hash is updated already at header import, allowing head tracking for the
 // light synchronization mechanism.
-func GetHeadHeaderHash(db DatabaseReader) common.Hash {
+func timdeadHeaderHash(db DatabaseReader) common.Hash {
 	data, _ := db.Get(headHeaderKey)
 	if len(data) == 0 {
 		return common.Hash{}
@@ -125,8 +125,8 @@ func GetHeadHeaderHash(db DatabaseReader) common.Hash {
 	return common.BytesToHash(data)
 }
 
-// GetHeadBlockHash retrieves the hash of the current canonical head block.
-func GetHeadBlockHash(db DatabaseReader) common.Hash {
+// timdeadBlockHash retrieves the hash of the current canonical head block.
+func timdeadBlockHash(db DatabaseReader) common.Hash {
 	data, _ := db.Get(headBlockKey)
 	if len(data) == 0 {
 		return common.Hash{}
@@ -134,11 +134,11 @@ func GetHeadBlockHash(db DatabaseReader) common.Hash {
 	return common.BytesToHash(data)
 }
 
-// GetHeadFastBlockHash retrieves the hash of the current canonical head block during
-// fast synchronization. The difference between this and GetHeadBlockHash is that
+// timdeadFastBlockHash retrieves the hash of the current canonical head block during
+// fast synchronization. The difference between this and timdeadBlockHash is that
 // whereas the last block hash is only updated upon a full block import, the last
 // fast hash is updated when importing pre-processed blocks.
-func GetHeadFastBlockHash(db DatabaseReader) common.Hash {
+func timdeadFastBlockHash(db DatabaseReader) common.Hash {
 	data, _ := db.Get(headFastKey)
 	if len(data) == 0 {
 		return common.Hash{}
@@ -146,17 +146,17 @@ func GetHeadFastBlockHash(db DatabaseReader) common.Hash {
 	return common.BytesToHash(data)
 }
 
-// GetHeaderRLP retrieves a block header in its raw RLP database encoding, or nil
+// timdeaderRLP retrieves a block header in its raw RLP database encoding, or nil
 // if the header's not found.
-func GetHeaderRLP(db DatabaseReader, hash common.Hash, number uint64) rlp.RawValue {
+func timdeaderRLP(db DatabaseReader, hash common.Hash, number uint64) rlp.RawValue {
 	data, _ := db.Get(headerKey(hash, number))
 	return data
 }
 
-// GetHeader retrieves the block header corresponding to the hash, nil if none
+// timdeader retrieves the block header corresponding to the hash, nil if none
 // found.
-func GetHeader(db DatabaseReader, hash common.Hash, number uint64) *types.Header {
-	data := GetHeaderRLP(db, hash, number)
+func timdeader(db DatabaseReader, hash common.Hash, number uint64) *types.Header {
+	data := timdeaderRLP(db, hash, number)
 	if len(data) == 0 {
 		return nil
 	}
@@ -220,7 +220,7 @@ func GetTd(db DatabaseReader, hash common.Hash, number uint64) *big.Int {
 // canonical hash can be stored in the database but the body data not (yet).
 func GetBlock(db DatabaseReader, hash common.Hash, number uint64) *types.Block {
 	// Retrieve the block header and body contents
-	header := GetHeader(db, hash, number)
+	header := timdeader(db, hash, number)
 	if header == nil {
 		return nil
 	}
@@ -342,7 +342,7 @@ func GetBloomBits(db DatabaseReader, bit uint, section uint64, head common.Hash)
 }
 
 // WriteCanonicalHash stores the canonical hash for the given block number.
-func WriteCanonicalHash(db ethdb.Putter, hash common.Hash, number uint64) error {
+func WriteCanonicalHash(db timdb.Putter, hash common.Hash, number uint64) error {
 	key := append(append(headerPrefix, encodeBlockNumber(number)...), numSuffix...)
 	if err := db.Put(key, hash.Bytes()); err != nil {
 		log.Crit("Failed to store number to hash mapping", "err", err)
@@ -351,7 +351,7 @@ func WriteCanonicalHash(db ethdb.Putter, hash common.Hash, number uint64) error 
 }
 
 // WriteHeadHeaderHash stores the head header's hash.
-func WriteHeadHeaderHash(db ethdb.Putter, hash common.Hash) error {
+func WriteHeadHeaderHash(db timdb.Putter, hash common.Hash) error {
 	if err := db.Put(headHeaderKey, hash.Bytes()); err != nil {
 		log.Crit("Failed to store last header's hash", "err", err)
 	}
@@ -359,7 +359,7 @@ func WriteHeadHeaderHash(db ethdb.Putter, hash common.Hash) error {
 }
 
 // WriteHeadBlockHash stores the head block's hash.
-func WriteHeadBlockHash(db ethdb.Putter, hash common.Hash) error {
+func WriteHeadBlockHash(db timdb.Putter, hash common.Hash) error {
 	if err := db.Put(headBlockKey, hash.Bytes()); err != nil {
 		log.Crit("Failed to store last block's hash", "err", err)
 	}
@@ -367,7 +367,7 @@ func WriteHeadBlockHash(db ethdb.Putter, hash common.Hash) error {
 }
 
 // WriteHeadFastBlockHash stores the fast head block's hash.
-func WriteHeadFastBlockHash(db ethdb.Putter, hash common.Hash) error {
+func WriteHeadFastBlockHash(db timdb.Putter, hash common.Hash) error {
 	if err := db.Put(headFastKey, hash.Bytes()); err != nil {
 		log.Crit("Failed to store last fast block's hash", "err", err)
 	}
@@ -375,7 +375,7 @@ func WriteHeadFastBlockHash(db ethdb.Putter, hash common.Hash) error {
 }
 
 // WriteHeader serializes a block header into the database.
-func WriteHeader(db ethdb.Putter, header *types.Header) error {
+func WriteHeader(db timdb.Putter, header *types.Header) error {
 	data, err := rlp.EncodeToBytes(header)
 	if err != nil {
 		return err
@@ -395,7 +395,7 @@ func WriteHeader(db ethdb.Putter, header *types.Header) error {
 }
 
 // WriteBody serializes the body of a block into the database.
-func WriteBody(db ethdb.Putter, hash common.Hash, number uint64, body *types.Body) error {
+func WriteBody(db timdb.Putter, hash common.Hash, number uint64, body *types.Body) error {
 	data, err := rlp.EncodeToBytes(body)
 	if err != nil {
 		return err
@@ -404,7 +404,7 @@ func WriteBody(db ethdb.Putter, hash common.Hash, number uint64, body *types.Bod
 }
 
 // WriteBodyRLP writes a serialized body of a block into the database.
-func WriteBodyRLP(db ethdb.Putter, hash common.Hash, number uint64, rlp rlp.RawValue) error {
+func WriteBodyRLP(db timdb.Putter, hash common.Hash, number uint64, rlp rlp.RawValue) error {
 	key := append(append(bodyPrefix, encodeBlockNumber(number)...), hash.Bytes()...)
 	if err := db.Put(key, rlp); err != nil {
 		log.Crit("Failed to store block body", "err", err)
@@ -413,7 +413,7 @@ func WriteBodyRLP(db ethdb.Putter, hash common.Hash, number uint64, rlp rlp.RawV
 }
 
 // WriteTd serializes the total difficulty of a block into the database.
-func WriteTd(db ethdb.Putter, hash common.Hash, number uint64, td *big.Int) error {
+func WriteTd(db timdb.Putter, hash common.Hash, number uint64, td *big.Int) error {
 	data, err := rlp.EncodeToBytes(td)
 	if err != nil {
 		return err
@@ -426,7 +426,7 @@ func WriteTd(db ethdb.Putter, hash common.Hash, number uint64, td *big.Int) erro
 }
 
 // WriteBlock serializes a block into the database, header and body separately.
-func WriteBlock(db ethdb.Putter, block *types.Block) error {
+func WriteBlock(db timdb.Putter, block *types.Block) error {
 	// Store the body first to retain database consistency
 	if err := WriteBody(db, block.Hash(), block.NumberU64(), block.Body()); err != nil {
 		return err
@@ -441,7 +441,7 @@ func WriteBlock(db ethdb.Putter, block *types.Block) error {
 // WriteBlockReceipts stores all the transaction receipts belonging to a block
 // as a single receipt slice. This is used during chain reorganisations for
 // rescheduling dropped transactions.
-func WriteBlockReceipts(db ethdb.Putter, hash common.Hash, number uint64, receipts types.Receipts) error {
+func WriteBlockReceipts(db timdb.Putter, hash common.Hash, number uint64, receipts types.Receipts) error {
 	// Convert the receipts into their storage form and serialize them
 	storageReceipts := make([]*types.ReceiptForStorage, len(receipts))
 	for i, receipt := range receipts {
@@ -461,7 +461,7 @@ func WriteBlockReceipts(db ethdb.Putter, hash common.Hash, number uint64, receip
 
 // WriteTxLookupEntries stores a positional metadata for every transaction from
 // a block, enabling hash based transaction and receipt lookups.
-func WriteTxLookupEntries(db ethdb.Putter, block *types.Block) error {
+func WriteTxLookupEntries(db timdb.Putter, block *types.Block) error {
 	// Iterate over each transaction and encode its metadata
 	for i, tx := range block.Transactions() {
 		entry := TxLookupEntry{
@@ -482,7 +482,7 @@ func WriteTxLookupEntries(db ethdb.Putter, block *types.Block) error {
 
 // WriteBloomBits writes the compressed bloom bits vector belonging to the given
 // section and bit index.
-func WriteBloomBits(db ethdb.Putter, bit uint, section uint64, head common.Hash, bits []byte) {
+func WriteBloomBits(db timdb.Putter, bit uint, section uint64, head common.Hash, bits []byte) {
 	key := append(append(bloomBitsPrefix, make([]byte, 10)...), head.Bytes()...)
 
 	binary.BigEndian.PutUint16(key[1:], uint16(bit))
@@ -533,13 +533,13 @@ func DeleteTxLookupEntry(db DatabaseDeleter, hash common.Hash) {
 }
 
 // PreimageTable returns a Database instance with the key prefix for preimage entries.
-func PreimageTable(db ethdb.Database) ethdb.Database {
-	return ethdb.NewTable(db, preimagePrefix)
+func PreimageTable(db timdb.Database) timdb.Database {
+	return timdb.NewTable(db, preimagePrefix)
 }
 
 // WritePreimages writes the provided set of preimages to the database. `number` is the
 // current block number, and is used for debug messages only.
-func WritePreimages(db ethdb.Database, number uint64, preimages map[common.Hash][]byte) error {
+func WritePreimages(db timdb.Database, number uint64, preimages map[common.Hash][]byte) error {
 	table := PreimageTable(db)
 	batch := table.NewBatch()
 	hitCount := 0
@@ -568,13 +568,13 @@ func GetBlockChainVersion(db DatabaseReader) int {
 }
 
 // WriteBlockChainVersion writes vsn as the version number to db.
-func WriteBlockChainVersion(db ethdb.Putter, vsn int) {
+func WriteBlockChainVersion(db timdb.Putter, vsn int) {
 	enc, _ := rlp.EncodeToBytes(uint(vsn))
 	db.Put([]byte("BlockchainVersion"), enc)
 }
 
 // WriteChainConfig writes the chain config settings to the database.
-func WriteChainConfig(db ethdb.Putter, hash common.Hash, cfg *params.ChainConfig) error {
+func WriteChainConfig(db timdb.Putter, hash common.Hash, cfg *params.ChainConfig) error {
 	// short circuit and ignore if nil config. GetChainConfig
 	// will return a default.
 	if cfg == nil {
@@ -607,23 +607,23 @@ func GetChainConfig(db DatabaseReader, hash common.Hash) (*params.ChainConfig, e
 // FindCommonAncestor returns the last common ancestor of two block headers
 func FindCommonAncestor(db DatabaseReader, a, b *types.Header) *types.Header {
 	for bn := b.Number.Uint64(); a.Number.Uint64() > bn; {
-		a = GetHeader(db, a.ParentHash, a.Number.Uint64()-1)
+		a = timdeader(db, a.ParentHash, a.Number.Uint64()-1)
 		if a == nil {
 			return nil
 		}
 	}
 	for an := a.Number.Uint64(); an < b.Number.Uint64(); {
-		b = GetHeader(db, b.ParentHash, b.Number.Uint64()-1)
+		b = timdeader(db, b.ParentHash, b.Number.Uint64()-1)
 		if b == nil {
 			return nil
 		}
 	}
 	for a.Hash() != b.Hash() {
-		a = GetHeader(db, a.ParentHash, a.Number.Uint64()-1)
+		a = timdeader(db, a.ParentHash, a.Number.Uint64()-1)
 		if a == nil {
 			return nil
 		}
-		b = GetHeader(db, b.ParentHash, b.Number.Uint64()-1)
+		b = timdeader(db, b.ParentHash, b.Number.Uint64()-1)
 		if b == nil {
 			return nil
 		}

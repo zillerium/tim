@@ -29,7 +29,7 @@ import (
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/vm"
 	"github.com/tim-coin/tim/crypto"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/params"
 )
 
@@ -79,7 +79,7 @@ type vmExecMarshaling struct {
 }
 
 func (t *VMTest) Run(vmconfig vm.Config) error {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	statedb := makePreState(db, t.json.Pre)
 	ret, gasRemaining, err := t.exec(statedb, vmconfig)
 
@@ -134,7 +134,7 @@ func (t *VMTest) newEVM(statedb *state.StateDB, vmconfig vm.Config) *vm.EVM {
 	context := vm.Context{
 		CanTransfer: canTransfer,
 		Transfer:    transfer,
-		GetHash:     vmTestBlockHash,
+		timdash:     vmTestBlockHash,
 		Origin:      t.json.Exec.Origin,
 		Coinbase:    t.json.Env.Coinbase,
 		BlockNumber: new(big.Int).SetUint64(t.json.Env.Number),

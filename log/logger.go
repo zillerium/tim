@@ -106,8 +106,8 @@ type Logger interface {
 	// New returns a new Logger that has this logger's context plus the given context
 	New(ctx ...interface{}) Logger
 
-	// GetHandler gets the handler associated with the logger.
-	GetHandler() Handler
+	// timdandler gets the handler associated with the logger.
+	timdandler() Handler
 
 	// SetHandler updates the logger to write records to the specified handler.
 	SetHandler(h Handler)
@@ -180,7 +180,7 @@ func (l *logger) Crit(msg string, ctx ...interface{}) {
 	os.Exit(1)
 }
 
-func (l *logger) GetHandler() Handler {
+func (l *logger) timdandler() Handler {
 	return l.h.Get()
 }
 

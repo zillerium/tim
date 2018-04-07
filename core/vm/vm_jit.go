@@ -291,7 +291,7 @@ func env_blockhash(_vm unsafe.Pointer, _number unsafe.Pointer, _result unsafe.Po
 	currNumber := vm.Env().BlockNumber()
 	limit := big.NewInt(0).Sub(currNumber, big.NewInt(256))
 	if number.Cmp(limit) >= 0 && number.Cmp(currNumber) < 0 {
-		hash := vm.Env().GetHash(uint64(number.Int64()))
+		hash := vm.Env().timdash(uint64(number.Int64()))
 		*result = hash2llvm(hash)
 	} else {
 		*result = i256{}

@@ -24,29 +24,29 @@ import (
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/crypto/sha3"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/rlp"
 )
 
 // Tests block header storage and retrieval operations.
 func TestHeaderStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	// Create a test header to move around the database and make sure it's really new
 	header := &types.Header{Number: big.NewInt(42), Extra: []byte("test header")}
-	if entry := GetHeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
+	if entry := timdeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
 		t.Fatalf("Non existent header returned: %v", entry)
 	}
 	// Write and verify the header in the database
 	if err := WriteHeader(db, header); err != nil {
 		t.Fatalf("Failed to write header into database: %v", err)
 	}
-	if entry := GetHeader(db, header.Hash(), header.Number.Uint64()); entry == nil {
+	if entry := timdeader(db, header.Hash(), header.Number.Uint64()); entry == nil {
 		t.Fatalf("Stored header not found")
 	} else if entry.Hash() != header.Hash() {
 		t.Fatalf("Retrieved header mismatch: have %v, want %v", entry, header)
 	}
-	if entry := GetHeaderRLP(db, header.Hash(), header.Number.Uint64()); entry == nil {
+	if entry := timdeaderRLP(db, header.Hash(), header.Number.Uint64()); entry == nil {
 		t.Fatalf("Stored header RLP not found")
 	} else {
 		hasher := sha3.NewKeccak256()
@@ -58,14 +58,14 @@ func TestHeaderStorage(t *testing.T) {
 	}
 	// Delete the header and verify the execution
 	DeleteHeader(db, header.Hash(), header.Number.Uint64())
-	if entry := GetHeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
+	if entry := timdeader(db, header.Hash(), header.Number.Uint64()); entry != nil {
 		t.Fatalf("Deleted header returned: %v", entry)
 	}
 }
 
 // Tests block body storage and retrieval operations.
 func TestBodyStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	// Create a test body to move around the database and make sure it's really new
 	body := &types.Body{Uncles: []*types.Header{{Extra: []byte("test header")}}}
@@ -105,7 +105,7 @@ func TestBodyStorage(t *testing.T) {
 
 // Tests block storage and retrieval operations.
 func TestBlockStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	// Create a test block to move around the database and make sure it's really new
 	block := types.NewBlockWithHeader(&types.Header{
@@ -117,7 +117,7 @@ func TestBlockStorage(t *testing.T) {
 	if entry := GetBlock(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Non existent block returned: %v", entry)
 	}
-	if entry := GetHeader(db, block.Hash(), block.NumberU64()); entry != nil {
+	if entry := timdeader(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Non existent header returned: %v", entry)
 	}
 	if entry := GetBody(db, block.Hash(), block.NumberU64()); entry != nil {
@@ -132,7 +132,7 @@ func TestBlockStorage(t *testing.T) {
 	} else if entry.Hash() != block.Hash() {
 		t.Fatalf("Retrieved block mismatch: have %v, want %v", entry, block)
 	}
-	if entry := GetHeader(db, block.Hash(), block.NumberU64()); entry == nil {
+	if entry := timdeader(db, block.Hash(), block.NumberU64()); entry == nil {
 		t.Fatalf("Stored header not found")
 	} else if entry.Hash() != block.Header().Hash() {
 		t.Fatalf("Retrieved header mismatch: have %v, want %v", entry, block.Header())
@@ -147,7 +147,7 @@ func TestBlockStorage(t *testing.T) {
 	if entry := GetBlock(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Deleted block returned: %v", entry)
 	}
-	if entry := GetHeader(db, block.Hash(), block.NumberU64()); entry != nil {
+	if entry := timdeader(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Deleted header returned: %v", entry)
 	}
 	if entry := GetBody(db, block.Hash(), block.NumberU64()); entry != nil {
@@ -157,7 +157,7 @@ func TestBlockStorage(t *testing.T) {
 
 // Tests that partial block contents don't get reassembled into full blocks.
 func TestPartialBlockStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 	block := types.NewBlockWithHeader(&types.Header{
 		Extra:       []byte("test block"),
 		UncleHash:   types.EmptyUncleHash,
@@ -198,7 +198,7 @@ func TestPartialBlockStorage(t *testing.T) {
 
 // Tests block total difficulty storage and retrieval operations.
 func TestTdStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	// Create a test TD to move around the database and make sure it's really new
 	hash, td := common.Hash{}, big.NewInt(314)
@@ -223,7 +223,7 @@ func TestTdStorage(t *testing.T) {
 
 // Tests that canonical numbers can be mapped to hashes and retrieved.
 func TestCanonicalMappingStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	// Create a test canonical number and assinged hash to move around
 	hash, number := common.Hash{0: 0xff}, uint64(314)
@@ -248,20 +248,20 @@ func TestCanonicalMappingStorage(t *testing.T) {
 
 // Tests that head headers and head blocks can be assigned, individually.
 func TestHeadStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	blockHead := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block header")})
 	blockFull := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block full")})
 	blockFast := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block fast")})
 
 	// Check that no head entries are in a pristine database
-	if entry := GetHeadHeaderHash(db); entry != (common.Hash{}) {
+	if entry := timdeadHeaderHash(db); entry != (common.Hash{}) {
 		t.Fatalf("Non head header entry returned: %v", entry)
 	}
-	if entry := GetHeadBlockHash(db); entry != (common.Hash{}) {
+	if entry := timdeadBlockHash(db); entry != (common.Hash{}) {
 		t.Fatalf("Non head block entry returned: %v", entry)
 	}
-	if entry := GetHeadFastBlockHash(db); entry != (common.Hash{}) {
+	if entry := timdeadFastBlockHash(db); entry != (common.Hash{}) {
 		t.Fatalf("Non fast head block entry returned: %v", entry)
 	}
 	// Assign separate entries for the head header and block
@@ -275,20 +275,20 @@ func TestHeadStorage(t *testing.T) {
 		t.Fatalf("Failed to write fast head block hash: %v", err)
 	}
 	// Check that both heads are present, and different (i.e. two heads maintained)
-	if entry := GetHeadHeaderHash(db); entry != blockHead.Hash() {
+	if entry := timdeadHeaderHash(db); entry != blockHead.Hash() {
 		t.Fatalf("Head header hash mismatch: have %v, want %v", entry, blockHead.Hash())
 	}
-	if entry := GetHeadBlockHash(db); entry != blockFull.Hash() {
+	if entry := timdeadBlockHash(db); entry != blockFull.Hash() {
 		t.Fatalf("Head block hash mismatch: have %v, want %v", entry, blockFull.Hash())
 	}
-	if entry := GetHeadFastBlockHash(db); entry != blockFast.Hash() {
+	if entry := timdeadFastBlockHash(db); entry != blockFast.Hash() {
 		t.Fatalf("Fast head block hash mismatch: have %v, want %v", entry, blockFast.Hash())
 	}
 }
 
 // Tests that positional lookup metadata can be stored and retrieved.
 func TestLookupStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	tx1 := types.NewTransaction(1, common.BytesToAddress([]byte{0x11}), big.NewInt(111), big.NewInt(1111), big.NewInt(11111), []byte{0x11, 0x11, 0x11})
 	tx2 := types.NewTransaction(2, common.BytesToAddress([]byte{0x22}), big.NewInt(222), big.NewInt(2222), big.NewInt(22222), []byte{0x22, 0x22, 0x22})
@@ -333,7 +333,7 @@ func TestLookupStorage(t *testing.T) {
 
 // Tests that receipts associated with a single block can be stored and retrieved.
 func TestBlockReceiptStorage(t *testing.T) {
-	db, _ := ethdb.NewMemDatabase()
+	db, _ := timdb.NewMemDatabase()
 
 	receipt1 := &types.Receipt{
 		Status:            types.ReceiptStatusFailed,

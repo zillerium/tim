@@ -31,7 +31,7 @@ import (
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/core/vm"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/params"
@@ -57,7 +57,7 @@ type Agent interface {
 	SetReturnCh(chan<- *Result)
 	Stop()
 	Start()
-	GetHashRate() int64
+	timdashRate() int64
 }
 
 // Work is the workers current environment and holds
@@ -109,7 +109,7 @@ type worker struct {
 	eth     Backend
 	chain   *core.BlockChain
 	proc    core.Validator
-	chainDb ethdb.Database
+	chainDb timdb.Database
 
 	coinbase common.Address
 	extra    []byte

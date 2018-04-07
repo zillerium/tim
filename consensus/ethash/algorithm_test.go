@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-package ethash
+package thash
 
 import (
 	"bytes"
@@ -704,8 +704,8 @@ func TestConcurrentDiskCacheGeneration(t *testing.T) {
 		go func(idx int) {
 			defer pend.Done()
 
-			ethash := New(cachedir, 0, 1, "", 0, 0)
-			if err := ethash.VerifySeal(nil, block.Header()); err != nil {
+			thash := New(cachedir, 0, 1, "", 0, 0)
+			if err := thash.VerifySeal(nil, block.Header()); err != nil {
 				t.Errorf("proc %d: block verification failed: %v", idx, err)
 			}
 		}(i)

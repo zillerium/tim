@@ -30,7 +30,7 @@ import (
 	"github.com/tim-coin/tim/core/vm"
 	"github.com/tim-coin/tim/eth/downloader"
 	"github.com/tim-coin/tim/eth/gasprice"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/light"
 	"github.com/tim-coin/tim/params"
@@ -38,7 +38,7 @@ import (
 )
 
 type LesApiBackend struct {
-	eth *LightEthereum
+	eth *Lighttim
 	gpo *gasprice.Oracle
 }
 
@@ -60,7 +60,7 @@ func (b *LesApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNum
 		return b.eth.blockchain.CurrentHeader(), nil
 	}
 
-	return b.eth.blockchain.GetHeaderByNumberOdr(ctx, uint64(blockNr))
+	return b.eth.blockchain.timdeaderByNumberOdr(ctx, uint64(blockNr))
 }
 
 func (b *LesApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {
@@ -161,7 +161,7 @@ func (b *LesApiBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
 	return b.gpo.SuggestPrice(ctx)
 }
 
-func (b *LesApiBackend) ChainDb() ethdb.Database {
+func (b *LesApiBackend) ChainDb() timdb.Database {
 	return b.eth.chainDb
 }
 

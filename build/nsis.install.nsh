@@ -1,41 +1,41 @@
-Name "geth ${MAJORVERSION}.${MINORVERSION}.${BUILDVERSION}" # VERSION variables set through command line arguments
+Name "timd ${MAJORVERSION}.${MINORVERSION}.${BUILDVERSION}" # VERSION variables set through command line arguments
 InstallDir "$InstDir"
 OutFile "${OUTPUTFILE}" # set through command line arguments
 
 # Links for "Add/Remove Programs"
 !define HELPURL "https://github.com/tim-coin/tim/issues"
 !define UPDATEURL "https://github.com/tim-coin/tim/releases"
-!define ABOUTURL "https://github.com/tim-coin/tim#ethereum-go"
+!define ABOUTURL "https://github.com/tim-coin/tim#tim-go"
 !define /date NOW "%Y%m%d"
 
 PageEx license
   LicenseData {{.License}}
 PageExEnd
 
-# Install geth binary
-Section "Geth" GETH_IDX
+# Install timd binary
+Section "timd" timd_IDX
   SetOutPath $INSTDIR
-  file {{.Geth}}
+  file {{.timd}}
 
   # Create start menu launcher
   createDirectory "$SMPROGRAMS\${APPNAME}"
-  createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "$INSTDIR\geth.exe" "--fast" "--cache=512"
-  createShortCut "$SMPROGRAMS\${APPNAME}\Attach.lnk" "$INSTDIR\geth.exe" "attach" "" ""
+  createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "$INSTDIR\timd.exe" "--fast" "--cache=512"
+  createShortCut "$SMPROGRAMS\${APPNAME}\Attach.lnk" "$INSTDIR\timd.exe" "attach" "" ""
   createShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "" ""
 
   # Firewall - remove rules (if exists)
-  SimpleFC::AdvRemoveRule "Geth incoming peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth outgoing peers (TCP:30303)"
-  SimpleFC::AdvRemoveRule "Geth UDP discovery (UDP:30303)"
+  SimpleFC::AdvRemoveRule "timd incoming peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "timd outgoing peers (TCP:30303)"
+  SimpleFC::AdvRemoveRule "timd UDP discovery (UDP:30303)"
 
   # Firewall - add rules
-  SimpleFC::AdvAddRule "Geth incoming peers (TCP:30303)" ""  6 1 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" 30303 "" "" ""
-  SimpleFC::AdvAddRule "Geth outgoing peers (TCP:30303)" ""  6 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
-  SimpleFC::AdvAddRule "Geth UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Ethereum" "" 30303 "" ""
+  SimpleFC::AdvAddRule "timd incoming peers (TCP:30303)" ""  6 1 1 2147483647 1 "$INSTDIR\timd.exe" "" "" "tim" 30303 "" "" ""
+  SimpleFC::AdvAddRule "timd outgoing peers (TCP:30303)" ""  6 2 1 2147483647 1 "$INSTDIR\timd.exe" "" "" "tim" "" 30303 "" ""
+  SimpleFC::AdvAddRule "timd UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\timd.exe" "" "" "tim" "" 30303 "" ""
 
   # Set default IPC endpoint (https://github.com/tim-coin/EIPs/issues/147)
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\geth.ipc"
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "A" "HKLM" "\\.\pipe\geth.ipc"
+  ${EnvVarUpdate} $0 "tim_SOCKET" "R" "HKLM" "\\.\pipe\timd.ipc"
+  ${EnvVarUpdate} $0 "tim_SOCKET" "A" "HKLM" "\\.\pipe\timd.ipc"
 
   # Add instdir to PATH
   Push "$INSTDIR"
@@ -54,8 +54,8 @@ Var GetInstalledSize.total
 Function GetInstalledSize
   StrCpy $GetInstalledSize.total 0
 
-  ${if} ${SectionIsSelected} ${GETH_IDX}
-    SectionGetSize ${GETH_IDX} $0
+  ${if} ${SectionIsSelected} ${timd_IDX}
+    SectionGetSize ${timd_IDX} $0
     IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
   ${endif}
 

@@ -34,7 +34,7 @@ import (
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/vm"
 	"github.com/tim-coin/tim/core/vm/runtime"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/params"
 	cli "gopkg.in/urfave/cli.v1"
@@ -99,7 +99,7 @@ func runCmd(ctx *cli.Context) error {
 		_, statedb = gen.ToBlock()
 		chainConfig = gen.Config
 	} else {
-		db, _ := ethdb.NewMemDatabase()
+		db, _ := timdb.NewMemDatabase()
 		statedb, _ = state.New(common.Hash{}, state.NewDatabase(db))
 	}
 	if ctx.GlobalString(SenderFlag.Name) != "" {

@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package bind generates Ethereum contract Go bindings.
+// Package bind generates tim contract Go bindings.
 //
 // Detailed usage document and tutorial available on the tim Wiki page:
-// https://github.com/tim-coin/tim/wiki/Native-DApps:-Go-bindings-to-Ethereum-contracts
+// https://github.com/tim-coin/tim/wiki/Native-DApps:-Go-bindings-to-tim-contracts
 package bind
 
 import (

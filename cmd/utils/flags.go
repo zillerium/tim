@@ -33,7 +33,7 @@ import (
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/consensus"
 	"github.com/tim-coin/tim/consensus/clique"
-	"github.com/tim-coin/tim/consensus/ethash"
+	"github.com/tim-coin/tim/consensus/thash"
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/vm"
@@ -41,8 +41,8 @@ import (
 	"github.com/tim-coin/tim/eth"
 	"github.com/tim-coin/tim/eth/downloader"
 	"github.com/tim-coin/tim/eth/gasprice"
-	"github.com/tim-coin/tim/ethdb"
-	"github.com/tim-coin/tim/ethstats"
+	"github.com/tim-coin/tim/timdb"
+	"github.com/tim-coin/tim/timstats"
 	"github.com/tim-coin/tim/les"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/metrics"
@@ -183,35 +183,35 @@ var (
 		Name:  "lightkdf",
 		Usage: "Reduce key-derivation RAM & CPU usage at some expense of KDF strength",
 	}
-	// Ethash settings
-	EthashCacheDirFlag = DirectoryFlag{
-		Name:  "ethash.cachedir",
-		Usage: "Directory to store the ethash verification caches (default = inside the datadir)",
+	// thash settings
+	thashCacheDirFlag = DirectoryFlag{
+		Name:  "thash.cachedir",
+		Usage: "Directory to store the thash verification caches (default = inside the datadir)",
 	}
-	EthashCachesInMemoryFlag = cli.IntFlag{
-		Name:  "ethash.cachesinmem",
-		Usage: "Number of recent ethash caches to keep in memory (16MB each)",
-		Value: eth.DefaultConfig.EthashCachesInMem,
+	thashCachesInMemoryFlag = cli.IntFlag{
+		Name:  "thash.cachesinmem",
+		Usage: "Number of recent thash caches to keep in memory (16MB each)",
+		Value: eth.DefaultConfig.thashCachesInMem,
 	}
-	EthashCachesOnDiskFlag = cli.IntFlag{
-		Name:  "ethash.cachesondisk",
-		Usage: "Number of recent ethash caches to keep on disk (16MB each)",
-		Value: eth.DefaultConfig.EthashCachesOnDisk,
+	thashCachesOnDiskFlag = cli.IntFlag{
+		Name:  "thash.cachesondisk",
+		Usage: "Number of recent thash caches to keep on disk (16MB each)",
+		Value: eth.DefaultConfig.thashCachesOnDisk,
 	}
-	EthashDatasetDirFlag = DirectoryFlag{
-		Name:  "ethash.dagdir",
-		Usage: "Directory to store the ethash mining DAGs (default = inside home folder)",
-		Value: DirectoryString{eth.DefaultConfig.EthashDatasetDir},
+	thashDatasetDirFlag = DirectoryFlag{
+		Name:  "thash.dagdir",
+		Usage: "Directory to store the thash mining DAGs (default = inside home folder)",
+		Value: DirectoryString{eth.DefaultConfig.thashDatasetDir},
 	}
-	EthashDatasetsInMemoryFlag = cli.IntFlag{
-		Name:  "ethash.dagsinmem",
-		Usage: "Number of recent ethash mining DAGs to keep in memory (1+GB each)",
-		Value: eth.DefaultConfig.EthashDatasetsInMem,
+	thashDatasetsInMemoryFlag = cli.IntFlag{
+		Name:  "thash.dagsinmem",
+		Usage: "Number of recent thash mining DAGs to keep in memory (1+GB each)",
+		Value: eth.DefaultConfig.thashDatasetsInMem,
 	}
-	EthashDatasetsOnDiskFlag = cli.IntFlag{
-		Name:  "ethash.dagsondisk",
-		Usage: "Number of recent ethash mining DAGs to keep on disk (1+GB each)",
-		Value: eth.DefaultConfig.EthashDatasetsOnDisk,
+	thashDatasetsOnDiskFlag = cli.IntFlag{
+		Name:  "thash.dagsondisk",
+		Usage: "Number of recent thash mining DAGs to keep on disk (1+GB each)",
+		Value: eth.DefaultConfig.thashDatasetsOnDisk,
 	}
 	// Transaction pool settings
 	TxPoolNoLocalsFlag = cli.BoolFlag{
@@ -320,9 +320,9 @@ var (
 		Usage: "Record information useful for VM and contract debugging",
 	}
 	// Logging and debug settings
-	EthStatsURLFlag = cli.StringFlag{
-		Name:  "ethstats",
-		Usage: "Reporting URL of a ethstats service (nodename:secret@host:port)",
+	timstatsURLFlag = cli.StringFlag{
+		Name:  "timstats",
+		Usage: "Reporting URL of a timstats service (nodename:secret@host:port)",
 	}
 	MetricsEnabledFlag = cli.BoolFlag{
 		Name:  metrics.MetricsEnabledFlag,
@@ -691,7 +691,7 @@ func setIPC(ctx *cli.Context, cfg *node.Config) {
 }
 
 // makeDatabaseHandles raises out the number of allowed file handles per process
-// for Geth and returns half of the allowance to assign to the database.
+// for timd and returns half of the allowance to assign to the database.
 func makeDatabaseHandles() int {
 	if err := raiseFdLimit(2048); err != nil {
 		Fatalf("Failed to raise file descriptor allowance: %v", err)
@@ -882,24 +882,24 @@ func setTxPool(ctx *cli.Context, cfg *core.TxPoolConfig) {
 	}
 }
 
-func setEthash(ctx *cli.Context, cfg *eth.Config) {
-	if ctx.GlobalIsSet(EthashCacheDirFlag.Name) {
-		cfg.EthashCacheDir = ctx.GlobalString(EthashCacheDirFlag.Name)
+func setthash(ctx *cli.Context, cfg *eth.Config) {
+	if ctx.GlobalIsSet(thashCacheDirFlag.Name) {
+		cfg.thashCacheDir = ctx.GlobalString(thashCacheDirFlag.Name)
 	}
-	if ctx.GlobalIsSet(EthashDatasetDirFlag.Name) {
-		cfg.EthashDatasetDir = ctx.GlobalString(EthashDatasetDirFlag.Name)
+	if ctx.GlobalIsSet(thashDatasetDirFlag.Name) {
+		cfg.thashDatasetDir = ctx.GlobalString(thashDatasetDirFlag.Name)
 	}
-	if ctx.GlobalIsSet(EthashCachesInMemoryFlag.Name) {
-		cfg.EthashCachesInMem = ctx.GlobalInt(EthashCachesInMemoryFlag.Name)
+	if ctx.GlobalIsSet(thashCachesInMemoryFlag.Name) {
+		cfg.thashCachesInMem = ctx.GlobalInt(thashCachesInMemoryFlag.Name)
 	}
-	if ctx.GlobalIsSet(EthashCachesOnDiskFlag.Name) {
-		cfg.EthashCachesOnDisk = ctx.GlobalInt(EthashCachesOnDiskFlag.Name)
+	if ctx.GlobalIsSet(thashCachesOnDiskFlag.Name) {
+		cfg.thashCachesOnDisk = ctx.GlobalInt(thashCachesOnDiskFlag.Name)
 	}
-	if ctx.GlobalIsSet(EthashDatasetsInMemoryFlag.Name) {
-		cfg.EthashDatasetsInMem = ctx.GlobalInt(EthashDatasetsInMemoryFlag.Name)
+	if ctx.GlobalIsSet(thashDatasetsInMemoryFlag.Name) {
+		cfg.thashDatasetsInMem = ctx.GlobalInt(thashDatasetsInMemoryFlag.Name)
 	}
-	if ctx.GlobalIsSet(EthashDatasetsOnDiskFlag.Name) {
-		cfg.EthashDatasetsOnDisk = ctx.GlobalInt(EthashDatasetsOnDiskFlag.Name)
+	if ctx.GlobalIsSet(thashDatasetsOnDiskFlag.Name) {
+		cfg.thashDatasetsOnDisk = ctx.GlobalInt(thashDatasetsOnDiskFlag.Name)
 	}
 }
 
@@ -935,7 +935,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 	setEtherbase(ctx, ks, cfg)
 	setGPO(ctx, &cfg.GPO)
 	setTxPool(ctx, &cfg.TxPool)
-	setEthash(ctx, cfg)
+	setthash(ctx, cfg)
 
 	switch {
 	case ctx.GlobalIsSet(SyncModeFlag.Name):
@@ -1019,7 +1019,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 	}
 }
 
-// RegisterEthService adds an Ethereum client to the stack.
+// RegisterEthService adds an tim client to the stack.
 func RegisterEthService(stack *node.Node, cfg *eth.Config) {
 	var err error
 	if cfg.SyncMode == downloader.LightSync {
@@ -1037,7 +1037,7 @@ func RegisterEthService(stack *node.Node, cfg *eth.Config) {
 		})
 	}
 	if err != nil {
-		Fatalf("Failed to register the Ethereum service: %v", err)
+		Fatalf("Failed to register the tim service: %v", err)
 	}
 }
 
@@ -1050,20 +1050,20 @@ func RegisterShhService(stack *node.Node, cfg *whisper.Config) {
 	}
 }
 
-// RegisterEthStatsService configures the Ethereum Stats daemon and adds it to
+// RegistertimstatsService configures the tim Stats daemon and adds it to
 // th egiven node.
-func RegisterEthStatsService(stack *node.Node, url string) {
+func RegistertimstatsService(stack *node.Node, url string) {
 	if err := stack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
 		// Retrieve both eth and les services
-		var ethServ *eth.Ethereum
+		var ethServ *eth.tim
 		ctx.Service(&ethServ)
 
-		var lesServ *les.LightEthereum
+		var lesServ *les.Lighttim
 		ctx.Service(&lesServ)
 
-		return ethstats.New(url, ethServ, lesServ)
+		return timstats.New(url, ethServ, lesServ)
 	}); err != nil {
-		Fatalf("Failed to register the Ethereum Stats service: %v", err)
+		Fatalf("Failed to register the tim Stats service: %v", err)
 	}
 }
 
@@ -1074,7 +1074,7 @@ func SetupNetwork(ctx *cli.Context) {
 }
 
 // MakeChainDatabase open an LevelDB using the flags passed to the client and will hard crash if it fails.
-func MakeChainDatabase(ctx *cli.Context, stack *node.Node) ethdb.Database {
+func MakeChainDatabase(ctx *cli.Context, stack *node.Node) timdb.Database {
 	var (
 		cache   = ctx.GlobalInt(CacheFlag.Name)
 		handles = makeDatabaseHandles()
@@ -1104,7 +1104,7 @@ func MakeGenesis(ctx *cli.Context) *core.Genesis {
 }
 
 // MakeChain creates a chain manager from set command line flags.
-func MakeChain(ctx *cli.Context, stack *node.Node) (chain *core.BlockChain, chainDb ethdb.Database) {
+func MakeChain(ctx *cli.Context, stack *node.Node) (chain *core.BlockChain, chainDb timdb.Database) {
 	var err error
 	chainDb = MakeChainDatabase(ctx, stack)
 
@@ -1116,11 +1116,11 @@ func MakeChain(ctx *cli.Context, stack *node.Node) (chain *core.BlockChain, chai
 	if config.Clique != nil {
 		engine = clique.New(config.Clique, chainDb)
 	} else {
-		engine = ethash.NewFaker()
+		engine = thash.NewFaker()
 		if !ctx.GlobalBool(FakePoWFlag.Name) {
-			engine = ethash.New(
-				stack.ResolvePath(eth.DefaultConfig.EthashCacheDir), eth.DefaultConfig.EthashCachesInMem, eth.DefaultConfig.EthashCachesOnDisk,
-				stack.ResolvePath(eth.DefaultConfig.EthashDatasetDir), eth.DefaultConfig.EthashDatasetsInMem, eth.DefaultConfig.EthashDatasetsOnDisk,
+			engine = thash.New(
+				stack.ResolvePath(eth.DefaultConfig.thashCacheDir), eth.DefaultConfig.thashCachesInMem, eth.DefaultConfig.thashCachesOnDisk,
+				stack.ResolvePath(eth.DefaultConfig.thashDatasetDir), eth.DefaultConfig.thashDatasetsInMem, eth.DefaultConfig.thashDatasetsOnDisk,
 			)
 		}
 	}
@@ -1153,11 +1153,11 @@ func MakeConsolePreloads(ctx *cli.Context) []string {
 // This is a temporary function used for migrating old command/flags to the
 // new format.
 //
-// e.g. geth account new --keystore /tmp/mykeystore --lightkdf
+// e.g. timd account new --keystore /tmp/mykeystore --lightkdf
 //
 // is equivalent after calling this method with:
 //
-// geth --keystore /tmp/mykeystore --lightkdf account new
+// timd --keystore /tmp/mykeystore --lightkdf account new
 //
 // This allows the use of the existing configuration functionality.
 // When all flags are migrated this function can be removed and the existing

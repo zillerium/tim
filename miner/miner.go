@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the tim library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package miner implements Ethereum block creation and mining.
+// Package miner implements tim block creation and mining.
 package miner
 
 import (
@@ -28,7 +28,7 @@ import (
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/params"
@@ -39,7 +39,7 @@ type Backend interface {
 	AccountManager() *accounts.Manager
 	BlockChain() *core.BlockChain
 	TxPool() *core.TxPool
-	ChainDb() ethdb.Database
+	ChainDb() timdb.Database
 }
 
 // Miner creates blocks and searches for proof-of-work values.
@@ -149,7 +149,7 @@ func (self *Miner) HashRate() (tot int64) {
 	// hashrate?
 	for agent := range self.worker.agents {
 		if _, ok := agent.(*CpuAgent); !ok {
-			tot += agent.GetHashRate()
+			tot += agent.timdashRate()
 		}
 	}
 	return

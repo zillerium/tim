@@ -152,7 +152,7 @@ func (s *State) ClearHistory() {
 }
 
 // Returns the history lines starting with prefix
-func (s *State) getHistoryByPrefix(prefix string) (ph []string) {
+func (s *State) timdistoryByPrefix(prefix string) (ph []string) {
 	for _, h := range s.history {
 		if strings.HasPrefix(h, prefix) {
 			ph = append(ph, h)
@@ -162,7 +162,7 @@ func (s *State) getHistoryByPrefix(prefix string) (ph []string) {
 }
 
 // Returns the history lines matching the intelligent search
-func (s *State) getHistoryByPattern(pattern string) (ph []string, pos []int) {
+func (s *State) timdistoryByPattern(pattern string) (ph []string, pos []int) {
 	if pattern == "" {
 		return
 	}

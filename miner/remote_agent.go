@@ -25,7 +25,7 @@ import (
 
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/consensus"
-	"github.com/tim-coin/tim/consensus/ethash"
+	"github.com/tim-coin/tim/consensus/thash"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/log"
 )
@@ -94,8 +94,8 @@ func (a *RemoteAgent) Stop() {
 	close(a.workCh)
 }
 
-// GetHashRate returns the accumulated hashrate of all identifier combined
-func (a *RemoteAgent) GetHashRate() (tot int64) {
+// timdashRate returns the accumulated hashrate of all identifier combined
+func (a *RemoteAgent) timdashRate() (tot int64) {
 	a.hashrateMu.RLock()
 	defer a.hashrateMu.RUnlock()
 
@@ -116,7 +116,7 @@ func (a *RemoteAgent) GetWork() ([3]string, error) {
 		block := a.currentWork.Block
 
 		res[0] = block.HashNoNonce().Hex()
-		seedHash := ethash.SeedHash(block.NumberU64())
+		seedHash := thash.SeedHash(block.NumberU64())
 		res[1] = common.BytesToHash(seedHash).Hex()
 		// Calculate the "target" to be returned to the external miner
 		n := big.NewInt(1)

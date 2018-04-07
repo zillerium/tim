@@ -1,6 +1,6 @@
-set(LIBRARY ethash)
+set(LIBRARY thash)
 
-if (CPPETHEREUM)
+if (CPPtim)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 endif ()
 
@@ -13,7 +13,7 @@ endif()
 set(FILES 	util.h
           	io.c
           	internal.c
-          	ethash.h
+          	thash.h
           	endian.h
           	compiler.h
           	fnv.h

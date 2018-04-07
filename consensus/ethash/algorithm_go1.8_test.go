@@ -16,7 +16,7 @@
 
 // +build go1.8
 
-package ethash
+package thash
 
 import "testing"
 

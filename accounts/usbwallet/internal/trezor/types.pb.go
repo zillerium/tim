@@ -42,9 +42,9 @@ It has these top-level messages:
 	GetPublicKey
 	PublicKey
 	GetAddress
-	EthereumGetAddress
+	timGetAddress
 	Address
-	EthereumAddress
+	timAddress
 	WipeDevice
 	LoadDevice
 	ResetDevice
@@ -69,12 +69,12 @@ It has these top-level messages:
 	SimpleSignTx
 	TxRequest
 	TxAck
-	EthereumSignTx
-	EthereumTxRequest
-	EthereumTxAck
-	EthereumSignMessage
-	EthereumVerifyMessage
-	EthereumMessageSignature
+	timSignTx
+	timTxRequest
+	timTxAck
+	timSignMessage
+	timVerifyMessage
+	timMessageSignature
 	SignIdentity
 	SignedIdentity
 	GetECDHSessionKey
@@ -1097,7 +1097,7 @@ func (m *IdentityType) GetUser() string {
 	return ""
 }
 
-func (m *IdentityType) GetHost() string {
+func (m *IdentityType) timdost() string {
 	if m != nil && m.Host != nil {
 		return *m.Host
 	}

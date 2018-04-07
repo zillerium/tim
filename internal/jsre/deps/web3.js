@@ -1231,7 +1231,7 @@ SolidityParam.prototype.withOffset = function (offset) {
 };
 
 /**
- * This method should be used to combine solidity params together
+ * This method should be used to combine solidity params totimder
  * eg. when appending an array
  *
  * @method combine
@@ -1779,7 +1779,7 @@ var ETH_UNITS = [
     'ether',
     'grand',
     'Mether',
-    'Gether',
+    'timder',
     'Tether',
     'Pether',
     'Eether',
@@ -1909,7 +1909,7 @@ var unitMap = {
     'kether':       '1000000000000000000000',
     'grand':        '1000000000000000000000',
     'mether':       '1000000000000000000000000',
-    'gether':       '1000000000000000000000000000',
+    'timder':       '1000000000000000000000000000',
     'tether':       '1000000000000000000000000000000'
 };
 
@@ -2150,7 +2150,7 @@ var getValueOfUnit = function (unit) {
  * - ether      --             --
  * - kether                    --           grand
  * - mether
- * - gether
+ * - timder
  * - tether
  *
  * @method fromWei
@@ -2178,7 +2178,7 @@ var fromWei = function(number, unit) {
  * - ether      --             --
  * - kether                    --           grand
  * - mether
- * - gether
+ * - timder
  * - tether
  *
  * @method toWei
@@ -2409,7 +2409,7 @@ var isJson = function (str) {
 };
 
 /**
- * Returns true if given string is a valid Ethereum block header bloom.
+ * Returns true if given string is a valid tim block header bloom.
  *
  * @method isBloom
  * @param {String} hex encoded bloom filter
@@ -2609,7 +2609,7 @@ var properties = function () {
             inputFormatter: utils.toDecimal
         }),
         new Property({
-            name: 'version.ethereum',
+            name: 'version.tim',
             getter: 'eth_protocolVersion',
             inputFormatter: utils.toDecimal
         }),
@@ -3239,7 +3239,7 @@ SolidityEvent.prototype.signature = function () {
  * @method encode
  * @param {Object} indexed
  * @param {Object} options
- * @return {Object} everything combined together and encoded
+ * @return {Object} everything combined totimder and encoded
  */
 SolidityEvent.prototype.encode = function (indexed, options) {
     indexed = indexed || {};
@@ -4496,7 +4496,7 @@ var Iban = function (iban) {
 };
 
 /**
- * This method should be used to create iban object from ethereum address
+ * This method should be used to create iban object from tim address
  *
  * @method fromAddress
  * @param {String} address
@@ -5154,14 +5154,14 @@ var methods = function () {
         params: 3
     });
 
-    var getHex = new Method({
-        name: 'getHex',
-        call: 'db_getHex',
+    var timdex = new Method({
+        name: 'timdex',
+        call: 'db_timdex',
         params: 2
     });
 
     return [
-        putString, getString, putHex, getHex
+        putString, getString, putHex, timdex
     ];
 };
 
@@ -5713,7 +5713,7 @@ module.exports = Personal;
 */
 /** @file shh.js
  * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
+ *   Fabian Vogelsteller <fabian@tim.org>
  *   Marek Kotewicz <marek@ethcore.io>
  * @date 2017
  */
@@ -6317,7 +6317,7 @@ var errors = require('./errors');
 
 /**
  * It's responsible for passing messages to providers
- * It's also responsible for polling the ethereum node for incoming messages
+ * It's also responsible for polling the tim node for incoming messages
  * Default poll timeout is 1 second
  * Singleton
  */

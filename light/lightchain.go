@@ -27,7 +27,7 @@ import (
 	"github.com/tim-coin/tim/consensus"
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/params"
@@ -45,7 +45,7 @@ var (
 // interface. It only does header validation during chain insertion.
 type LightChain struct {
 	hc            *core.HeaderChain
-	chainDb       ethdb.Database
+	chainDb       timdb.Database
 	odr           OdrBackend
 	chainFeed     event.Feed
 	chainSideFeed event.Feed
@@ -70,7 +70,7 @@ type LightChain struct {
 }
 
 // NewLightChain returns a fully initialised light chain using information
-// available in the database. It initialises the default Ethereum header
+// available in the database. It initialises the default tim header
 // validator.
 func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.Engine) (*LightChain, error) {
 	bodyCache, _ := lru.New(bodyCacheLimit)
@@ -104,7 +104,7 @@ func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.
 	}
 	// Check the current state of the block hashes and make sure that we do not have any of the bad blocks in our chain
 	for hash := range core.BadHashes {
-		if header := bc.GetHeaderByHash(hash); header != nil {
+		if header := bc.timdeaderByHash(hash); header != nil {
 			log.Error("Found bad hash, rewinding chain", "number", header.Number, "hash", header.ParentHash)
 			bc.SetHead(header.Number.Uint64() - 1)
 			log.Error("Chain rewind was successful, resuming normal operation")
@@ -141,11 +141,11 @@ func (self *LightChain) Odr() OdrBackend {
 // loadLastState loads the last known chain state from the database. This method
 // assumes that the chain manager mutex is held.
 func (self *LightChain) loadLastState() error {
-	if head := core.GetHeadHeaderHash(self.chainDb); head == (common.Hash{}) {
+	if head := core.timdeadHeaderHash(self.chainDb); head == (common.Hash{}) {
 		// Corrupt or empty database, init from scratch
 		self.Reset()
 	} else {
-		if header := self.GetHeaderByHash(head); header != nil {
+		if header := self.timdeaderByHash(head); header != nil {
 			self.hc.SetCurrentHeader(header)
 		}
 	}
@@ -326,7 +326,7 @@ func (self *LightChain) Rollback(chain []common.Hash) {
 		hash := chain[i]
 
 		if head := self.hc.CurrentHeader(); head.Hash() == hash {
-			self.hc.SetCurrentHeader(self.GetHeader(head.ParentHash, head.Number.Uint64()-1))
+			self.hc.SetCurrentHeader(self.timdeader(head.ParentHash, head.Number.Uint64()-1))
 		}
 	}
 }
@@ -418,16 +418,16 @@ func (self *LightChain) GetTdByHash(hash common.Hash) *big.Int {
 	return self.hc.GetTdByHash(hash)
 }
 
-// GetHeader retrieves a block header from the database by hash and number,
+// timdeader retrieves a block header from the database by hash and number,
 // caching it if found.
-func (self *LightChain) GetHeader(hash common.Hash, number uint64) *types.Header {
-	return self.hc.GetHeader(hash, number)
+func (self *LightChain) timdeader(hash common.Hash, number uint64) *types.Header {
+	return self.hc.timdeader(hash, number)
 }
 
-// GetHeaderByHash retrieves a block header from the database by hash, caching it if
+// timdeaderByHash retrieves a block header from the database by hash, caching it if
 // found.
-func (self *LightChain) GetHeaderByHash(hash common.Hash) *types.Header {
-	return self.hc.GetHeaderByHash(hash)
+func (self *LightChain) timdeaderByHash(hash common.Hash) *types.Header {
+	return self.hc.timdeaderByHash(hash)
 }
 
 // HasHeader checks if a block header is present in the database or not, caching
@@ -442,19 +442,19 @@ func (self *LightChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []c
 	return self.hc.GetBlockHashesFromHash(hash, max)
 }
 
-// GetHeaderByNumber retrieves a block header from the database by number,
+// timdeaderByNumber retrieves a block header from the database by number,
 // caching it (associated with its hash) if found.
-func (self *LightChain) GetHeaderByNumber(number uint64) *types.Header {
-	return self.hc.GetHeaderByNumber(number)
+func (self *LightChain) timdeaderByNumber(number uint64) *types.Header {
+	return self.hc.timdeaderByNumber(number)
 }
 
-// GetHeaderByNumberOdr retrieves a block header from the database or network
+// timdeaderByNumberOdr retrieves a block header from the database or network
 // by number, caching it (associated with its hash) if found.
-func (self *LightChain) GetHeaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) {
-	if header := self.hc.GetHeaderByNumber(number); header != nil {
+func (self *LightChain) timdeaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) {
+	if header := self.hc.timdeaderByNumber(number); header != nil {
 		return header, nil
 	}
-	return GetHeaderByNumber(ctx, self.odr, number)
+	return timdeaderByNumber(ctx, self.odr, number)
 }
 
 func (self *LightChain) SyncCht(ctx context.Context) bool {
@@ -465,7 +465,7 @@ func (self *LightChain) SyncCht(ctx context.Context) bool {
 	chtCount, _, _ := self.odr.ChtIndexer().Sections()
 	if headNum+1 < chtCount*ChtFrequency {
 		num := chtCount*ChtFrequency - 1
-		header, err := GetHeaderByNumber(ctx, self.odr, num)
+		header, err := timdeaderByNumber(ctx, self.odr, num)
 		if header != nil && err == nil {
 			self.mu.Lock()
 			if self.hc.CurrentHeader().Number.Uint64() < header.Number.Uint64() {

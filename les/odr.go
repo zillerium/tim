@@ -20,20 +20,20 @@ import (
 	"context"
 
 	"github.com/tim-coin/tim/core"
-	"github.com/tim-coin/tim/ethdb"
+	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/light"
 	"github.com/tim-coin/tim/log"
 )
 
 // LesOdr implements light.OdrBackend
 type LesOdr struct {
-	db                                   ethdb.Database
+	db                                   timdb.Database
 	chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer
 	retriever                            *retrieveManager
 	stop                                 chan struct{}
 }
 
-func NewLesOdr(db ethdb.Database, chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer, retriever *retrieveManager) *LesOdr {
+func NewLesOdr(db timdb.Database, chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer, retriever *retrieveManager) *LesOdr {
 	return &LesOdr{
 		db:           db,
 		chtIndexer:   chtIndexer,
@@ -50,7 +50,7 @@ func (odr *LesOdr) Stop() {
 }
 
 // Database returns the backing database
-func (odr *LesOdr) Database() ethdb.Database {
+func (odr *LesOdr) Database() timdb.Database {
 	return odr.db
 }
 

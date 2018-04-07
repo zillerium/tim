@@ -611,10 +611,10 @@ func (n *Node) Ref() int32 {
 	return atomic.LoadInt32(&n.ref)
 }
 
-// GetHandle returns an handle for this 'cache node'.
-func (n *Node) GetHandle() *Handle {
+// timdandle returns an handle for this 'cache node'.
+func (n *Node) timdandle() *Handle {
 	if atomic.AddInt32(&n.ref, 1) <= 1 {
-		panic("BUG: Node.GetHandle on zero ref")
+		panic("BUG: Node.timdandle on zero ref")
 	}
 	return &Handle{unsafe.Pointer(n)}
 }

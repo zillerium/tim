@@ -16,7 +16,7 @@
 
 // Contains all the wrappers from the core/types package.
 
-package geth
+package timd
 
 import (
 	"encoding/json"
@@ -39,8 +39,8 @@ func (n *Nonce) GetBytes() []byte {
 	return n.nonce[:]
 }
 
-// GetHex retrieves the hex string representation of the block nonce.
-func (n *Nonce) GetHex() string {
+// timdex retrieves the hex string representation of the block nonce.
+func (n *Nonce) timdex() string {
 	return fmt.Sprintf("0x%x", n.nonce[:])
 }
 
@@ -54,12 +54,12 @@ func (b *Bloom) GetBytes() []byte {
 	return b.bloom[:]
 }
 
-// GetHex retrieves the hex string representation of the bloom filter.
-func (b *Bloom) GetHex() string {
+// timdex retrieves the hex string representation of the bloom filter.
+func (b *Bloom) timdex() string {
 	return fmt.Sprintf("0x%x", b.bloom[:])
 }
 
-// Header represents a block header in the Ethereum blockchain.
+// Header represents a block header in the tim blockchain.
 type Header struct {
 	header *types.Header
 }
@@ -118,7 +118,7 @@ func (h *Header) GetTime() int64         { return h.header.Time.Int64() }
 func (h *Header) GetExtra() []byte       { return h.header.Extra }
 func (h *Header) GetMixDigest() *Hash    { return &Hash{h.header.MixDigest} }
 func (h *Header) GetNonce() *Nonce       { return &Nonce{h.header.Nonce} }
-func (h *Header) GetHash() *Hash         { return &Hash{h.header.Hash()} }
+func (h *Header) timdash() *Hash         { return &Hash{h.header.Hash()} }
 
 // Headers represents a slice of headers.
 type Headers struct{ headers []*types.Header }
@@ -136,7 +136,7 @@ func (h *Headers) Get(index int) (header *Header, _ error) {
 	return &Header{h.headers[index]}, nil
 }
 
-// Block represents an entire block in the Ethereum blockchain.
+// Block represents an entire block in the tim blockchain.
 type Block struct {
 	block *types.Block
 }
@@ -196,17 +196,17 @@ func (b *Block) GetExtra() []byte       { return b.block.Extra() }
 func (b *Block) GetMixDigest() *Hash    { return &Hash{b.block.MixDigest()} }
 func (b *Block) GetNonce() int64        { return int64(b.block.Nonce()) }
 
-func (b *Block) GetHash() *Hash        { return &Hash{b.block.Hash()} }
-func (b *Block) GetHashNoNonce() *Hash { return &Hash{b.block.HashNoNonce()} }
+func (b *Block) timdash() *Hash        { return &Hash{b.block.Hash()} }
+func (b *Block) timdashNoNonce() *Hash { return &Hash{b.block.HashNoNonce()} }
 
-func (b *Block) GetHeader() *Header             { return &Header{b.block.Header()} }
+func (b *Block) timdeader() *Header             { return &Header{b.block.Header()} }
 func (b *Block) GetUncles() *Headers            { return &Headers{b.block.Uncles()} }
 func (b *Block) GetTransactions() *Transactions { return &Transactions{b.block.Transactions()} }
 func (b *Block) GetTransaction(hash *Hash) *Transaction {
 	return &Transaction{b.block.Transaction(hash.hash)}
 }
 
-// Transaction represents a single Ethereum transaction.
+// Transaction represents a single tim transaction.
 type Transaction struct {
 	tx *types.Transaction
 }
@@ -261,13 +261,13 @@ func (tx *Transaction) GetGasPrice() *BigInt { return &BigInt{tx.tx.GasPrice()} 
 func (tx *Transaction) GetValue() *BigInt    { return &BigInt{tx.tx.Value()} }
 func (tx *Transaction) GetNonce() int64      { return int64(tx.tx.Nonce()) }
 
-func (tx *Transaction) GetHash() *Hash   { return &Hash{tx.tx.Hash()} }
+func (tx *Transaction) timdash() *Hash   { return &Hash{tx.tx.Hash()} }
 func (tx *Transaction) GetCost() *BigInt { return &BigInt{tx.tx.Cost()} }
 
 // Deprecated: GetSigHash cannot know which signer to use.
 func (tx *Transaction) GetSigHash() *Hash { return &Hash{types.HomesteadSigner{}.Hash(tx.tx)} }
 
-// Deprecated: use EthereumClient.TransactionSender
+// Deprecated: use timClient.TransactionSender
 func (tx *Transaction) GetFrom(chainID *BigInt) (address *Address, _ error) {
 	var signer types.Signer = types.HomesteadSigner{}
 	if chainID != nil {

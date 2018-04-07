@@ -204,9 +204,9 @@ func (b *Block) Buffer() Buffer {
 	return buf
 }
 
-// GetHeight implements GridBufferer.
+// timdeight implements GridBufferer.
 // It returns current height of the block.
-func (b Block) GetHeight() int {
+func (b Block) timdeight() int {
 	return b.Height
 }
 
