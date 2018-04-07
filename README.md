@@ -5,7 +5,7 @@ Official golang implementation of the Ethereum protocol.
 [![API Reference](
 https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667
 )](https://godoc.org/github.com/tim-coin/tim)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/go-ethereum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/tim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Automated builds are available for stable releases and the unstable master branch.
 Binary archives are published at https://geth.ethereum.org/downloads/.
@@ -28,7 +28,7 @@ or, to build the full suite of utilities:
 
 ## Executables
 
-The go-ethereum project comes with several wrappers/executables found in the `cmd` directory.
+The tim project comes with several wrappers/executables found in the `cmd` directory.
 
 | Command    | Description |
 |:----------:|-------------|
@@ -275,9 +275,9 @@ limit blocks converge to (`--targetgaslimit`) and the price transactions are acc
 Thank you for considering to help out with the source code! We welcome contributions from
 anyone on the internet, and are grateful for even the smallest of fixes!
 
-If you'd like to contribute to go-ethereum, please fork, fix, commit and send a pull request
+If you'd like to contribute to tim, please fork, fix, commit and send a pull request
 for the maintainers to review and merge into the main code base. If you wish to submit more
-complex changes though, please check up with the core devs first on [our gitter channel](https://gitter.im/ethereum/go-ethereum)
+complex changes though, please check up with the core devs first on [our gitter channel](https://gitter.im/ethereum/tim)
 to ensure those changes are in line with the general philosophy of the project and/or get some
 early feedback which can make both your efforts much lighter as well as our review and merge
 procedures quick and simple.
@@ -295,10 +295,10 @@ for more details on configuring your environment, managing project dependencies 
 
 ## License
 
-The go-ethereum library (i.e. all code outside of the `cmd` directory) is licensed under the
+The tim library (i.e. all code outside of the `cmd` directory) is licensed under the
 [GNU Lesser General Public License v3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html), also
 included in our repository in the `COPYING.LESSER` file.
 
-The go-ethereum binaries (i.e. all code inside of the `cmd` directory) is licensed under the
+The tim binaries (i.e. all code inside of the `cmd` directory) is licensed under the
 [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html), also included
 in our repository in the `COPYING` file.
