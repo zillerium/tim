@@ -5,7 +5,7 @@ Official golang implementation of the tim protocol.
 [![API Reference](
 https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667
 )](https://godoc.org/github.com/tim-coin/tim)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tim/tim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tim-coin/tim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Automated builds are available for stable releases and the unstable master branch.
 Binary archives are published at https://timd.tim.org/downloads/.
@@ -277,7 +277,7 @@ anyone on the internet, and are grateful for even the smallest of fixes!
 
 If you'd like to contribute to tim, please fork, fix, commit and send a pull request
 for the maintainers to review and merge into the main code base. If you wish to submit more
-complex changes though, please check up with the core devs first on [our gitter channel](https://gitter.im/tim/tim)
+complex changes though, please check up with the core devs first on [our gitter channel](https://gitter.im/tim-coin/tim)
 to ensure those changes are in line with the general philosophy of the project and/or get some
 early feedback which can make both your efforts much lighter as well as our review and merge
 procedures quick and simple.
