@@ -1,4 +1,4 @@
-## Go tim
+## TIM - Golang
 
 Official golang implementation of the tim protocol.
 
