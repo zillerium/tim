@@ -28,7 +28,7 @@ import (
 	"github.com/tim-coin/tim/contracts/chequebook"
 	"github.com/tim-coin/tim/contracts/ens"
 	"github.com/tim-coin/tim/crypto"
-	"github.com/tim-coin/tim/ethclient"
+	"github.com/tim-coin/tim/timclient"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/node"
 	"github.com/tim-coin/tim/p2p"

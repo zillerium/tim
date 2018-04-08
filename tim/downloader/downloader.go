@@ -158,8 +158,8 @@ type LightChain interface {
 	// HasHeader verifies a header's presence in the local chain.
 	HasHeader(h common.Hash, number uint64) bool
 
-	// timdeaderByHash retrieves a header from the local chain.
-	timdeaderByHash(common.Hash) *types.Header
+	// timheaderByHash retrieves a header from the local chain.
+	timheaderByHash(common.Hash) *types.Header
 
 	// CurrentHeader retrieves the head header from the local chain.
 	CurrentHeader() *types.Header
@@ -735,7 +735,7 @@ func (d *Downloader) findAncestor(p *peerConnection, height uint64) (uint64, err
 					end = check
 					break
 				}
-				header := d.lightchain.timdeaderByHash(headers[0].Hash()) // Independent of sync mode, header surely exists
+				header := d.lightchain.timheaderByHash(headers[0].Hash()) // Independent of sync mode, header surely exists
 				if header.Number.Uint64() != check {
 					p.log.Debug("Received non requested header", "number", header.Number, "hash", header.Hash(), "request", check)
 					return 0, errBadPeer
@@ -781,7 +781,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 	defer timeout.Stop()
 
 	var ttl time.Duration
-	timdeaders := func(from uint64) {
+	timheaders := func(from uint64) {
 		request = time.Now()
 
 		ttl = d.requestTTL()
@@ -796,7 +796,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 		}
 	}
 	// Start pulling the header chain skeleton until all is done
-	timdeaders(from)
+	timheaders(from)
 
 	for {
 		select {
@@ -815,7 +815,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 			// If the skeleton's finished, pull any remaining head headers directly from the origin
 			if packet.Items() == 0 && skeleton {
 				skeleton = false
-				timdeaders(from)
+				timheaders(from)
 				continue
 			}
 			// If no more headers are inbound, notify the content fetchers and return
@@ -850,7 +850,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 				}
 				from += uint64(len(headers))
 			}
-			timdeaders(from)
+			timheaders(from)
 
 		case <-timeout.C:
 			// Header retrieval timed out, consider the peer bad and drop

@@ -28,8 +28,8 @@ import (
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/core/vm"
-	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/eth/gasprice"
+	"github.com/tim-coin/tim/tim/downloader"
+	"github.com/tim-coin/tim/tim/gasprice"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/params"
@@ -65,7 +65,7 @@ func (b *EthApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNum
 	if blockNr == rpc.LatestBlockNumber {
 		return b.eth.blockchain.CurrentBlock().Header(), nil
 	}
-	return b.eth.blockchain.timdeaderByNumber(uint64(blockNr)), nil
+	return b.eth.blockchain.timheaderByNumber(uint64(blockNr)), nil
 }
 
 func (b *EthApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {

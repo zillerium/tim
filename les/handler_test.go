@@ -27,7 +27,7 @@ import (
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/crypto"
-	"github.com/tim-coin/tim/eth/downloader"
+	"github.com/tim-coin/tim/tim/downloader"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/light"
 	"github.com/tim-coin/tim/p2p"
@@ -181,7 +181,7 @@ func testGetBlockHeaders(t *testing.T, protocol int) {
 		// Collect the headers to expect in the response
 		headers := []*types.Header{}
 		for _, hash := range tt.expect {
-			headers = append(headers, bc.timdeaderByHash(hash))
+			headers = append(headers, bc.timheaderByHash(hash))
 		}
 		// Send the hash request and verify the response
 		reqID++
@@ -288,7 +288,7 @@ func testGetCode(t *testing.T, protocol int) {
 	var codes [][]byte
 
 	for i := uint64(0); i <= bc.CurrentBlock().NumberU64(); i++ {
-		header := bc.timdeaderByNumber(i)
+		header := bc.timheaderByNumber(i)
 		req := &CodeReq{
 			BHash:  header.Hash(),
 			AccKey: crypto.Keccak256(testContractAddr[:]),
@@ -356,7 +356,7 @@ func testGetProofs(t *testing.T, protocol int) {
 
 	accounts := []common.Address{testBankAddress, acc1Addr, acc2Addr, {}}
 	for i := uint64(0); i <= bc.CurrentBlock().NumberU64(); i++ {
-		header := bc.timdeaderByNumber(i)
+		header := bc.timheaderByNumber(i)
 		root := header.Root
 		trie, _ := trie.New(root, db)
 

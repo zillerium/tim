@@ -146,17 +146,17 @@ func timdeadFastBlockHash(db DatabaseReader) common.Hash {
 	return common.BytesToHash(data)
 }
 
-// timdeaderRLP retrieves a block header in its raw RLP database encoding, or nil
+// timheaderRLP retrieves a block header in its raw RLP database encoding, or nil
 // if the header's not found.
-func timdeaderRLP(db DatabaseReader, hash common.Hash, number uint64) rlp.RawValue {
+func timheaderRLP(db DatabaseReader, hash common.Hash, number uint64) rlp.RawValue {
 	data, _ := db.Get(headerKey(hash, number))
 	return data
 }
 
-// timdeader retrieves the block header corresponding to the hash, nil if none
+// timheader retrieves the block header corresponding to the hash, nil if none
 // found.
-func timdeader(db DatabaseReader, hash common.Hash, number uint64) *types.Header {
-	data := timdeaderRLP(db, hash, number)
+func timheader(db DatabaseReader, hash common.Hash, number uint64) *types.Header {
+	data := timheaderRLP(db, hash, number)
 	if len(data) == 0 {
 		return nil
 	}
@@ -220,7 +220,7 @@ func GetTd(db DatabaseReader, hash common.Hash, number uint64) *big.Int {
 // canonical hash can be stored in the database but the body data not (yet).
 func GetBlock(db DatabaseReader, hash common.Hash, number uint64) *types.Block {
 	// Retrieve the block header and body contents
-	header := timdeader(db, hash, number)
+	header := timheader(db, hash, number)
 	if header == nil {
 		return nil
 	}
@@ -607,23 +607,23 @@ func GetChainConfig(db DatabaseReader, hash common.Hash) (*params.ChainConfig, e
 // FindCommonAncestor returns the last common ancestor of two block headers
 func FindCommonAncestor(db DatabaseReader, a, b *types.Header) *types.Header {
 	for bn := b.Number.Uint64(); a.Number.Uint64() > bn; {
-		a = timdeader(db, a.ParentHash, a.Number.Uint64()-1)
+		a = timheader(db, a.ParentHash, a.Number.Uint64()-1)
 		if a == nil {
 			return nil
 		}
 	}
 	for an := a.Number.Uint64(); an < b.Number.Uint64(); {
-		b = timdeader(db, b.ParentHash, b.Number.Uint64()-1)
+		b = timheader(db, b.ParentHash, b.Number.Uint64()-1)
 		if b == nil {
 			return nil
 		}
 	}
 	for a.Hash() != b.Hash() {
-		a = timdeader(db, a.ParentHash, a.Number.Uint64()-1)
+		a = timheader(db, a.ParentHash, a.Number.Uint64()-1)
 		if a == nil {
 			return nil
 		}
-		b = timdeader(db, b.ParentHash, b.Number.Uint64()-1)
+		b = timheader(db, b.ParentHash, b.Number.Uint64()-1)
 		if b == nil {
 			return nil
 		}

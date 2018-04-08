@@ -69,8 +69,8 @@ func testFork(t *testing.T, blockchain *BlockChain, i, n int, full bool, compara
 		hash1 = blockchain.GetBlockByNumber(uint64(i)).Hash()
 		hash2 = blockchain2.GetBlockByNumber(uint64(i)).Hash()
 	} else {
-		hash1 = blockchain.timdeaderByNumber(uint64(i)).Hash()
-		hash2 = blockchain2.timdeaderByNumber(uint64(i)).Hash()
+		hash1 = blockchain.timheaderByNumber(uint64(i)).Hash()
+		hash2 = blockchain2.timheaderByNumber(uint64(i)).Hash()
 	}
 	if hash1 != hash2 {
 		t.Errorf("chain content mismatch at %d: have hash %v, want hash %v", i, hash2, hash1)
@@ -419,7 +419,7 @@ func testReorg(t *testing.T, first, second []int, td int64, full bool) {
 		}
 	} else {
 		prev := bc.CurrentHeader()
-		for header := bc.timdeaderByNumber(bc.CurrentHeader().Number.Uint64() - 1); header.Number.Uint64() != 0; prev, header = header, bc.timdeaderByNumber(header.Number.Uint64()-1) {
+		for header := bc.timheaderByNumber(bc.CurrentHeader().Number.Uint64() - 1); header.Number.Uint64() != 0; prev, header = header, bc.timheaderByNumber(header.Number.Uint64()-1) {
 			if prev.ParentHash != header.Hash() {
 				t.Errorf("parent header hash mismatch: have %x, want %x", prev.ParentHash, header.Hash())
 			}
@@ -564,7 +564,7 @@ func testInsertNonceError(t *testing.T, full bool) {
 					t.Errorf("test %d: invalid block in chain: %v", i, block)
 				}
 			} else {
-				if header := blockchain.timdeaderByNumber(failNum + uint64(j)); header != nil {
+				if header := blockchain.timheaderByNumber(failNum + uint64(j)); header != nil {
 					t.Errorf("test %d: invalid header in chain: %v", i, header)
 				}
 			}
@@ -638,7 +638,7 @@ func TestFastVsFullChains(t *testing.T) {
 		if ftd, atd := fast.GetTdByHash(hash), archive.GetTdByHash(hash); ftd.Cmp(atd) != 0 {
 			t.Errorf("block #%d [%x]: td mismatch: have %v, want %v", num, hash, ftd, atd)
 		}
-		if fheader, aheader := fast.timdeaderByHash(hash), archive.timdeaderByHash(hash); fheader.Hash() != aheader.Hash() {
+		if fheader, aheader := fast.timheaderByHash(hash), archive.timheaderByHash(hash); fheader.Hash() != aheader.Hash() {
 			t.Errorf("block #%d [%x]: header mismatch: have %v, want %v", num, hash, fheader, aheader)
 		}
 		if fblock, ablock := fast.GetBlockByHash(hash), archive.GetBlockByHash(hash); fblock.Hash() != ablock.Hash() {

@@ -31,8 +31,8 @@ type ChainContext interface {
 	// Engine retrieves the chain's consensus engine.
 	Engine() consensus.Engine
 
-	// timdeader returns the hash corresponding to their hash.
-	timdeader(common.Hash, uint64) *types.Header
+	// timheader returns the hash corresponding to their hash.
+	timheader(common.Hash, uint64) *types.Header
 }
 
 // NewEVMContext creates a new context for use in the EVM.
@@ -61,7 +61,7 @@ func NewEVMContext(msg Message, header *types.Header, chain ChainContext, author
 // timdashFn returns a timdashFunc which retrieves header hashes by number
 func timdashFn(ref *types.Header, chain ChainContext) func(n uint64) common.Hash {
 	return func(n uint64) common.Hash {
-		for header := chain.timdeader(ref.ParentHash, ref.Number.Uint64()-1); header != nil; header = chain.timdeader(header.ParentHash, header.Number.Uint64()-1) {
+		for header := chain.timheader(ref.ParentHash, ref.Number.Uint64()-1); header != nil; header = chain.timheader(header.ParentHash, header.Number.Uint64()-1) {
 			if header.Number.Uint64() == n {
 				return header.Hash()
 			}

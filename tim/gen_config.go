@@ -8,8 +8,8 @@ import (
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/common/hexutil"
 	"github.com/tim-coin/tim/core"
-	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/eth/gasprice"
+	"github.com/tim-coin/tim/tim/downloader"
+	"github.com/tim-coin/tim/tim/gasprice"
 )
 
 func (c Config) MarshalTOML() (interface{}, error) {

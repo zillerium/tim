@@ -156,9 +156,9 @@ func NewBlockChain(chainDb timdb.Database, config *params.ChainConfig, engine co
 	}
 	// Check the current state of the block hashes and make sure that we do not have any of the bad blocks in our chain
 	for hash := range BadHashes {
-		if header := bc.timdeaderByHash(hash); header != nil {
+		if header := bc.timheaderByHash(hash); header != nil {
 			// get the canonical block corresponding to the offending header's number
-			headerByNumber := bc.timdeaderByNumber(header.Number.Uint64())
+			headerByNumber := bc.timheaderByNumber(header.Number.Uint64())
 			// make sure the headerByNumber (if present) is in our current canonical chain
 			if headerByNumber != nil && headerByNumber.Hash() == header.Hash() {
 				log.Error("Found bad hash, rewinding chain", "number", header.Number, "hash", header.ParentHash)
@@ -205,7 +205,7 @@ func (bc *BlockChain) loadLastState() error {
 	// Restore the last known head header
 	currentHeader := bc.currentBlock.Header()
 	if head := timdeadHeaderHash(bc.chainDb); head != (common.Hash{}) {
-		if header := bc.timdeaderByHash(head); header != nil {
+		if header := bc.timheaderByHash(head); header != nil {
 			currentHeader = header
 		}
 	}
@@ -646,7 +646,7 @@ func (bc *BlockChain) Rollback(chain []common.Hash) {
 
 		currentHeader := bc.hc.CurrentHeader()
 		if currentHeader.Hash() == hash {
-			bc.hc.SetCurrentHeader(bc.timdeader(currentHeader.ParentHash, currentHeader.Number.Uint64()-1))
+			bc.hc.SetCurrentHeader(bc.timheader(currentHeader.ParentHash, currentHeader.Number.Uint64()-1))
 		}
 		if bc.currentFastBlock.Hash() == hash {
 			bc.currentFastBlock = bc.GetBlock(bc.currentFastBlock.ParentHash(), bc.currentFastBlock.NumberU64()-1)
@@ -1319,16 +1319,16 @@ func (bc *BlockChain) GetTdByHash(hash common.Hash) *big.Int {
 	return bc.hc.GetTdByHash(hash)
 }
 
-// timdeader retrieves a block header from the database by hash and number,
+// timheader retrieves a block header from the database by hash and number,
 // caching it if found.
-func (bc *BlockChain) timdeader(hash common.Hash, number uint64) *types.Header {
-	return bc.hc.timdeader(hash, number)
+func (bc *BlockChain) timheader(hash common.Hash, number uint64) *types.Header {
+	return bc.hc.timheader(hash, number)
 }
 
-// timdeaderByHash retrieves a block header from the database by hash, caching it if
+// timheaderByHash retrieves a block header from the database by hash, caching it if
 // found.
-func (bc *BlockChain) timdeaderByHash(hash common.Hash) *types.Header {
-	return bc.hc.timdeaderByHash(hash)
+func (bc *BlockChain) timheaderByHash(hash common.Hash) *types.Header {
+	return bc.hc.timheaderByHash(hash)
 }
 
 // HasHeader checks if a block header is present in the database or not, caching
@@ -1343,10 +1343,10 @@ func (bc *BlockChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []com
 	return bc.hc.GetBlockHashesFromHash(hash, max)
 }
 
-// timdeaderByNumber retrieves a block header from the database by number,
+// timheaderByNumber retrieves a block header from the database by number,
 // caching it (associated with its hash) if found.
-func (bc *BlockChain) timdeaderByNumber(number uint64) *types.Header {
-	return bc.hc.timdeaderByNumber(number)
+func (bc *BlockChain) timheaderByNumber(number uint64) *types.Header {
+	return bc.hc.timheaderByNumber(number)
 }
 
 // Config retrieves the blockchain's chain configuration.

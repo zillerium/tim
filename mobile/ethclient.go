@@ -22,7 +22,7 @@ import (
 	"math/big"
 
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/ethclient"
+	"github.com/tim-coin/tim/timclient"
 )
 
 // timClient provides access to the tim APIs.
@@ -53,15 +53,15 @@ func (ec *timClient) GetBlockByNumber(ctx *Context, number int64) (block *Block,
 	return &Block{rawBlock}, err
 }
 
-// timdeaderByHash returns the block header with the given hash.
-func (ec *timClient) timdeaderByHash(ctx *Context, hash *Hash) (header *Header, _ error) {
+// timheaderByHash returns the block header with the given hash.
+func (ec *timClient) timheaderByHash(ctx *Context, hash *Hash) (header *Header, _ error) {
 	rawHeader, err := ec.client.HeaderByHash(ctx.context, hash.hash)
 	return &Header{rawHeader}, err
 }
 
-// timdeaderByNumber returns a block header from the current canonical chain. If number is <0,
+// timheaderByNumber returns a block header from the current canonical chain. If number is <0,
 // the latest known header is returned.
-func (ec *timClient) timdeaderByNumber(ctx *Context, number int64) (header *Header, _ error) {
+func (ec *timClient) timheaderByNumber(ctx *Context, number int64) (header *Header, _ error) {
 	if number < 0 {
 		rawHeader, err := ec.client.HeaderByNumber(ctx.context, nil)
 		return &Header{rawHeader}, err

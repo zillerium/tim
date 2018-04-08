@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"github.com/tim-coin/tim/core"
-	"github.com/tim-coin/tim/eth/downloader"
+	"github.com/tim-coin/tim/tim/downloader"
 	"github.com/tim-coin/tim/light"
 )
 

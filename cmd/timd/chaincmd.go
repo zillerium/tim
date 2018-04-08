@@ -31,7 +31,7 @@ import (
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/eth/downloader"
+	"github.com/tim-coin/tim/tim/downloader"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/log"

@@ -28,7 +28,7 @@ import (
 
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/core"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/internal/jsre"
 	"github.com/tim-coin/tim/node"
 )

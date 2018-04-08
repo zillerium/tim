@@ -28,8 +28,8 @@ import (
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/core/vm"
-	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/eth/gasprice"
+	"github.com/tim-coin/tim/tim/downloader"
+	"github.com/tim-coin/tim/tim/gasprice"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/light"
@@ -60,7 +60,7 @@ func (b *LesApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNum
 		return b.eth.blockchain.CurrentHeader(), nil
 	}
 
-	return b.eth.blockchain.timdeaderByNumberOdr(ctx, uint64(blockNr))
+	return b.eth.blockchain.timheaderByNumberOdr(ctx, uint64(blockNr))
 }
 
 func (b *LesApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {

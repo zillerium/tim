@@ -27,7 +27,7 @@ import (
 
 	"github.com/tim-coin/tim/accounts/abi/bind"
 	"github.com/tim-coin/tim/common"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/internal/ethapi"
 	"github.com/tim-coin/tim/les"
 	"github.com/tim-coin/tim/log"

@@ -38,7 +38,7 @@ import (
 	"github.com/tim-coin/tim/console"
 	"github.com/tim-coin/tim/contracts/ens"
 	"github.com/tim-coin/tim/crypto"
-	"github.com/tim-coin/tim/ethclient"
+	"github.com/tim-coin/tim/timclient"
 	"github.com/tim-coin/tim/internal/debug"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/node"

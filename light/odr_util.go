@@ -29,12 +29,12 @@ import (
 
 var sha3_nil = crypto.Keccak256Hash(nil)
 
-func timdeaderByNumber(ctx context.Context, odr OdrBackend, number uint64) (*types.Header, error) {
+func timheaderByNumber(ctx context.Context, odr OdrBackend, number uint64) (*types.Header, error) {
 	db := odr.Database()
 	hash := core.GetCanonicalHash(db, number)
 	if (hash != common.Hash{}) {
 		// if there is a canonical hash, there is a header too
-		header := core.timdeader(db, hash, number)
+		header := core.timheader(db, hash, number)
 		if header == nil {
 			panic("Canonical hash present but header not found")
 		}
@@ -76,7 +76,7 @@ func GetCanonicalHash(ctx context.Context, odr OdrBackend, number uint64) (commo
 	if (hash != common.Hash{}) {
 		return hash, nil
 	}
-	header, err := timdeaderByNumber(ctx, odr, number)
+	header, err := timheaderByNumber(ctx, odr, number)
 	if header != nil {
 		return header.Hash(), nil
 	}
@@ -114,7 +114,7 @@ func GetBody(ctx context.Context, odr OdrBackend, hash common.Hash, number uint6
 // back from the stored header and body.
 func GetBlock(ctx context.Context, odr OdrBackend, hash common.Hash, number uint64) (*types.Block, error) {
 	// Retrieve the block header and body contents
-	header := core.timdeader(odr.Database(), hash, number)
+	header := core.timheader(odr.Database(), hash, number)
 	if header == nil {
 		return nil, ErrNoHeader
 	}

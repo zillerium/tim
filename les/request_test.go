@@ -24,7 +24,7 @@ import (
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/crypto"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/light"
 )
@@ -58,7 +58,7 @@ func TestTrieEntryAccessLes1(t *testing.T) { testAccess(t, 1, tfTrieEntryAccess)
 func TestTrieEntryAccessLes2(t *testing.T) { testAccess(t, 2, tfTrieEntryAccess) }
 
 func tfTrieEntryAccess(db timdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
-	return &light.TrieRequest{Id: light.StateTrieID(core.timdeader(db, bhash, core.GetBlockNumber(db, bhash))), Key: testBankSecureTrieKey}
+	return &light.TrieRequest{Id: light.StateTrieID(core.timheader(db, bhash, core.GetBlockNumber(db, bhash))), Key: testBankSecureTrieKey}
 }
 
 func TestCodeAccessLes1(t *testing.T) { testAccess(t, 1, tfCodeAccess) }
@@ -66,7 +66,7 @@ func TestCodeAccessLes1(t *testing.T) { testAccess(t, 1, tfCodeAccess) }
 func TestCodeAccessLes2(t *testing.T) { testAccess(t, 2, tfCodeAccess) }
 
 func tfCodeAccess(db timdb.Database, bhash common.Hash, number uint64) light.OdrRequest {
-	header := core.timdeader(db, bhash, core.GetBlockNumber(db, bhash))
+	header := core.timheader(db, bhash, core.GetBlockNumber(db, bhash))
 	if header.Number.Uint64() < testContractDeployed {
 		return nil
 	}

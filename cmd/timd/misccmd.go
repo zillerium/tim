@@ -25,7 +25,7 @@ import (
 
 	"github.com/tim-coin/tim/cmd/utils"
 	"github.com/tim-coin/tim/consensus/thash"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/params"
 	"gopkg.in/urfave/cli.v1"
 )

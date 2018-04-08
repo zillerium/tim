@@ -110,7 +110,7 @@ func (r *BlockRequest) Validate(db timdb.Database, msg *Msg) error {
 	body := bodies[0]
 
 	// Retrieve our stored header and validate block content against it
-	header := core.timdeader(db, r.Hash, r.Number)
+	header := core.timheader(db, r.Hash, r.Number)
 	if header == nil {
 		return errHeaderUnavailable
 	}
@@ -166,7 +166,7 @@ func (r *ReceiptsRequest) Validate(db timdb.Database, msg *Msg) error {
 	receipt := receipts[0]
 
 	// Retrieve our stored header and validate receipt content against it
-	header := core.timdeader(db, r.Hash, r.Number)
+	header := core.timheader(db, r.Hash, r.Number)
 	if header == nil {
 		return errHeaderUnavailable
 	}
@@ -352,7 +352,7 @@ type ChtRequest light.ChtRequest
 func (r *ChtRequest) GetCost(peer *peer) uint64 {
 	switch peer.version {
 	case lpv1:
-		return peer.GetRequestCost(timdeaderProofsMsg, 1)
+		return peer.GetRequestCost(timheaderProofsMsg, 1)
 	case lpv2:
 		return peer.GetRequestCost(timdelperTrieProofsMsg, 1)
 	default:

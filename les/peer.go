@@ -28,7 +28,7 @@ import (
 
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/les/flowcontrol"
 	"github.com/tim-coin/tim/light"
 	"github.com/tim-coin/tim/p2p"
@@ -298,7 +298,7 @@ func (p *peer) RequestHelperTrieProofs(reqID, cost uint64, reqs []HelperTrieReq)
 			// convert HelperTrie request to old CHT request
 			reqsV1[i] = ChtReq{ChtNum: (req.TrieIdx+1)*(light.ChtFrequency/light.ChtV1Frequency) - 1, BlockNum: blockNum, FromLevel: req.FromLevel}
 		}
-		return sendRequest(p.rw, timdeaderProofsMsg, reqID, cost, reqsV1)
+		return sendRequest(p.rw, timheaderProofsMsg, reqID, cost, reqsV1)
 	case lpv2:
 		return sendRequest(p.rw, timdelperTrieProofsMsg, reqID, cost, reqs)
 	default:

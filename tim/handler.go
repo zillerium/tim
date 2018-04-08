@@ -31,8 +31,8 @@ import (
 	"github.com/tim-coin/tim/consensus/misc"
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/eth/fetcher"
+	"github.com/tim-coin/tim/tim/downloader"
+	"github.com/tim-coin/tim/tim/fetcher"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/log"
@@ -346,9 +346,9 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the next header satisfying the query
 			var origin *types.Header
 			if hashMode {
-				origin = pm.blockchain.timdeaderByHash(query.Origin.Hash)
+				origin = pm.blockchain.timheaderByHash(query.Origin.Hash)
 			} else {
-				origin = pm.blockchain.timdeaderByNumber(query.Origin.Number)
+				origin = pm.blockchain.timheaderByNumber(query.Origin.Number)
 			}
 			if origin == nil {
 				break
@@ -362,7 +362,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			case query.Origin.Hash != (common.Hash{}) && query.Reverse:
 				// Hash based traversal towards the genesis block
 				for i := 0; i < int(query.Skip)+1; i++ {
-					if header := pm.blockchain.timdeader(query.Origin.Hash, number); header != nil {
+					if header := pm.blockchain.timheader(query.Origin.Hash, number); header != nil {
 						query.Origin.Hash = header.ParentHash
 						number--
 					} else {
@@ -381,7 +381,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 					p.Log().Warn("GetBlockHeaders skip overflow attack", "current", current, "skip", query.Skip, "next", next, "attacker", infos)
 					unknown = true
 				} else {
-					if header := pm.blockchain.timdeaderByNumber(next); header != nil {
+					if header := pm.blockchain.timheaderByNumber(next); header != nil {
 						if pm.blockchain.GetBlockHashesFromHash(header.Hash(), query.Skip+1)[query.Skip] == query.Origin.Hash {
 							query.Origin.Hash = header.Hash()
 						} else {
@@ -419,7 +419,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 
 			// If we already have a DAO header, we can check the peer's TD against it. If
 			// the peer's ahead of this, it too must have a reply to the DAO check
-			if daoHeader := pm.blockchain.timdeaderByNumber(pm.chainconfig.DAOForkBlock.Uint64()); daoHeader != nil {
+			if daoHeader := pm.blockchain.timheaderByNumber(pm.chainconfig.DAOForkBlock.Uint64()); daoHeader != nil {
 				if _, td := p.Head(); td.Cmp(pm.blockchain.GetTd(daoHeader.Hash(), daoHeader.Number.Uint64())) >= 0 {
 					verifyDAO = false
 				}
@@ -572,7 +572,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the requested block's receipts, skipping if unknown to us
 			results := core.GetBlockReceipts(pm.chaindb, hash, core.GetBlockNumber(pm.chaindb, hash))
 			if results == nil {
-				if header := pm.blockchain.timdeaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
+				if header := pm.blockchain.timheaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
 					continue
 				}
 			}

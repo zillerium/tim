@@ -34,14 +34,14 @@ type ChainReader interface {
 	// CurrentHeader retrieves the current header from the local chain.
 	CurrentHeader() *types.Header
 
-	// timdeader retrieves a block header from the database by hash and number.
-	timdeader(hash common.Hash, number uint64) *types.Header
+	// timheader retrieves a block header from the database by hash and number.
+	timheader(hash common.Hash, number uint64) *types.Header
 
-	// timdeaderByNumber retrieves a block header from the database by number.
-	timdeaderByNumber(number uint64) *types.Header
+	// timheaderByNumber retrieves a block header from the database by number.
+	timheaderByNumber(number uint64) *types.Header
 
-	// timdeaderByHash retrieves a block header from the database by its hash.
-	timdeaderByHash(hash common.Hash) *types.Header
+	// timheaderByHash retrieves a block header from the database by its hash.
+	timheaderByHash(hash common.Hash) *types.Header
 
 	// GetBlock retrieves a block from the database by hash and number.
 	GetBlock(hash common.Hash, number uint64) *types.Block

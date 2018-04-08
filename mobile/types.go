@@ -199,7 +199,7 @@ func (b *Block) GetNonce() int64        { return int64(b.block.Nonce()) }
 func (b *Block) timdash() *Hash        { return &Hash{b.block.Hash()} }
 func (b *Block) timdashNoNonce() *Hash { return &Hash{b.block.HashNoNonce()} }
 
-func (b *Block) timdeader() *Header             { return &Header{b.block.Header()} }
+func (b *Block) timheader() *Header             { return &Header{b.block.Header()} }
 func (b *Block) GetUncles() *Headers            { return &Headers{b.block.Uncles()} }
 func (b *Block) GetTransactions() *Transactions { return &Transactions{b.block.Transactions()} }
 func (b *Block) GetTransaction(hash *Hash) *Transaction {

@@ -30,7 +30,7 @@ import (
 
 	"github.com/tim-coin/tim/cmd/utils"
 	"github.com/tim-coin/tim/contracts/release"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/node"
 	"github.com/tim-coin/tim/params"
 	whisper "github.com/tim-coin/tim/whisper/whisperv5"

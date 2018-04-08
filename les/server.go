@@ -27,7 +27,7 @@ import (
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/les/flowcontrol"
 	"github.com/tim-coin/tim/light"

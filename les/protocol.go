@@ -69,7 +69,7 @@ const (
 	GetCodeMsg         = 0x0a
 	CodeMsg            = 0x0b
 	SendTxMsg          = 0x0c
-	timdeaderProofsMsg = 0x0d
+	timheaderProofsMsg = 0x0d
 	HeaderProofsMsg    = 0x0e
 	// Protocol messages belonging to LPV2
 	GetProofsV2Msg         = 0x0f

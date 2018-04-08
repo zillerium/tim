@@ -73,10 +73,10 @@ func (thash *thash) VerifyHeader(chain consensus.ChainReader, header *types.Head
 	}
 	// Short circuit if the header is known, or it's parent not
 	number := header.Number.Uint64()
-	if chain.timdeader(header.Hash(), number) != nil {
+	if chain.timheader(header.Hash(), number) != nil {
 		return nil
 	}
-	parent := chain.timdeader(header.ParentHash, number-1)
+	parent := chain.timheader(header.ParentHash, number-1)
 	if parent == nil {
 		return consensus.ErrUnknownAncestor
 	}
@@ -152,14 +152,14 @@ func (thash *thash) VerifyHeaders(chain consensus.ChainReader, headers []*types.
 func (thash *thash) verifyHeaderWorker(chain consensus.ChainReader, headers []*types.Header, seals []bool, index int) error {
 	var parent *types.Header
 	if index == 0 {
-		parent = chain.timdeader(headers[0].ParentHash, headers[0].Number.Uint64()-1)
+		parent = chain.timheader(headers[0].ParentHash, headers[0].Number.Uint64()-1)
 	} else if headers[index-1].Hash() == headers[index].ParentHash {
 		parent = headers[index-1]
 	}
 	if parent == nil {
 		return consensus.ErrUnknownAncestor
 	}
-	if chain.timdeader(headers[index].Hash(), headers[index].Number.Uint64()) != nil {
+	if chain.timheader(headers[index].Hash(), headers[index].Number.Uint64()) != nil {
 		return nil // known block
 	}
 	return thash.verifyHeader(chain, headers[index], parent, false, seals[index])
@@ -497,7 +497,7 @@ func (thash *thash) VerifySeal(chain consensus.ChainReader, header *types.Header
 // Prepare implements consensus.Engine, initializing the difficulty field of a
 // header to conform to the thash protocol. The changes are done inline.
 func (thash *thash) Prepare(chain consensus.ChainReader, header *types.Header) error {
-	parent := chain.timdeader(header.ParentHash, header.Number.Uint64()-1)
+	parent := chain.timheader(header.ParentHash, header.Number.Uint64()-1)
 	if parent == nil {
 		return consensus.ErrUnknownAncestor
 	}

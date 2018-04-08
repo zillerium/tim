@@ -25,9 +25,9 @@ import (
 	"path/filepath"
 
 	"github.com/tim-coin/tim/core"
-	"github.com/tim-coin/tim/eth"
-	"github.com/tim-coin/tim/eth/downloader"
-	"github.com/tim-coin/tim/ethclient"
+	"github.com/tim-coin/tim/tim"
+	"github.com/tim-coin/tim/tim/downloader"
+	"github.com/tim-coin/tim/timclient"
 	"github.com/tim-coin/tim/timstats"
 	"github.com/tim-coin/tim/les"
 	"github.com/tim-coin/tim/node"

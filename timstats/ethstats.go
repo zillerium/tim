@@ -35,7 +35,7 @@ import (
 	"github.com/tim-coin/tim/consensus"
 	"github.com/tim-coin/tim/core"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/eth"
+	"github.com/tim-coin/tim/tim"
 	"github.com/tim-coin/tim/event"
 	"github.com/tim-coin/tim/les"
 	"github.com/tim-coin/tim/log"
@@ -603,7 +603,7 @@ func (s *Service) reportHistory(conn *websocket.Conn, list []uint64) error {
 		if s.eth != nil {
 			block = s.eth.BlockChain().GetBlockByNumber(number)
 		} else {
-			if header := s.les.BlockChain().timdeaderByNumber(number); header != nil {
+			if header := s.les.BlockChain().timheaderByNumber(number); header != nil {
 				block = types.NewBlockWithHeader(header)
 			}
 		}
