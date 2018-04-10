@@ -141,7 +141,7 @@ func init() {
 	// Initialize the CLI app and start timd
 	app.Action = timd
 	app.HideVersion = true // we have a command to print the version
-	app.Copyright = "Copyright 2013-2017 The tim Authors"
+	app.Copyright = "Copyright 2017-2018 The tim Authors"
 	app.Commands = []cli.Command{
 		// See chaincmd.go:
 		initCommand,
@@ -272,7 +272,7 @@ func startNode(ctx *cli.Context, stack *node.Node) {
 	}()
 	// Start auxiliary services if enabled
 	if ctx.GlobalBool(utils.MiningEnabledFlag.Name) || ctx.GlobalBool(utils.DeveloperFlag.Name) {
-		// Mining only makes sense if a full tim node is running
+		// Mining only makes sense if a statistical tim node is running
 		var tim *eth.Tim
 		if err := stack.Service(&tim); err != nil {
 			utils.Fatalf("tim service not running: %v", err)

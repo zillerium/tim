@@ -744,9 +744,9 @@ func (self *ProtocolManager) txBroadcastLoop() {
 	}
 }
 
-// EthNodeInfo represents a short summary of the tim sub-protocol metadata known
+// TimNodeInfo represents a short summary of the tim sub-protocol metadata known
 // about the host peer.
-type EthNodeInfo struct {
+type TimNodeInfo struct {
 	Network    uint64      `json:"network"`    // tim network ID (1=Frontier, 2=Morden, Ropsten=3)
 	Difficulty *big.Int    `json:"difficulty"` // Total difficulty of the host's blockchain
 	Genesis    common.Hash `json:"genesis"`    // SHA3 hash of the host's genesis block
@@ -754,9 +754,9 @@ type EthNodeInfo struct {
 }
 
 // NodeInfo retrieves some protocol metadata about the running host node.
-func (self *ProtocolManager) NodeInfo() *EthNodeInfo {
+func (self *ProtocolManager) NodeInfo() *TimNodeInfo {
 	currentBlock := self.blockchain.CurrentBlock()
-	return &EthNodeInfo{
+	return &TimNodeInfo{
 		Network:    self.networkId,
 		Difficulty: self.blockchain.GetTd(currentBlock.Hash(), currentBlock.NumberU64()),
 		Genesis:    self.blockchain.Genesis().Hash(),

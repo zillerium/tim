@@ -51,7 +51,7 @@ ADD account.pass /account.pass
 EXPOSE 8080
 
 CMD [ \
-	"/faucet", "--genesis", "/genesis.json", "--network", "{{.NetworkID}}", "--bootnodes", "{{.Bootnodes}}", "--timstats", "{{.timstats}}", "--ethport", "{{.EthPort}}", \
+	"/faucet", "--genesis", "/genesis.json", "--network", "{{.NetworkID}}", "--bootnodes", "{{.Bootnodes}}", "--timstats", "{{.timstats}}", "--ethport", "{{.TimPort}}", \
 	"--faucet.name", "{{.FaucetName}}", "--faucet.amount", "{{.FaucetAmount}}", "--faucet.minutes", "{{.FaucetMinutes}}", "--faucet.tiers", "{{.FaucetTiers}}",          \
 	"--github.user", "{{.GitHubUser}}", "--github.token", "{{.GitHubToken}}", "--account.json", "/account.json", "--account.pass", "/account.pass"                       \
 	{{if .CaptchaToken}}, "--captcha.token", "{{.CaptchaToken}}", "--captcha.secret", "{{.CaptchaSecret}}"{{end}}                                                        \
@@ -66,13 +66,13 @@ services:
     build: .
     image: {{.Network}}/faucet
     ports:
-      - "{{.EthPort}}:{{.EthPort}}"{{if not .VHost}}
+      - "{{.TimPort}}:{{.TimPort}}"{{if not .VHost}}
       - "{{.ApiPort}}:8080"{{end}}
     volumes:
       - {{.Datadir}}:/root/.faucet
     environment:
-      - ETH_PORT={{.EthPort}}
-      - ETH_NAME={{.EthName}}
+      - ETH_PORT={{.TimPort}}
+      - ETH_NAME={{.TimName}}
       - FAUCET_AMOUNT={{.FaucetAmount}}
       - FAUCET_MINUTES={{.FaucetMinutes}}
       - FAUCET_TIERS={{.FaucetTiers}}
@@ -103,7 +103,7 @@ func deployFaucet(client *sshClient, network string, bootnodes []string, config 
 		"NetworkID":     config.node.network,
 		"Bootnodes":     strings.Join(bootnodes, ","),
 		"timstats":      config.node.timstats,
-		"EthPort":       config.node.portFull,
+		"TimPort":       config.node.portFull,
 		"GitHubUser":    config.githubUser,
 		"GitHubToken":   config.githubToken,
 		"CaptchaToken":  config.captchaToken,
@@ -121,8 +121,8 @@ func deployFaucet(client *sshClient, network string, bootnodes []string, config 
 		"Datadir":       config.node.datadir,
 		"VHost":         config.host,
 		"ApiPort":       config.port,
-		"EthPort":       config.node.portFull,
-		"EthName":       config.node.timstats[:strings.Index(config.node.timstats, ":")],
+		"TimPort":       config.node.portFull,
+		"TimName":       config.node.timstats[:strings.Index(config.node.timstats, ":")],
 		"GitHubUser":    config.githubUser,
 		"GitHubToken":   config.githubToken,
 		"CaptchaToken":  config.captchaToken,

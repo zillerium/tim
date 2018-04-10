@@ -82,7 +82,7 @@ type Tim struct {
 	bloomRequests chan chan *bloombits.Retrieval // Channel receiving bloom data retrieval requests
 	bloomIndexer  *core.ChainIndexer             // Bloom indexer operating during block imports
 
-	ApiBackend *EthApiBackend
+	ApiBackend *TimApiBackend
 
 	miner     *miner.Miner
 	gasPrice  *big.Int
@@ -169,7 +169,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Tim, error) {
 	eth.miner = miner.New(eth, eth.chainConfig, eth.EventMux(), eth.engine)
 	eth.miner.SetExtra(makeExtraData(config.ExtraData))
 
-	eth.ApiBackend = &EthApiBackend{eth, nil}
+	eth.ApiBackend = &TimApiBackend{eth, nil}
 	gpoParams := config.GPO
 	if gpoParams.Default == nil {
 		gpoParams.Default = config.GasPrice
@@ -355,7 +355,7 @@ func (s *Tim) EventMux() *event.TypeMux           { return s.eventMux }
 func (s *Tim) Engine() consensus.Engine           { return s.engine }
 func (s *Tim) ChainDb() timdb.Database            { return s.chainDb }
 func (s *Tim) IsListening() bool                  { return true } // Always listening
-func (s *Tim) EthVersion() int                    { return int(s.protocolManager.SubProtocols[0].Version) }
+func (s *Tim) TimVersion() int                    { return int(s.protocolManager.SubProtocols[0].Version) }
 func (s *Tim) NetVersion() uint64                 { return s.networkId }
 func (s *Tim) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
 

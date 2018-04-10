@@ -25,7 +25,7 @@ import (
 	"github.com/tim-coin/tim/event"
 )
 
-// Implement our EthTest Manager
+// Implement our TimTest Manager
 type TestManager struct {
 	// stateManager *StateManager
 	eventMux *event.TypeMux

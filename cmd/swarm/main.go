@@ -141,7 +141,7 @@ var (
 	}
 
 	// the following flags are deprecated and should be removed in the future
-	DeprecatedEthAPIFlag = cli.StringFlag{
+	DeprecatedTimAPIFlag = cli.StringFlag{
 		Name:  "timapi",
 		Usage: "DEPRECATED: please use --ens-api and --swap-api",
 	}
@@ -342,7 +342,7 @@ DEPRECATED: use 'swarm db clean'.
 		SwarmUpFromStdinFlag,
 		SwarmUploadMimeType,
 		//deprecated flags
-		DeprecatedEthAPIFlag,
+		DeprecatedTimAPIFlag,
 	}
 	app.Flags = append(app.Flags, debug.Flags...)
 	app.Before = func(ctx *cli.Context) error {
@@ -378,7 +378,7 @@ func version(ctx *cli.Context) error {
 
 func bzzd(ctx *cli.Context) error {
 	// exit if the deprecated --timapi flag is set
-	if ctx.GlobalString(DeprecatedEthAPIFlag.Name) != "" {
+	if ctx.GlobalString(DeprecatedTimAPIFlag.Name) != "" {
 		utils.Fatalf("--timapi is no longer a valid command line flag, please use --ens-api and/or --swap-api.")
 	}
 

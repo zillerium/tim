@@ -76,7 +76,7 @@ type timstatsConfig struct {
 }
 
 type timdConfig struct {
-	Eth      eth.Config
+	Tim      eth.Config
 	Shh      whisper.Config
 	Node     node.Config
 	timstats timstatsConfig
@@ -110,7 +110,7 @@ func defaultNodeConfig() node.Config {
 func makeConfigNode(ctx *cli.Context) (*node.Node, timdConfig) {
 	// Load defaults.
 	cfg := timdConfig{
-		Eth:  eth.DefaultConfig,
+		Tim:  eth.DefaultConfig,
 		Shh:  whisper.DefaultConfig,
 		Node: defaultNodeConfig(),
 	}
@@ -128,7 +128,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, timdConfig) {
 	if err != nil {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)
 	}
-	utils.SetEthConfig(ctx, stack, &cfg.Eth)
+	utils.SetTimConfig(ctx, stack, &cfg.Tim)
 	if ctx.GlobalIsSet(utils.TimstatsURLFlag.Name) {
 		cfg.timstats.URL = ctx.GlobalString(utils.TimstatsURLFlag.Name)
 	}
@@ -151,7 +151,7 @@ func enableWhisper(ctx *cli.Context) bool {
 func makeFullNode(ctx *cli.Context) *node.Node {
 	stack, cfg := makeConfigNode(ctx)
 
-	utils.RegisterEthService(stack, &cfg.Eth)
+	utils.RegisterTimService(stack, &cfg.Tim)
 
 	// Whisper must be explicitly enabled by specifying at least 1 whisper flag or in dev mode
 	shhEnabled := enableWhisper(ctx)
@@ -193,8 +193,8 @@ func dumpConfig(ctx *cli.Context) error {
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 
-	if cfg.Eth.Genesis != nil {
-		cfg.Eth.Genesis = nil
+	if cfg.Tim.Genesis != nil {
+		cfg.Tim.Genesis = nil
 		comment += "# Note: this config doesn't contain the genesis block.\n\n"
 	}
 
