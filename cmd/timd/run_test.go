@@ -39,7 +39,7 @@ type testtimd struct {
 
 	// template variables for expect
 	Datadir   string
-	Etherbase string
+	Timbase string
 }
 
 func init() {
@@ -74,7 +74,7 @@ func runtimd(t *testing.T, args ...string) *testtimd {
 			}
 		case arg == "-etherbase" || arg == "--etherbase":
 			if i < len(args)-1 {
-				tt.Etherbase = args[i+1]
+				tt.Timbase = args[i+1]
 			}
 		}
 	}

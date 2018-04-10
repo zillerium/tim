@@ -289,7 +289,7 @@ var (
 		Usage: "Target gas limit sets the artificial target gas floor for the blocks to mine",
 		Value: params.GenesisGasLimit.Uint64(),
 	}
-	EtherbaseFlag = cli.StringFlag{
+	TimbaseFlag = cli.StringFlag{
 		Name:  "etherbase",
 		Usage: "Public address for block mining rewards (default = first account created)",
 		Value: "0",
@@ -725,21 +725,21 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 	return accs[index], nil
 }
 
-// setEtherbase retrieves the etherbase either from the directly specified
+// setTimbase retrieves the etherbase either from the directly specified
 // command line flags or from the keystore if CLI indexed.
-func setEtherbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *eth.Config) {
-	if ctx.GlobalIsSet(EtherbaseFlag.Name) {
-		account, err := MakeAddress(ks, ctx.GlobalString(EtherbaseFlag.Name))
+func setTimbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *eth.Config) {
+	if ctx.GlobalIsSet(TimbaseFlag.Name) {
+		account, err := MakeAddress(ks, ctx.GlobalString(TimbaseFlag.Name))
 		if err != nil {
-			Fatalf("Option %q: %v", EtherbaseFlag.Name, err)
+			Fatalf("Option %q: %v", TimbaseFlag.Name, err)
 		}
-		cfg.Etherbase = account.Address
+		cfg.Timbase = account.Address
 		return
 	}
 	accounts := ks.Accounts()
-	if (cfg.Etherbase == common.Address{}) {
+	if (cfg.Timbase == common.Address{}) {
 		if len(accounts) > 0 {
-			cfg.Etherbase = accounts[0].Address
+			cfg.Timbase = accounts[0].Address
 		} else {
 			log.Warn("No etherbase set and no accounts found as default")
 		}
@@ -932,7 +932,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 	checkExclusive(ctx, FastSyncFlag, LightModeFlag, SyncModeFlag)
 
 	ks := stack.AccountManager().Backends(keystore.KeyStoreType)[0].(*keystore.KeyStore)
-	setEtherbase(ctx, ks, cfg)
+	setTimbase(ctx, ks, cfg)
 	setGPO(ctx, &cfg.GPO)
 	setTxPool(ctx, &cfg.TxPool)
 	setthash(ctx, cfg)

@@ -130,7 +130,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Tim, error) {
 		stopDbUpgrade:  stopDbUpgrade,
 		networkId:      config.NetworkId,
 		gasPrice:       config.GasPrice,
-		etherbase:      config.Etherbase,
+		etherbase:      config.Timbase,
 		bloomRequests:  make(chan chan *bloombits.Retrieval),
 		bloomIndexer:   NewBloomIndexer(chainDb, params.BloomBitsBlocks),
 	}
@@ -294,7 +294,7 @@ func (s *Tim) ResetWithGenesisBlock(gb *types.Block) {
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *Tim) Etherbase() (eb common.Address, err error) {
+func (s *Tim) Timbase() (eb common.Address, err error) {
 	s.lock.RLock()
 	etherbase := s.etherbase
 	s.lock.RUnlock()
@@ -311,16 +311,16 @@ func (s *Tim) Etherbase() (eb common.Address, err error) {
 }
 
 // set in js console via admin interface or wrapper from cli flags
-func (self *Tim) SetEtherbase(etherbase common.Address) {
+func (self *Tim) SetTimbase(etherbase common.Address) {
 	self.lock.Lock()
 	self.etherbase = etherbase
 	self.lock.Unlock()
 
-	self.miner.SetEtherbase(etherbase)
+	self.miner.SetTimbase(etherbase)
 }
 
 func (s *Tim) StartMining(local bool) error {
-	eb, err := s.Etherbase()
+	eb, err := s.Timbase()
 	if err != nil {
 		log.Error("Cannot start mining without etherbase", "err", err)
 		return fmt.Errorf("etherbase missing: %v", err)
@@ -328,7 +328,7 @@ func (s *Tim) StartMining(local bool) error {
 	if clique, ok := s.engine.(*clique.Clique); ok {
 		wallet, err := s.accountManager.Find(accounts.Account{Address: eb})
 		if wallet == nil || err != nil {
-			log.Error("Etherbase account unavailable locally", "err", err)
+			log.Error("Timbase account unavailable locally", "err", err)
 			return fmt.Errorf("signer missing: %v", err)
 		}
 		clique.Authorize(eb, wallet.SignHash)

@@ -56,14 +56,14 @@ func NewPublictimAPI(e *Tim) *PublictimAPI {
 	return &PublictimAPI{e}
 }
 
-// Etherbase is the address that mining rewards will be send to
-func (api *PublictimAPI) Etherbase() (common.Address, error) {
-	return api.e.Etherbase()
+// Timbase is the address that mining rewards will be send to
+func (api *PublictimAPI) Timbase() (common.Address, error) {
+	return api.e.Timbase()
 }
 
-// Coinbase is the address that mining rewards will be send to (alias for Etherbase)
+// Coinbase is the address that mining rewards will be send to (alias for Timbase)
 func (api *PublictimAPI) Coinbase() (common.Address, error) {
-	return api.Etherbase()
+	return api.Timbase()
 }
 
 // Hashrate returns the POW hashrate
@@ -194,9 +194,9 @@ func (api *PrivateMinerAPI) SetGasPrice(gasPrice hexutil.Big) bool {
 	return true
 }
 
-// SetEtherbase sets the etherbase of the miner
-func (api *PrivateMinerAPI) SetEtherbase(etherbase common.Address) bool {
-	api.e.SetEtherbase(etherbase)
+// SetTimbase sets the etherbase of the miner
+func (api *PrivateMinerAPI) SetTimbase(etherbase common.Address) bool {
+	api.e.SetTimbase(etherbase)
 	return true
 }
 

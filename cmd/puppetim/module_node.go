@@ -40,7 +40,7 @@ ADD genesis.json /genesis.json
 RUN \
   echo 'timd init /genesis.json' > timd.sh && \{{if .Unlock}}
 	echo 'mkdir -p /root/.tim/keystore/ && cp /signer.json /root/.tim/keystore/' >> timd.sh && \{{end}}
-	echo $'timd --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --maxpeers {{.Peers}} {{.LightFlag}} --timstats \'{{.timstats}}\' {{if .BootV4}}--bootnodesv4 {{.BootV4}}{{end}} {{if .BootV5}}--bootnodesv5 {{.BootV5}}{{end}} {{if .Etherbase}}--timbase {{.Etherbase}} --mine{{end}}{{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --targetgaslimit {{.GasTarget}} --gasprice {{.GasPrice}}' >> timd.sh
+	echo $'timd --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --maxpeers {{.Peers}} {{.LightFlag}} --timstats \'{{.timstats}}\' {{if .BootV4}}--bootnodesv4 {{.BootV4}}{{end}} {{if .BootV5}}--bootnodesv5 {{.BootV5}}{{end}} {{if .Timbase}}--timbase {{.Timbase}} --mine{{end}}{{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --targetgaslimit {{.GasTarget}} --gasprice {{.GasPrice}}' >> timd.sh
 
 ENTRYPOINT ["/bin/sh", "timd.sh"]
 `
@@ -65,7 +65,7 @@ services:
       - TOTAL_PEERS={{.TotalPeers}}
       - LIGHT_PEERS={{.LightPeers}}
       - STATS_NAME={{.timstats}}
-      - MINER_NAME={{.Etherbase}}
+      - MINER_NAME={{.Timbase}}
       - GAS_TARGET={{.GasTarget}}
       - GAS_PRICE={{.GasPrice}}
     logging:
@@ -121,7 +121,7 @@ func deployNode(client *sshClient, network string, bootv4, bootv5 []string, conf
 		"LightPort":  config.portFull + 1,
 		"LightPeers": config.peersLight,
 		"timstats":   config.timstats[:strings.Index(config.timstats, ":")],
-		"Etherbase":  config.timbase,
+		"Timbase":  config.timbase,
 		"GasTarget":  config.gasTarget,
 		"GasPrice":   config.gasPrice,
 	})
