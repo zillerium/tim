@@ -27,7 +27,7 @@ import (
 
 	goruntime "runtime"
 
-	"github.com/tim-coin/tim/cmd/evm/internal/compiler"
+	"github.com/tim-coin/tim/cmd/tvm/internal/compiler"
 	"github.com/tim-coin/tim/cmd/utils"
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/core"

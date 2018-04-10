@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/tim-coin/tim/cmd/evm/internal/compiler"
+	"github.com/tim-coin/tim/cmd/tvm/internal/compiler"
 
 	cli "gopkg.in/urfave/cli.v1"
 )
