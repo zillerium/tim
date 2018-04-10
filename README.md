@@ -271,7 +271,7 @@ $ timd <usual-flags> --mine  --minertype=<G><B><C> --minerthreads=1 --timsbase=0
 
 Which will start mining bocks and transactions on a single CPU thread, crediting all proceedings to
 the account specified by `--timsbase`. You can further tune the mining by changing the default gas
-limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`). You can select miner type (`--minertype`) as one or all of three. 100 will start a graph miner. 111 will start all three miners.
+limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`). You can select miner type (`--minertype`). 1 will start a graph miner, 2 will start a block consensus miner, and 3 will start challenger.
 
 ## Contribution
 
