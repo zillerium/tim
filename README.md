@@ -256,7 +256,7 @@ There can be 3 types of miners on TIM.
   * Block Consensus Miner
   * Challenger
 
-Mining on the public tim network is a easy task and it requires a medium sized computer and good quality internet. If you have low bandwidth internet, you can choose to run consensus mining and challenger mining. For information on such a setup, please consult the
+Mining on the public tim network is a easy task and it requires a medium sized computer and good quality internet. If you have high bandwidth internet, you can choose to run consensus mining and/or challenger node. For information on such a setup, please consult the
 [TimMining subreddit](https://www.reddit.com/r/TIMMining/) and the [Tim miner](https://github.com/jollysean/cpp-tim)
 repository.
 
