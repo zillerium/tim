@@ -53,15 +53,15 @@ func (ec *timClient) GetBlockByNumber(ctx *Context, number int64) (block *Block,
 	return &Block{rawBlock}, err
 }
 
-// timheaderByHash returns the block header with the given hash.
-func (ec *timClient) timheaderByHash(ctx *Context, hash *Hash) (header *Header, _ error) {
+// TimheaderByHash returns the block header with the given hash.
+func (ec *timClient) TimheaderByHash(ctx *Context, hash *Hash) (header *Header, _ error) {
 	rawHeader, err := ec.client.HeaderByHash(ctx.context, hash.hash)
 	return &Header{rawHeader}, err
 }
 
-// timheaderByNumber returns a block header from the current canonical chain. If number is <0,
+// TimheaderByNumber returns a block header from the current canonical chain. If number is <0,
 // the latest known header is returned.
-func (ec *timClient) timheaderByNumber(ctx *Context, number int64) (header *Header, _ error) {
+func (ec *timClient) TimheaderByNumber(ctx *Context, number int64) (header *Header, _ error) {
 	if number < 0 {
 		rawHeader, err := ec.client.HeaderByNumber(ctx.context, nil)
 		return &Header{rawHeader}, err

@@ -101,8 +101,8 @@ func defaultNodeConfig() node.Config {
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(gitCommit)
-	cfg.HTTPModules = append(cfg.HTTPModules, "eth", "shh")
-	cfg.WSModules = append(cfg.WSModules, "eth", "shh")
+	cfg.HTTPModules = append(cfg.HTTPModules, "tim", "shh")
+	cfg.WSModules = append(cfg.WSModules, "tim", "shh")
 	cfg.IPCPath = "timd.ipc"
 	return cfg
 }
@@ -129,8 +129,8 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, timdConfig) {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)
 	}
 	utils.SetEthConfig(ctx, stack, &cfg.Eth)
-	if ctx.GlobalIsSet(utils.timstatsURLFlag.Name) {
-		cfg.timstats.URL = ctx.GlobalString(utils.timstatsURLFlag.Name)
+	if ctx.GlobalIsSet(utils.TimstatsURLFlag.Name) {
+		cfg.timstats.URL = ctx.GlobalString(utils.TimstatsURLFlag.Name)
 	}
 
 	utils.SetShhConfig(ctx, stack, &cfg.Shh)

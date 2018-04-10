@@ -28,8 +28,8 @@ import (
 // headerRetriever is used by the unconfirmed block set to verify whether a previously
 // mined block is part of the canonical chain or not.
 type headerRetriever interface {
-	// timheaderByNumber retrieves the canonical header associated with a block number.
-	timheaderByNumber(number uint64) *types.Header
+	// TimheaderByNumber retrieves the canonical header associated with a block number.
+	TimheaderByNumber(number uint64) *types.Header
 }
 
 // unconfirmedBlock is a small collection of metadata about a locally mined block
@@ -96,7 +96,7 @@ func (set *unconfirmedBlocks) Shift(height uint64) {
 			break
 		}
 		// Block seems to exceed depth allowance, check for canonical status
-		header := set.chain.timheaderByNumber(next.index)
+		header := set.chain.TimheaderByNumber(next.index)
 		switch {
 		case header == nil:
 			log.Warn("Failed to retrieve header of mined block", "number", next.index, "hash", next.hash)

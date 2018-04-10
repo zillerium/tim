@@ -34,11 +34,11 @@ import (
 // DefaultConfig contains default settings for use on the tim main net.
 var DefaultConfig = Config{
 	SyncMode:             downloader.FastSync,
-	thashCacheDir:       "timash",
-	thashCachesInMem:    2,
-	thashCachesOnDisk:   3,
-	thashDatasetsInMem:  1,
-	thashDatasetsOnDisk: 2,
+	ThashCacheDir:       "timash",
+	ThashCachesInMem:    2,
+	ThashCachesOnDisk:   3,
+	ThashDatasetsInMem:  1,
+	ThashDatasetsOnDisk: 2,
 	NetworkId:            1,
 	LightPeers:           20,
 	DatabaseCache:        128,
@@ -59,9 +59,9 @@ func init() {
 		}
 	}
 	if runtime.GOOS == "windows" {
-		DefaultConfig.thashDatasetDir = filepath.Join(home, "AppData", "thash")
+		DefaultConfig.ThashDatasetDir = filepath.Join(home, "AppData", "thash")
 	} else {
-		DefaultConfig.thashDatasetDir = filepath.Join(home, ".timhash")
+		DefaultConfig.ThashDatasetDir = filepath.Join(home, ".timhash")
 	}
 }
 
@@ -92,12 +92,12 @@ type Config struct {
 	GasPrice     *big.Int
 
 	// thash options
-	thashCacheDir       string
-	thashCachesInMem    int
-	thashCachesOnDisk   int
-	thashDatasetDir     string
-	thashDatasetsInMem  int
-	thashDatasetsOnDisk int
+	ThashCacheDir       string
+	ThashCachesInMem    int
+	ThashCachesOnDisk   int
+	ThashDatasetDir     string
+	ThashDatasetsInMem  int
+	ThashDatasetsOnDisk int
 
 	// Transaction pool options
 	TxPool core.TxPoolConfig

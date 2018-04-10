@@ -42,9 +42,9 @@ It has these top-level messages:
 	GetPublicKey
 	PublicKey
 	GetAddress
-	timGetAddress
+	TimGetAddress
 	Address
-	timAddress
+	TimAddress
 	WipeDevice
 	LoadDevice
 	ResetDevice
@@ -69,9 +69,9 @@ It has these top-level messages:
 	SimpleSignTx
 	TxRequest
 	TxAck
-	timSignTx
-	timTxRequest
-	timTxAck
+	TimSignTx
+	TimTxRequest
+	TimTxAck
 	timSignMessage
 	timVerifyMessage
 	timMessageSignature

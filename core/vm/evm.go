@@ -32,9 +32,9 @@ var emptyCodeHash = crypto.Keccak256Hash(nil)
 type (
 	CanTransferFunc func(StateDB, common.Address, *big.Int) bool
 	TransferFunc    func(StateDB, common.Address, common.Address, *big.Int)
-	// timdashFunc returns the nth block hash in the blockchain
+	// GetHashFunc returns the nth block hash in the blockchain
 	// and is used by the BLOCKHASH EVM op code.
-	timdashFunc func(uint64) common.Hash
+	GetHashFunc func(uint64) common.Hash
 )
 
 // run runs the given contract and takes care of running precompiles with a fallback to the byte code interpreter.
@@ -59,8 +59,8 @@ type Context struct {
 	CanTransfer CanTransferFunc
 	// Transfer transfers ether from one account to the other
 	Transfer TransferFunc
-	// timdash returns the hash corresponding to n
-	timdash timdashFunc
+	// GetHash returns the hash corresponding to n
+	GetHash GetHashFunc
 
 	// Message information
 	Origin   common.Address // Provides information for ORIGIN

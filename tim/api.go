@@ -34,7 +34,7 @@ import (
 	"github.com/tim-coin/tim/core/state"
 	"github.com/tim-coin/tim/core/types"
 	"github.com/tim-coin/tim/core/vm"
-	"github.com/tim-coin/tim/internal/ethapi"
+	"github.com/tim-coin/tim/internal/timapi"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/miner"
 	"github.com/tim-coin/tim/params"
@@ -48,11 +48,11 @@ const defaultTraceTimeout = 5 * time.Second
 // PublictimAPI provides an API to access tim full node-related
 // information.
 type PublictimAPI struct {
-	e *tim
+	e *Tim
 }
 
 // NewPublictimAPI creates a new tim protocol API for full nodes.
-func NewPublictimAPI(e *tim) *PublictimAPI {
+func NewPublictimAPI(e *Tim) *PublictimAPI {
 	return &PublictimAPI{e}
 }
 
@@ -74,12 +74,12 @@ func (api *PublictimAPI) Hashrate() hexutil.Uint64 {
 // PublicMinerAPI provides an API to control the miner.
 // It offers only methods that operate on data that pose no security risk when it is publicly accessible.
 type PublicMinerAPI struct {
-	e     *tim
+	e     *Tim
 	agent *miner.RemoteAgent
 }
 
 // NewPublicMinerAPI create a new PublicMinerAPI instance.
-func NewPublicMinerAPI(e *tim) *PublicMinerAPI {
+func NewPublicMinerAPI(e *Tim) *PublicMinerAPI {
 	agent := miner.NewRemoteAgent(e.BlockChain(), e.Engine())
 	e.Miner().Register(agent)
 
@@ -125,11 +125,11 @@ func (api *PublicMinerAPI) SubmitHashrate(hashrate hexutil.Uint64, id common.Has
 // PrivateMinerAPI provides private RPC methods to control the miner.
 // These methods can be abused by external users and must be considered insecure for use by untrusted users.
 type PrivateMinerAPI struct {
-	e *tim
+	e *Tim
 }
 
 // NewPrivateMinerAPI create a new RPC service which controls the miner of this node.
-func NewPrivateMinerAPI(e *tim) *PrivateMinerAPI {
+func NewPrivateMinerAPI(e *Tim) *PrivateMinerAPI {
 	return &PrivateMinerAPI{e: e}
 }
 
@@ -200,20 +200,20 @@ func (api *PrivateMinerAPI) SetEtherbase(etherbase common.Address) bool {
 	return true
 }
 
-// timdashrate returns the current hashrate of the miner.
-func (api *PrivateMinerAPI) timdashrate() uint64 {
+// GetHashrate returns the current hashrate of the miner.
+func (api *PrivateMinerAPI) GetHashrate() uint64 {
 	return uint64(api.e.miner.HashRate())
 }
 
 // PrivateAdminAPI is the collection of tim full node-related APIs
 // exposed over the private admin endpoint.
 type PrivateAdminAPI struct {
-	eth *tim
+	eth *Tim
 }
 
 // NewPrivateAdminAPI creates a new API definition for the full node private
 // admin methods of the tim service.
-func NewPrivateAdminAPI(eth *tim) *PrivateAdminAPI {
+func NewPrivateAdminAPI(eth *Tim) *PrivateAdminAPI {
 	return &PrivateAdminAPI{eth: eth}
 }
 
@@ -301,12 +301,12 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 // PublicDebugAPI is the collection of tim full node APIs exposed
 // over the public debugging endpoint.
 type PublicDebugAPI struct {
-	eth *tim
+	eth *Tim
 }
 
 // NewPublicDebugAPI creates a new API definition for the full node-
 // related public debug methods of the tim service.
-func NewPublicDebugAPI(eth *tim) *PublicDebugAPI {
+func NewPublicDebugAPI(eth *Tim) *PublicDebugAPI {
 	return &PublicDebugAPI{eth: eth}
 }
 
@@ -339,12 +339,12 @@ func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error
 // the private debugging endpoint.
 type PrivateDebugAPI struct {
 	config *params.ChainConfig
-	eth    *tim
+	eth    *Tim
 }
 
 // NewPrivateDebugAPI creates a new API definition for the full node-related
 // private debug methods of the tim service.
-func NewPrivateDebugAPI(config *params.ChainConfig, eth *tim) *PrivateDebugAPI {
+func NewPrivateDebugAPI(config *params.ChainConfig, eth *Tim) *PrivateDebugAPI {
 	return &PrivateDebugAPI{config: config, eth: eth}
 }
 
@@ -352,7 +352,7 @@ func NewPrivateDebugAPI(config *params.ChainConfig, eth *tim) *PrivateDebugAPI {
 // consensus results and full VM trace logs for all included transactions.
 type BlockTraceResult struct {
 	Validated  bool                  `json:"validated"`
-	StructLogs []ethapi.StructLogRes `json:"structLogs"`
+	StructLogs []timapi.StructLogRes `json:"structLogs"`
 	Error      string                `json:"error"`
 }
 
@@ -375,7 +375,7 @@ func (api *PrivateDebugAPI) TraceBlock(blockRlp []byte, config *vm.LogConfig) Bl
 	validated, logs, err := api.traceBlock(&block, config)
 	return BlockTraceResult{
 		Validated:  validated,
-		StructLogs: ethapi.FormatLogs(logs),
+		StructLogs: timapi.FormatLogs(logs),
 		Error:      formatError(err),
 	}
 }
@@ -411,7 +411,7 @@ func (api *PrivateDebugAPI) TraceBlockByNumber(blockNr rpc.BlockNumber, config *
 	validated, logs, err := api.traceBlock(block, config)
 	return BlockTraceResult{
 		Validated:  validated,
-		StructLogs: ethapi.FormatLogs(logs),
+		StructLogs: timapi.FormatLogs(logs),
 		Error:      formatError(err),
 	}
 }
@@ -427,7 +427,7 @@ func (api *PrivateDebugAPI) TraceBlockByHash(hash common.Hash, config *vm.LogCon
 	validated, logs, err := api.traceBlock(block, config)
 	return BlockTraceResult{
 		Validated:  validated,
-		StructLogs: ethapi.FormatLogs(logs),
+		StructLogs: timapi.FormatLogs(logs),
 		Error:      formatError(err),
 	}
 }
@@ -494,7 +494,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 		}
 
 		var err error
-		if tracer, err = ethapi.NewJavascriptTracer(*config.Tracer); err != nil {
+		if tracer, err = timapi.NewJavascriptTracer(*config.Tracer); err != nil {
 			return nil, err
 		}
 
@@ -502,7 +502,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 		deadlineCtx, cancel := context.WithTimeout(ctx, timeout)
 		go func() {
 			<-deadlineCtx.Done()
-			tracer.(*ethapi.JavascriptTracer).Stop(&timeoutError{})
+			tracer.(*timapi.JavascriptTracer).Stop(&timeoutError{})
 		}()
 		defer cancel()
 	} else if config == nil {
@@ -529,13 +529,13 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, txHash common.
 	}
 	switch tracer := tracer.(type) {
 	case *vm.StructLogger:
-		return &ethapi.ExecutionResult{
+		return &timapi.ExecutionResult{
 			Gas:         gas,
 			Failed:      failed,
 			ReturnValue: fmt.Sprintf("%x", ret),
-			StructLogs:  ethapi.FormatLogs(tracer.StructLogs()),
+			StructLogs:  timapi.FormatLogs(tracer.StructLogs()),
 		}, nil
-	case *ethapi.JavascriptTracer:
+	case *timapi.JavascriptTracer:
 		return tracer.GetResult()
 	default:
 		panic(fmt.Sprintf("bad tracer type %T", tracer))

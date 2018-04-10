@@ -89,10 +89,10 @@ func odrAccounts(ctx context.Context, db timdb.Database, config *params.ChainCon
 	)
 	for _, addr := range acc {
 		if bc != nil {
-			header := bc.timheaderByHash(bhash)
+			header := bc.TimheaderByHash(bhash)
 			st, err = state.New(header.Root, state.NewDatabase(db))
 		} else {
-			header := lc.timheaderByHash(bhash)
+			header := lc.TimheaderByHash(bhash)
 			st = light.NewState(ctx, header, lc.Odr())
 		}
 		if err == nil {
@@ -122,7 +122,7 @@ func odrContractCall(ctx context.Context, db timdb.Database, config *params.Chai
 	for i := 0; i < 3; i++ {
 		data[35] = byte(i)
 		if bc != nil {
-			header := bc.timheaderByHash(bhash)
+			header := bc.TimheaderByHash(bhash)
 			statedb, err := state.New(header.Root, state.NewDatabase(db))
 
 			if err == nil {
@@ -140,7 +140,7 @@ func odrContractCall(ctx context.Context, db timdb.Database, config *params.Chai
 				res = append(res, ret...)
 			}
 		} else {
-			header := lc.timheaderByHash(bhash)
+			header := lc.TimheaderByHash(bhash)
 			state := light.NewState(ctx, header, lc.Odr())
 			state.SetBalance(testBankAddress, math.MaxBig256)
 			msg := callmsg{types.NewMessage(testBankAddress, &testContractAddr, 0, new(big.Int), big.NewInt(100000), new(big.Int), data, false)}

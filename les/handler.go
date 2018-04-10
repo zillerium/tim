@@ -74,14 +74,14 @@ func errResp(code errCode, format string, v ...interface{}) error {
 
 type BlockChain interface {
 	HasHeader(hash common.Hash, number uint64) bool
-	timheader(hash common.Hash, number uint64) *types.Header
-	timheaderByHash(hash common.Hash) *types.Header
+	Timheader(hash common.Hash, number uint64) *types.Header
+	TimheaderByHash(hash common.Hash) *types.Header
 	CurrentHeader() *types.Header
 	GetTdByHash(hash common.Hash) *big.Int
 	InsertHeaderChain(chain []*types.Header, checkFreq int) (int, error)
 	Rollback(chain []common.Hash)
 	Status() (td *big.Int, currentBlock common.Hash, genesisBlock common.Hash)
-	timheaderByNumber(number uint64) *types.Header
+	TimheaderByNumber(number uint64) *types.Header
 	GetBlockHashesFromHash(hash common.Hash, max uint64) []common.Hash
 	LastBlockHash() common.Hash
 	Genesis() *types.Block
@@ -319,7 +319,7 @@ func (pm *ProtocolManager) handle(p *peer) error {
 	}
 }
 
-var reqList = []uint64{GetBlockHeadersMsg, GetBlockBodiesMsg, GetCodeMsg, GetReceiptsMsg, GetProofsV1Msg, SendTxMsg, SendTxV2Msg, GetTxStatusMsg, timheaderProofsMsg, GetProofsV2Msg, timdelperTrieProofsMsg}
+var reqList = []uint64{GetBlockHeadersMsg, GetBlockBodiesMsg, GetCodeMsg, GetReceiptsMsg, GetProofsV1Msg, SendTxMsg, SendTxV2Msg, GetTxStatusMsg, TimheaderProofsMsg, GetProofsV2Msg, timdelperTrieProofsMsg}
 
 // handleMsg is invoked whenever an inbound message is received from a remote
 // peer. The remote connection is torn down upon returning any error.
@@ -416,9 +416,9 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the next header satisfying the query
 			var origin *types.Header
 			if hashMode {
-				origin = pm.blockchain.timheaderByHash(query.Origin.Hash)
+				origin = pm.blockchain.TimheaderByHash(query.Origin.Hash)
 			} else {
-				origin = pm.blockchain.timheaderByNumber(query.Origin.Number)
+				origin = pm.blockchain.TimheaderByNumber(query.Origin.Number)
 			}
 			if origin == nil {
 				break
@@ -432,7 +432,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			case query.Origin.Hash != (common.Hash{}) && query.Reverse:
 				// Hash based traversal towards the genesis block
 				for i := 0; i < int(query.Skip)+1; i++ {
-					if header := pm.blockchain.timheader(query.Origin.Hash, number); header != nil {
+					if header := pm.blockchain.Timheader(query.Origin.Hash, number); header != nil {
 						query.Origin.Hash = header.ParentHash
 						number--
 					} else {
@@ -442,7 +442,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				}
 			case query.Origin.Hash != (common.Hash{}) && !query.Reverse:
 				// Hash based traversal towards the leaf block
-				if header := pm.blockchain.timheaderByNumber(origin.Number.Uint64() + query.Skip + 1); header != nil {
+				if header := pm.blockchain.TimheaderByNumber(origin.Number.Uint64() + query.Skip + 1); header != nil {
 					if pm.blockchain.GetBlockHashesFromHash(header.Hash(), query.Skip+1)[query.Skip] == query.Origin.Hash {
 						query.Origin.Hash = header.Hash()
 					} else {
@@ -568,7 +568,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 		for _, req := range req.Reqs {
 			// Retrieve the requested state entry, stopping if enough was found
-			if header := core.timheader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+			if header := core.Timheader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if trie, _ := trie.New(header.Root, pm.chainDb); trie != nil {
 					sdata := trie.Get(req.AccKey)
 					var acc state.Account
@@ -634,7 +634,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			// Retrieve the requested block's receipts, skipping if unknown to us
 			results := core.GetBlockReceipts(pm.chainDb, hash, core.GetBlockNumber(pm.chainDb, hash))
 			if results == nil {
-				if header := pm.blockchain.timheaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
+				if header := pm.blockchain.TimheaderByHash(hash); header == nil || header.ReceiptHash != types.EmptyRootHash {
 					continue
 				}
 			}
@@ -695,7 +695,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				break
 			}
 			// Retrieve the requested state entry, stopping if enough was found
-			if header := core.timheader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+			if header := core.Timheader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 				if tr, _ := trie.New(header.Root, pm.chainDb); tr != nil {
 					if len(req.AccKey) > 0 {
 						sdata := tr.Get(req.AccKey)
@@ -746,7 +746,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				break
 			}
 			if tr == nil || req.BHash != lastBHash {
-				if header := core.timheader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
+				if header := core.Timheader(pm.chainDb, req.BHash, core.GetBlockNumber(pm.chainDb, req.BHash)); header != nil {
 					tr, _ = trie.New(header.Root, pm.chainDb)
 				} else {
 					tr = nil
@@ -820,7 +820,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			Obj:     resp.Data,
 		}
 
-	case timheaderProofsMsg:
+	case TimheaderProofsMsg:
 		p.Log().Trace("Received headers proof request")
 		// Decode the retrieval message
 		var req struct {
@@ -845,7 +845,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 				break
 			}
 
-			if header := pm.blockchain.timheaderByNumber(req.BlockNum); header != nil {
+			if header := pm.blockchain.TimheaderByNumber(req.BlockNum); header != nil {
 				sectionHead := core.GetCanonicalHash(pm.chainDb, (req.ChtNum+1)*light.ChtV1Frequency-1)
 				if root := light.GetChtRoot(pm.chainDb, req.ChtNum, sectionHead); root != (common.Hash{}) {
 					if tr, _ := trie.New(root, trieDb); tr != nil {
@@ -1101,7 +1101,7 @@ func (pm *ProtocolManager) timdelperTrieAuxData(req HelperTrieReq) []byte {
 		}
 		blockNum := binary.BigEndian.Uint64(req.Key)
 		hash := core.GetCanonicalHash(pm.chainDb, blockNum)
-		return core.timheaderRLP(pm.chainDb, hash, blockNum)
+		return core.TimheaderRLP(pm.chainDb, hash, blockNum)
 	}
 	return nil
 }

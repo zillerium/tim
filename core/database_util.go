@@ -112,12 +112,12 @@ func GetBlockNumber(db DatabaseReader, hash common.Hash) uint64 {
 	return binary.BigEndian.Uint64(data)
 }
 
-// timdeadHeaderHash retrieves the hash of the current canonical head block's
+// TimheadHeaderHash retrieves the hash of the current canonical head block's
 // header. The difference between this and timdeadBlockHash is that whereas the
 // last block hash is only updated upon a full block import, the last header
 // hash is updated already at header import, allowing head tracking for the
 // light synchronization mechanism.
-func timdeadHeaderHash(db DatabaseReader) common.Hash {
+func TimheadHeaderHash(db DatabaseReader) common.Hash {
 	data, _ := db.Get(headHeaderKey)
 	if len(data) == 0 {
 		return common.Hash{}
@@ -146,17 +146,17 @@ func timdeadFastBlockHash(db DatabaseReader) common.Hash {
 	return common.BytesToHash(data)
 }
 
-// timheaderRLP retrieves a block header in its raw RLP database encoding, or nil
+// TimheaderRLP retrieves a block header in its raw RLP database encoding, or nil
 // if the header's not found.
-func timheaderRLP(db DatabaseReader, hash common.Hash, number uint64) rlp.RawValue {
+func TimheaderRLP(db DatabaseReader, hash common.Hash, number uint64) rlp.RawValue {
 	data, _ := db.Get(headerKey(hash, number))
 	return data
 }
 
-// timheader retrieves the block header corresponding to the hash, nil if none
+// Timheader retrieves the block header corresponding to the hash, nil if none
 // found.
-func timheader(db DatabaseReader, hash common.Hash, number uint64) *types.Header {
-	data := timheaderRLP(db, hash, number)
+func Timheader(db DatabaseReader, hash common.Hash, number uint64) *types.Header {
+	data := TimheaderRLP(db, hash, number)
 	if len(data) == 0 {
 		return nil
 	}
@@ -220,7 +220,7 @@ func GetTd(db DatabaseReader, hash common.Hash, number uint64) *big.Int {
 // canonical hash can be stored in the database but the body data not (yet).
 func GetBlock(db DatabaseReader, hash common.Hash, number uint64) *types.Block {
 	// Retrieve the block header and body contents
-	header := timheader(db, hash, number)
+	header := Timheader(db, hash, number)
 	if header == nil {
 		return nil
 	}
@@ -607,23 +607,23 @@ func GetChainConfig(db DatabaseReader, hash common.Hash) (*params.ChainConfig, e
 // FindCommonAncestor returns the last common ancestor of two block headers
 func FindCommonAncestor(db DatabaseReader, a, b *types.Header) *types.Header {
 	for bn := b.Number.Uint64(); a.Number.Uint64() > bn; {
-		a = timheader(db, a.ParentHash, a.Number.Uint64()-1)
+		a = Timheader(db, a.ParentHash, a.Number.Uint64()-1)
 		if a == nil {
 			return nil
 		}
 	}
 	for an := a.Number.Uint64(); an < b.Number.Uint64(); {
-		b = timheader(db, b.ParentHash, b.Number.Uint64()-1)
+		b = Timheader(db, b.ParentHash, b.Number.Uint64()-1)
 		if b == nil {
 			return nil
 		}
 	}
 	for a.Hash() != b.Hash() {
-		a = timheader(db, a.ParentHash, a.Number.Uint64()-1)
+		a = Timheader(db, a.ParentHash, a.Number.Uint64()-1)
 		if a == nil {
 			return nil
 		}
-		b = timheader(db, b.ParentHash, b.Number.Uint64()-1)
+		b = Timheader(db, b.ParentHash, b.Number.Uint64()-1)
 		if b == nil {
 			return nil
 		}

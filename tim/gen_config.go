@@ -27,12 +27,12 @@ func (c Config) MarshalTOML() (interface{}, error) {
 		MinerThreads            int            `toml:",omitempty"`
 		ExtraData               hexutil.Bytes  `toml:",omitempty"`
 		GasPrice                *big.Int
-		thashCacheDir          string
-		thashCachesInMem       int
-		thashCachesOnDisk      int
-		thashDatasetDir        string
-		thashDatasetsInMem     int
-		thashDatasetsOnDisk    int
+		ThashCacheDir          string
+		ThashCachesInMem       int
+		ThashCachesOnDisk      int
+		ThashDatasetDir        string
+		ThashDatasetsInMem     int
+		ThashDatasetsOnDisk    int
 		TxPool                  core.TxPoolConfig
 		GPO                     gasprice.Config
 		EnablePreimageRecording bool
@@ -54,12 +54,12 @@ func (c Config) MarshalTOML() (interface{}, error) {
 	enc.MinerThreads = c.MinerThreads
 	enc.ExtraData = c.ExtraData
 	enc.GasPrice = c.GasPrice
-	enc.thashCacheDir = c.thashCacheDir
-	enc.thashCachesInMem = c.thashCachesInMem
-	enc.thashCachesOnDisk = c.thashCachesOnDisk
-	enc.thashDatasetDir = c.thashDatasetDir
-	enc.thashDatasetsInMem = c.thashDatasetsInMem
-	enc.thashDatasetsOnDisk = c.thashDatasetsOnDisk
+	enc.ThashCacheDir = c.ThashCacheDir
+	enc.ThashCachesInMem = c.ThashCachesInMem
+	enc.ThashCachesOnDisk = c.ThashCachesOnDisk
+	enc.ThashDatasetDir = c.ThashDatasetDir
+	enc.ThashDatasetsInMem = c.ThashDatasetsInMem
+	enc.ThashDatasetsOnDisk = c.ThashDatasetsOnDisk
 	enc.TxPool = c.TxPool
 	enc.GPO = c.GPO
 	enc.EnablePreimageRecording = c.EnablePreimageRecording
@@ -85,12 +85,12 @@ func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error {
 		MinerThreads            *int            `toml:",omitempty"`
 		ExtraData               hexutil.Bytes   `toml:",omitempty"`
 		GasPrice                *big.Int
-		thashCacheDir          *string
-		thashCachesInMem       *int
-		thashCachesOnDisk      *int
-		thashDatasetDir        *string
-		thashDatasetsInMem     *int
-		thashDatasetsOnDisk    *int
+		ThashCacheDir          *string
+		ThashCachesInMem       *int
+		ThashCachesOnDisk      *int
+		ThashDatasetDir        *string
+		ThashDatasetsInMem     *int
+		ThashDatasetsOnDisk    *int
 		TxPool                  *core.TxPoolConfig
 		GPO                     *gasprice.Config
 		EnablePreimageRecording *bool
@@ -139,23 +139,23 @@ func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error {
 	if dec.GasPrice != nil {
 		c.GasPrice = dec.GasPrice
 	}
-	if dec.thashCacheDir != nil {
-		c.thashCacheDir = *dec.thashCacheDir
+	if dec.ThashCacheDir != nil {
+		c.ThashCacheDir = *dec.ThashCacheDir
 	}
-	if dec.thashCachesInMem != nil {
-		c.thashCachesInMem = *dec.thashCachesInMem
+	if dec.ThashCachesInMem != nil {
+		c.ThashCachesInMem = *dec.ThashCachesInMem
 	}
-	if dec.thashCachesOnDisk != nil {
-		c.thashCachesOnDisk = *dec.thashCachesOnDisk
+	if dec.ThashCachesOnDisk != nil {
+		c.ThashCachesOnDisk = *dec.ThashCachesOnDisk
 	}
-	if dec.thashDatasetDir != nil {
-		c.thashDatasetDir = *dec.thashDatasetDir
+	if dec.ThashDatasetDir != nil {
+		c.ThashDatasetDir = *dec.ThashDatasetDir
 	}
-	if dec.thashDatasetsInMem != nil {
-		c.thashDatasetsInMem = *dec.thashDatasetsInMem
+	if dec.ThashDatasetsInMem != nil {
+		c.ThashDatasetsInMem = *dec.ThashDatasetsInMem
 	}
-	if dec.thashDatasetsOnDisk != nil {
-		c.thashDatasetsOnDisk = *dec.thashDatasetsOnDisk
+	if dec.ThashDatasetsOnDisk != nil {
+		c.ThashDatasetsOnDisk = *dec.ThashDatasetsOnDisk
 	}
 	if dec.TxPool != nil {
 		c.TxPool = *dec.TxPool

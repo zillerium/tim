@@ -28,7 +28,7 @@ import (
 	"github.com/tim-coin/tim/accounts/abi/bind"
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/tim"
-	"github.com/tim-coin/tim/internal/ethapi"
+	"github.com/tim-coin/tim/internal/timapi"
 	"github.com/tim-coin/tim/les"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/node"
@@ -61,8 +61,8 @@ type ReleaseService struct {
 // releases and notify the user of such.
 func NewReleaseService(ctx *node.ServiceContext, config Config) (node.Service, error) {
 	// Retrieve the tim service dependency to access the blockchain
-	var apiBackend ethapi.Backend
-	var tim *eth.tim
+	var apiBackend timapi.Backend
+	var tim *eth.Tim
 	if err := ctx.Service(&tim); err == nil {
 		apiBackend = tim.ApiBackend
 	} else {

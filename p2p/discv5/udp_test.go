@@ -128,8 +128,8 @@ var (
 // 	// put a few nodes into the table. their exact
 // 	// distribution shouldn't matter much, although we need to
 // 	// take care not to overflow any bucket.
-// 	tartimdash := crypto.Keccak256Hash(testTarget[:])
-// 	nodes := &nodesByDistance{target: tartimdash}
+// 	tarGetHash := crypto.Keccak256Hash(testTarget[:])
+// 	nodes := &nodesByDistance{target: tarGetHash}
 // 	for i := 0; i < bucketSize; i++ {
 // 		nodes.push(nodeAtDistance(test.table.self.sha, i+2), bucketSize)
 // 	}
@@ -145,7 +145,7 @@ var (
 // 	))
 // 	// check that closest neighbors are returned.
 // 	test.packetIn(nil, findnodePacket, &findnode{Target: testTarget, Expiration: futureExp})
-// 	expected := test.table.closest(tartimdash, bucketSize)
+// 	expected := test.table.closest(tarGetHash, bucketSize)
 //
 // 	waitNeighbors := func(want []*Node) {
 // 		test.waitPacketOut(func(p *neighbors) {

@@ -73,7 +73,7 @@ var AppHelpFlagGroups = []flagGroup{
 			utils.TestnetFlag,
 			utils.RinkebyFlag,
 			utils.SyncModeFlag,
-			utils.timstatsURLFlag,
+			utils.TimstatsURLFlag,
 			utils.IdentityFlag,
 			utils.LightServFlag,
 			utils.LightPeersFlag,
@@ -89,12 +89,12 @@ var AppHelpFlagGroups = []flagGroup{
 	{
 		Name: "thash",
 		Flags: []cli.Flag{
-			utils.thashCacheDirFlag,
-			utils.thashCachesInMemoryFlag,
-			utils.thashCachesOnDiskFlag,
-			utils.thashDatasetDirFlag,
-			utils.thashDatasetsInMemoryFlag,
-			utils.thashDatasetsOnDiskFlag,
+			utils.ThashCacheDirFlag,
+			utils.ThashCachesInMemoryFlag,
+			utils.ThashCachesOnDiskFlag,
+			utils.ThashDatasetDirFlag,
+			utils.ThashDatasetsInMemoryFlag,
+			utils.ThashDatasetsOnDiskFlag,
 		},
 	},
 	{

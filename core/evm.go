@@ -31,8 +31,8 @@ type ChainContext interface {
 	// Engine retrieves the chain's consensus engine.
 	Engine() consensus.Engine
 
-	// timheader returns the hash corresponding to their hash.
-	timheader(common.Hash, uint64) *types.Header
+	// Timheader returns the hash corresponding to their hash.
+	Timheader(common.Hash, uint64) *types.Header
 }
 
 // NewEVMContext creates a new context for use in the EVM.
@@ -47,7 +47,7 @@ func NewEVMContext(msg Message, header *types.Header, chain ChainContext, author
 	return vm.Context{
 		CanTransfer: CanTransfer,
 		Transfer:    Transfer,
-		timdash:     timdashFn(header, chain),
+		GetHash:     GetHashFn(header, chain),
 		Origin:      msg.From(),
 		Coinbase:    beneficiary,
 		BlockNumber: new(big.Int).Set(header.Number),
@@ -58,10 +58,10 @@ func NewEVMContext(msg Message, header *types.Header, chain ChainContext, author
 	}
 }
 
-// timdashFn returns a timdashFunc which retrieves header hashes by number
-func timdashFn(ref *types.Header, chain ChainContext) func(n uint64) common.Hash {
+// GetHashFn returns a GetHashFunc which retrieves header hashes by number
+func GetHashFn(ref *types.Header, chain ChainContext) func(n uint64) common.Hash {
 	return func(n uint64) common.Hash {
-		for header := chain.timheader(ref.ParentHash, ref.Number.Uint64()-1); header != nil; header = chain.timheader(header.ParentHash, header.Number.Uint64()-1) {
+		for header := chain.Timheader(ref.ParentHash, ref.Number.Uint64()-1); header != nil; header = chain.Timheader(header.ParentHash, header.Number.Uint64()-1) {
 			if header.Number.Uint64() == n {
 				return header.Hash()
 			}

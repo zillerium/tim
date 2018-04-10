@@ -442,7 +442,7 @@ func opBlockhash(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack
 
 	n := evm.interpreter.intPool.get().Sub(evm.BlockNumber, common.Big257)
 	if num.Cmp(n) > 0 && num.Cmp(evm.BlockNumber) < 0 {
-		stack.push(evm.timdash(num.Uint64()).Big())
+		stack.push(evm.GetHash(num.Uint64()).Big())
 	} else {
 		stack.push(new(big.Int))
 	}

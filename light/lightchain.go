@@ -104,7 +104,7 @@ func NewLightChain(odr OdrBackend, config *params.ChainConfig, engine consensus.
 	}
 	// Check the current state of the block hashes and make sure that we do not have any of the bad blocks in our chain
 	for hash := range core.BadHashes {
-		if header := bc.timheaderByHash(hash); header != nil {
+		if header := bc.TimheaderByHash(hash); header != nil {
 			log.Error("Found bad hash, rewinding chain", "number", header.Number, "hash", header.ParentHash)
 			bc.SetHead(header.Number.Uint64() - 1)
 			log.Error("Chain rewind was successful, resuming normal operation")
@@ -141,11 +141,11 @@ func (self *LightChain) Odr() OdrBackend {
 // loadLastState loads the last known chain state from the database. This method
 // assumes that the chain manager mutex is held.
 func (self *LightChain) loadLastState() error {
-	if head := core.timdeadHeaderHash(self.chainDb); head == (common.Hash{}) {
+	if head := core.TimheadHeaderHash(self.chainDb); head == (common.Hash{}) {
 		// Corrupt or empty database, init from scratch
 		self.Reset()
 	} else {
-		if header := self.timheaderByHash(head); header != nil {
+		if header := self.TimheaderByHash(head); header != nil {
 			self.hc.SetCurrentHeader(header)
 		}
 	}
@@ -326,7 +326,7 @@ func (self *LightChain) Rollback(chain []common.Hash) {
 		hash := chain[i]
 
 		if head := self.hc.CurrentHeader(); head.Hash() == hash {
-			self.hc.SetCurrentHeader(self.timheader(head.ParentHash, head.Number.Uint64()-1))
+			self.hc.SetCurrentHeader(self.Timheader(head.ParentHash, head.Number.Uint64()-1))
 		}
 	}
 }
@@ -418,16 +418,16 @@ func (self *LightChain) GetTdByHash(hash common.Hash) *big.Int {
 	return self.hc.GetTdByHash(hash)
 }
 
-// timheader retrieves a block header from the database by hash and number,
+// Timheader retrieves a block header from the database by hash and number,
 // caching it if found.
-func (self *LightChain) timheader(hash common.Hash, number uint64) *types.Header {
-	return self.hc.timheader(hash, number)
+func (self *LightChain) Timheader(hash common.Hash, number uint64) *types.Header {
+	return self.hc.Timheader(hash, number)
 }
 
-// timheaderByHash retrieves a block header from the database by hash, caching it if
+// TimheaderByHash retrieves a block header from the database by hash, caching it if
 // found.
-func (self *LightChain) timheaderByHash(hash common.Hash) *types.Header {
-	return self.hc.timheaderByHash(hash)
+func (self *LightChain) TimheaderByHash(hash common.Hash) *types.Header {
+	return self.hc.TimheaderByHash(hash)
 }
 
 // HasHeader checks if a block header is present in the database or not, caching
@@ -442,19 +442,19 @@ func (self *LightChain) GetBlockHashesFromHash(hash common.Hash, max uint64) []c
 	return self.hc.GetBlockHashesFromHash(hash, max)
 }
 
-// timheaderByNumber retrieves a block header from the database by number,
+// TimheaderByNumber retrieves a block header from the database by number,
 // caching it (associated with its hash) if found.
-func (self *LightChain) timheaderByNumber(number uint64) *types.Header {
-	return self.hc.timheaderByNumber(number)
+func (self *LightChain) TimheaderByNumber(number uint64) *types.Header {
+	return self.hc.TimheaderByNumber(number)
 }
 
-// timheaderByNumberOdr retrieves a block header from the database or network
+// TimheaderByNumberOdr retrieves a block header from the database or network
 // by number, caching it (associated with its hash) if found.
-func (self *LightChain) timheaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) {
-	if header := self.hc.timheaderByNumber(number); header != nil {
+func (self *LightChain) TimheaderByNumberOdr(ctx context.Context, number uint64) (*types.Header, error) {
+	if header := self.hc.TimheaderByNumber(number); header != nil {
 		return header, nil
 	}
-	return timheaderByNumber(ctx, self.odr, number)
+	return TimheaderByNumber(ctx, self.odr, number)
 }
 
 func (self *LightChain) SyncCht(ctx context.Context) bool {
@@ -465,7 +465,7 @@ func (self *LightChain) SyncCht(ctx context.Context) bool {
 	chtCount, _, _ := self.odr.ChtIndexer().Sections()
 	if headNum+1 < chtCount*ChtFrequency {
 		num := chtCount*ChtFrequency - 1
-		header, err := timheaderByNumber(ctx, self.odr, num)
+		header, err := TimheaderByNumber(ctx, self.odr, num)
 		if header != nil && err == nil {
 			self.mu.Lock()
 			if self.hc.CurrentHeader().Number.Uint64() < header.Number.Uint64() {

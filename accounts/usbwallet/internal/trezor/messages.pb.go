@@ -70,11 +70,11 @@ const (
 	MessageType_MessageType_SignIdentity             MessageType = 53
 	MessageType_MessageType_SignedIdentity           MessageType = 54
 	MessageType_MessageType_GetFeatures              MessageType = 55
-	MessageType_MessageType_timGetAddress       MessageType = 56
-	MessageType_MessageType_timAddress          MessageType = 57
-	MessageType_MessageType_timSignTx           MessageType = 58
-	MessageType_MessageType_timTxRequest        MessageType = 59
-	MessageType_MessageType_timTxAck            MessageType = 60
+	MessageType_MessageType_TimGetAddress       MessageType = 56
+	MessageType_MessageType_TimAddress          MessageType = 57
+	MessageType_MessageType_TimSignTx           MessageType = 58
+	MessageType_MessageType_TimTxRequest        MessageType = 59
+	MessageType_MessageType_TimTxAck            MessageType = 60
 	MessageType_MessageType_GetECDHSessionKey        MessageType = 61
 	MessageType_MessageType_ECDHSessionKey           MessageType = 62
 	MessageType_MessageType_SetU2FCounter            MessageType = 63
@@ -146,11 +146,11 @@ var MessageType_name = map[int32]string{
 	53:  "MessageType_SignIdentity",
 	54:  "MessageType_SignedIdentity",
 	55:  "MessageType_GetFeatures",
-	56:  "MessageType_timGetAddress",
-	57:  "MessageType_timAddress",
-	58:  "MessageType_timSignTx",
-	59:  "MessageType_timTxRequest",
-	60:  "MessageType_timTxAck",
+	56:  "MessageType_TimGetAddress",
+	57:  "MessageType_TimAddress",
+	58:  "MessageType_TimSignTx",
+	59:  "MessageType_TimTxRequest",
+	60:  "MessageType_TimTxAck",
 	61:  "MessageType_GetECDHSessionKey",
 	62:  "MessageType_ECDHSessionKey",
 	63:  "MessageType_SetU2FCounter",
@@ -221,11 +221,11 @@ var MessageType_value = map[string]int32{
 	"MessageType_SignIdentity":             53,
 	"MessageType_SignedIdentity":           54,
 	"MessageType_GetFeatures":              55,
-	"MessageType_timGetAddress":       56,
-	"MessageType_timAddress":          57,
-	"MessageType_timSignTx":           58,
-	"MessageType_timTxRequest":        59,
-	"MessageType_timTxAck":            60,
+	"MessageType_TimGetAddress":       56,
+	"MessageType_TimAddress":          57,
+	"MessageType_TimSignTx":           58,
+	"MessageType_TimTxRequest":        59,
+	"MessageType_TimTxAck":            60,
 	"MessageType_GetECDHSessionKey":        61,
 	"MessageType_ECDHSessionKey":           62,
 	"MessageType_SetU2FCounter":            63,
@@ -956,27 +956,27 @@ func (m *GetAddress) GetScriptType() InputScriptType {
 // *
 // Request: Ask device for tim address corresponding to address_n path
 // @next PassphraseRequest
-// @next timAddress
+// @next TimAddress
 // @next Failure
-type timGetAddress struct {
+type TimGetAddress struct {
 	AddressN         []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	ShowDisplay      *bool    `protobuf:"varint,2,opt,name=show_display,json=showDisplay" json:"show_display,omitempty"`
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *timGetAddress) Reset()                    { *m = timGetAddress{} }
-func (m *timGetAddress) String() string            { return proto.CompactTextString(m) }
-func (*timGetAddress) ProtoMessage()               {}
-func (*timGetAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{22} }
+func (m *TimGetAddress) Reset()                    { *m = TimGetAddress{} }
+func (m *TimGetAddress) String() string            { return proto.CompactTextString(m) }
+func (*TimGetAddress) ProtoMessage()               {}
+func (*TimGetAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{22} }
 
-func (m *timGetAddress) GetAddressN() []uint32 {
+func (m *TimGetAddress) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *timGetAddress) GetShowDisplay() bool {
+func (m *TimGetAddress) GetShowDisplay() bool {
 	if m != nil && m.ShowDisplay != nil {
 		return *m.ShowDisplay
 	}
@@ -1005,18 +1005,18 @@ func (m *Address) GetAddress() string {
 
 // *
 // Response: Contains an tim address derived from device private seed
-// @prev timGetAddress
-type timAddress struct {
+// @prev TimGetAddress
+type TimAddress struct {
 	Address          []byte `protobuf:"bytes,1,req,name=address" json:"address,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *timAddress) Reset()                    { *m = timAddress{} }
-func (m *timAddress) String() string            { return proto.CompactTextString(m) }
-func (*timAddress) ProtoMessage()               {}
-func (*timAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{24} }
+func (m *TimAddress) Reset()                    { *m = TimAddress{} }
+func (m *TimAddress) String() string            { return proto.CompactTextString(m) }
+func (*TimAddress) ProtoMessage()               {}
+func (*TimAddress) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{24} }
 
-func (m *timAddress) GetAddress() []byte {
+func (m *TimAddress) GetAddress() []byte {
 	if m != nil {
 		return m.Address
 	}
@@ -2006,9 +2006,9 @@ func (m *TxAck) GetTx() *TransactionType {
 // Note: the first at most 1024 bytes of data MUST be transmitted as part of this message.
 // @next PassphraseRequest
 // @next PinMatrixRequest
-// @next timTxRequest
+// @next TimTxRequest
 // @next Failure
-type timSignTx struct {
+type TimSignTx struct {
 	AddressN         []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	Nonce            []byte   `protobuf:"bytes,2,opt,name=nonce" json:"nonce,omitempty"`
 	GasPrice         []byte   `protobuf:"bytes,3,opt,name=gas_price,json=gasPrice" json:"gas_price,omitempty"`
@@ -2021,68 +2021,68 @@ type timSignTx struct {
 	XXX_unrecognized []byte   `json:"-"`
 }
 
-func (m *timSignTx) Reset()                    { *m = timSignTx{} }
-func (m *timSignTx) String() string            { return proto.CompactTextString(m) }
-func (*timSignTx) ProtoMessage()               {}
-func (*timSignTx) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{49} }
+func (m *TimSignTx) Reset()                    { *m = TimSignTx{} }
+func (m *TimSignTx) String() string            { return proto.CompactTextString(m) }
+func (*TimSignTx) ProtoMessage()               {}
+func (*TimSignTx) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{49} }
 
-func (m *timSignTx) GetAddressN() []uint32 {
+func (m *TimSignTx) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *timSignTx) GetNonce() []byte {
+func (m *TimSignTx) GetNonce() []byte {
 	if m != nil {
 		return m.Nonce
 	}
 	return nil
 }
 
-func (m *timSignTx) GetGasPrice() []byte {
+func (m *TimSignTx) GetGasPrice() []byte {
 	if m != nil {
 		return m.GasPrice
 	}
 	return nil
 }
 
-func (m *timSignTx) GetGasLimit() []byte {
+func (m *TimSignTx) GetGasLimit() []byte {
 	if m != nil {
 		return m.GasLimit
 	}
 	return nil
 }
 
-func (m *timSignTx) GetTo() []byte {
+func (m *TimSignTx) GetTo() []byte {
 	if m != nil {
 		return m.To
 	}
 	return nil
 }
 
-func (m *timSignTx) GetValue() []byte {
+func (m *TimSignTx) GetValue() []byte {
 	if m != nil {
 		return m.Value
 	}
 	return nil
 }
 
-func (m *timSignTx) GetDataInitialChunk() []byte {
+func (m *TimSignTx) GetDataInitialChunk() []byte {
 	if m != nil {
 		return m.DataInitialChunk
 	}
 	return nil
 }
 
-func (m *timSignTx) GetDataLength() uint32 {
+func (m *TimSignTx) GetDataLength() uint32 {
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *timSignTx) GetChainId() uint32 {
+func (m *TimSignTx) GetChainId() uint32 {
 	if m != nil && m.ChainId != nil {
 		return *m.ChainId
 	}
@@ -2093,9 +2093,9 @@ func (m *timSignTx) GetChainId() uint32 {
 // Response: Device asks for more data from transaction payload, or returns the signature.
 // If data_length is set, device awaits that many more bytes of payload.
 // Otherwise, the signature_* fields contain the computed transaction signature. All three fields will be present.
-// @prev timSignTx
-// @next timTxAck
-type timTxRequest struct {
+// @prev TimSignTx
+// @next TimTxAck
+type TimTxRequest struct {
 	DataLength       *uint32 `protobuf:"varint,1,opt,name=data_length,json=dataLength" json:"data_length,omitempty"`
 	SignatureV       *uint32 `protobuf:"varint,2,opt,name=signature_v,json=signatureV" json:"signature_v,omitempty"`
 	SignatureR       []byte  `protobuf:"bytes,3,opt,name=signature_r,json=signatureR" json:"signature_r,omitempty"`
@@ -2103,33 +2103,33 @@ type timTxRequest struct {
 	XXX_unrecognized []byte  `json:"-"`
 }
 
-func (m *timTxRequest) Reset()                    { *m = timTxRequest{} }
-func (m *timTxRequest) String() string            { return proto.CompactTextString(m) }
-func (*timTxRequest) ProtoMessage()               {}
-func (*timTxRequest) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{50} }
+func (m *TimTxRequest) Reset()                    { *m = TimTxRequest{} }
+func (m *TimTxRequest) String() string            { return proto.CompactTextString(m) }
+func (*TimTxRequest) ProtoMessage()               {}
+func (*TimTxRequest) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{50} }
 
-func (m *timTxRequest) GetDataLength() uint32 {
+func (m *TimTxRequest) GetDataLength() uint32 {
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *timTxRequest) GetSignatureV() uint32 {
+func (m *TimTxRequest) GetSignatureV() uint32 {
 	if m != nil && m.SignatureV != nil {
 		return *m.SignatureV
 	}
 	return 0
 }
 
-func (m *timTxRequest) GetSignatureR() []byte {
+func (m *TimTxRequest) GetSignatureR() []byte {
 	if m != nil {
 		return m.SignatureR
 	}
 	return nil
 }
 
-func (m *timTxRequest) GetSignatureS() []byte {
+func (m *TimTxRequest) GetSignatureS() []byte {
 	if m != nil {
 		return m.SignatureS
 	}
@@ -2138,19 +2138,19 @@ func (m *timTxRequest) GetSignatureS() []byte {
 
 // *
 // Request: Transaction payload data.
-// @prev timTxRequest
-// @next timTxRequest
-type timTxAck struct {
+// @prev TimTxRequest
+// @next TimTxRequest
+type TimTxAck struct {
 	DataChunk        []byte `protobuf:"bytes,1,opt,name=data_chunk,json=dataChunk" json:"data_chunk,omitempty"`
 	XXX_unrecognized []byte `json:"-"`
 }
 
-func (m *timTxAck) Reset()                    { *m = timTxAck{} }
-func (m *timTxAck) String() string            { return proto.CompactTextString(m) }
-func (*timTxAck) ProtoMessage()               {}
-func (*timTxAck) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{51} }
+func (m *TimTxAck) Reset()                    { *m = TimTxAck{} }
+func (m *TimTxAck) String() string            { return proto.CompactTextString(m) }
+func (*TimTxAck) ProtoMessage()               {}
+func (*TimTxAck) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{51} }
 
-func (m *timTxAck) GetDataChunk() []byte {
+func (m *TimTxAck) GetDataChunk() []byte {
 	if m != nil {
 		return m.DataChunk
 	}
@@ -2481,7 +2481,7 @@ func (m *FirmwareUpload) GetPayload() []byte {
 	return nil
 }
 
-func (m *FirmwareUpload) timdash() []byte {
+func (m *FirmwareUpload) GetHash() []byte {
 	if m != nil {
 		return m.Hash
 	}
@@ -2806,9 +2806,9 @@ func init() {
 	proto.RegisterType((*GetPublicKey)(nil), "GetPublicKey")
 	proto.RegisterType((*PublicKey)(nil), "PublicKey")
 	proto.RegisterType((*GetAddress)(nil), "GetAddress")
-	proto.RegisterType((*timGetAddress)(nil), "timGetAddress")
+	proto.RegisterType((*TimGetAddress)(nil), "TimGetAddress")
 	proto.RegisterType((*Address)(nil), "Address")
-	proto.RegisterType((*timAddress)(nil), "timAddress")
+	proto.RegisterType((*TimAddress)(nil), "TimAddress")
 	proto.RegisterType((*WipeDevice)(nil), "WipeDevice")
 	proto.RegisterType((*LoadDevice)(nil), "LoadDevice")
 	proto.RegisterType((*ResetDevice)(nil), "ResetDevice")
@@ -2833,9 +2833,9 @@ func init() {
 	proto.RegisterType((*SimpleSignTx)(nil), "SimpleSignTx")
 	proto.RegisterType((*TxRequest)(nil), "TxRequest")
 	proto.RegisterType((*TxAck)(nil), "TxAck")
-	proto.RegisterType((*timSignTx)(nil), "timSignTx")
-	proto.RegisterType((*timTxRequest)(nil), "timTxRequest")
-	proto.RegisterType((*timTxAck)(nil), "timTxAck")
+	proto.RegisterType((*TimSignTx)(nil), "TimSignTx")
+	proto.RegisterType((*TimTxRequest)(nil), "TimTxRequest")
+	proto.RegisterType((*TimTxAck)(nil), "TimTxAck")
 	proto.RegisterType((*timSignMessage)(nil), "timSignMessage")
 	proto.RegisterType((*timVerifyMessage)(nil), "timVerifyMessage")
 	proto.RegisterType((*timMessageSignature)(nil), "timMessageSignature")

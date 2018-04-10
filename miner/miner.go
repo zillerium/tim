@@ -149,7 +149,7 @@ func (self *Miner) HashRate() (tot int64) {
 	// hashrate?
 	for agent := range self.worker.agents {
 		if _, ok := agent.(*CpuAgent); !ok {
-			tot += agent.timdashRate()
+			tot += agent.GetHashRate()
 		}
 	}
 	return

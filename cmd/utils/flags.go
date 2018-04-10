@@ -184,34 +184,34 @@ var (
 		Usage: "Reduce key-derivation RAM & CPU usage at some expense of KDF strength",
 	}
 	// thash settings
-	thashCacheDirFlag = DirectoryFlag{
+	ThashCacheDirFlag = DirectoryFlag{
 		Name:  "thash.cachedir",
 		Usage: "Directory to store the thash verification caches (default = inside the datadir)",
 	}
-	thashCachesInMemoryFlag = cli.IntFlag{
+	ThashCachesInMemoryFlag = cli.IntFlag{
 		Name:  "thash.cachesinmem",
 		Usage: "Number of recent thash caches to keep in memory (16MB each)",
-		Value: eth.DefaultConfig.thashCachesInMem,
+		Value: eth.DefaultConfig.ThashCachesInMem,
 	}
-	thashCachesOnDiskFlag = cli.IntFlag{
+	ThashCachesOnDiskFlag = cli.IntFlag{
 		Name:  "thash.cachesondisk",
 		Usage: "Number of recent thash caches to keep on disk (16MB each)",
-		Value: eth.DefaultConfig.thashCachesOnDisk,
+		Value: eth.DefaultConfig.ThashCachesOnDisk,
 	}
-	thashDatasetDirFlag = DirectoryFlag{
+	ThashDatasetDirFlag = DirectoryFlag{
 		Name:  "thash.dagdir",
 		Usage: "Directory to store the thash mining DAGs (default = inside home folder)",
-		Value: DirectoryString{eth.DefaultConfig.thashDatasetDir},
+		Value: DirectoryString{eth.DefaultConfig.ThashDatasetDir},
 	}
-	thashDatasetsInMemoryFlag = cli.IntFlag{
+	ThashDatasetsInMemoryFlag = cli.IntFlag{
 		Name:  "thash.dagsinmem",
 		Usage: "Number of recent thash mining DAGs to keep in memory (1+GB each)",
-		Value: eth.DefaultConfig.thashDatasetsInMem,
+		Value: eth.DefaultConfig.ThashDatasetsInMem,
 	}
-	thashDatasetsOnDiskFlag = cli.IntFlag{
+	ThashDatasetsOnDiskFlag = cli.IntFlag{
 		Name:  "thash.dagsondisk",
 		Usage: "Number of recent thash mining DAGs to keep on disk (1+GB each)",
-		Value: eth.DefaultConfig.thashDatasetsOnDisk,
+		Value: eth.DefaultConfig.ThashDatasetsOnDisk,
 	}
 	// Transaction pool settings
 	TxPoolNoLocalsFlag = cli.BoolFlag{
@@ -320,7 +320,7 @@ var (
 		Usage: "Record information useful for VM and contract debugging",
 	}
 	// Logging and debug settings
-	timstatsURLFlag = cli.StringFlag{
+	TimstatsURLFlag = cli.StringFlag{
 		Name:  "timstats",
 		Usage: "Reporting URL of a timstats service (nodename:secret@host:port)",
 	}
@@ -883,23 +883,23 @@ func setTxPool(ctx *cli.Context, cfg *core.TxPoolConfig) {
 }
 
 func setthash(ctx *cli.Context, cfg *eth.Config) {
-	if ctx.GlobalIsSet(thashCacheDirFlag.Name) {
-		cfg.thashCacheDir = ctx.GlobalString(thashCacheDirFlag.Name)
+	if ctx.GlobalIsSet(ThashCacheDirFlag.Name) {
+		cfg.ThashCacheDir = ctx.GlobalString(ThashCacheDirFlag.Name)
 	}
-	if ctx.GlobalIsSet(thashDatasetDirFlag.Name) {
-		cfg.thashDatasetDir = ctx.GlobalString(thashDatasetDirFlag.Name)
+	if ctx.GlobalIsSet(ThashDatasetDirFlag.Name) {
+		cfg.ThashDatasetDir = ctx.GlobalString(ThashDatasetDirFlag.Name)
 	}
-	if ctx.GlobalIsSet(thashCachesInMemoryFlag.Name) {
-		cfg.thashCachesInMem = ctx.GlobalInt(thashCachesInMemoryFlag.Name)
+	if ctx.GlobalIsSet(ThashCachesInMemoryFlag.Name) {
+		cfg.ThashCachesInMem = ctx.GlobalInt(ThashCachesInMemoryFlag.Name)
 	}
-	if ctx.GlobalIsSet(thashCachesOnDiskFlag.Name) {
-		cfg.thashCachesOnDisk = ctx.GlobalInt(thashCachesOnDiskFlag.Name)
+	if ctx.GlobalIsSet(ThashCachesOnDiskFlag.Name) {
+		cfg.ThashCachesOnDisk = ctx.GlobalInt(ThashCachesOnDiskFlag.Name)
 	}
-	if ctx.GlobalIsSet(thashDatasetsInMemoryFlag.Name) {
-		cfg.thashDatasetsInMem = ctx.GlobalInt(thashDatasetsInMemoryFlag.Name)
+	if ctx.GlobalIsSet(ThashDatasetsInMemoryFlag.Name) {
+		cfg.ThashDatasetsInMem = ctx.GlobalInt(ThashDatasetsInMemoryFlag.Name)
 	}
-	if ctx.GlobalIsSet(thashDatasetsOnDiskFlag.Name) {
-		cfg.thashDatasetsOnDisk = ctx.GlobalInt(thashDatasetsOnDiskFlag.Name)
+	if ctx.GlobalIsSet(ThashDatasetsOnDiskFlag.Name) {
+		cfg.ThashDatasetsOnDisk = ctx.GlobalInt(ThashDatasetsOnDiskFlag.Name)
 	}
 }
 
@@ -1055,7 +1055,7 @@ func RegisterShhService(stack *node.Node, cfg *whisper.Config) {
 func RegistertimstatsService(stack *node.Node, url string) {
 	if err := stack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
 		// Retrieve both eth and les services
-		var ethServ *eth.tim
+		var ethServ *eth.Tim
 		ctx.Service(&ethServ)
 
 		var lesServ *les.Lighttim
@@ -1119,8 +1119,8 @@ func MakeChain(ctx *cli.Context, stack *node.Node) (chain *core.BlockChain, chai
 		engine = thash.NewFaker()
 		if !ctx.GlobalBool(FakePoWFlag.Name) {
 			engine = thash.New(
-				stack.ResolvePath(eth.DefaultConfig.thashCacheDir), eth.DefaultConfig.thashCachesInMem, eth.DefaultConfig.thashCachesOnDisk,
-				stack.ResolvePath(eth.DefaultConfig.thashDatasetDir), eth.DefaultConfig.thashDatasetsInMem, eth.DefaultConfig.thashDatasetsOnDisk,
+				stack.ResolvePath(eth.DefaultConfig.ThashCacheDir), eth.DefaultConfig.ThashCachesInMem, eth.DefaultConfig.ThashCachesOnDisk,
+				stack.ResolvePath(eth.DefaultConfig.ThashDatasetDir), eth.DefaultConfig.ThashDatasetsInMem, eth.DefaultConfig.ThashDatasetsOnDisk,
 			)
 		}
 	}

@@ -91,7 +91,7 @@ func (w *wizard) deployNode(boot bool) {
 	}
 	// If the node is a miner/signer, load up needed credentials
 	if !boot {
-		if w.conf.genesis.Config.thash != nil {
+		if w.conf.genesis.Config.Thash != nil {
 			// thash based miners only need an etherbase to mine against
 			fmt.Println()
 			if infos.etherbase == "" {

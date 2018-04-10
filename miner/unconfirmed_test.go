@@ -27,7 +27,7 @@ import (
 // returns nil for any requested headers.
 type noopHeaderRetriever struct{}
 
-func (r *noopHeaderRetriever) timheaderByNumber(number uint64) *types.Header {
+func (r *noopHeaderRetriever) TimheaderByNumber(number uint64) *types.Header {
 	return nil
 }
 

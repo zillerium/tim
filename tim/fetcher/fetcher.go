@@ -285,7 +285,7 @@ func (f *Fetcher) loop() {
 		// Clean up any expired block fetches
 		for hash, announce := range f.fetching {
 			if time.Since(announce.time) > fetchTimeout {
-				f.fortimdash(hash)
+				f.forGetHash(hash)
 			}
 		}
 		// Import any queued blocks that could potentially fit
@@ -359,7 +359,7 @@ func (f *Fetcher) loop() {
 
 		case hash := <-f.done:
 			// A pending import finished, remove all traces of the notification
-			f.fortimdash(hash)
+			f.forGetHash(hash)
 			f.forgetBlock(hash)
 
 		case <-fetchTimer.C:
@@ -370,7 +370,7 @@ func (f *Fetcher) loop() {
 				if time.Since(announces[0].time) > arriveTimeout-gatherSlack {
 					// Pick a random peer to retrieve from, reset all others
 					announce := announces[rand.Intn(len(announces))]
-					f.fortimdash(hash)
+					f.forGetHash(hash)
 
 					// If the block still didn't arrive, queue for fetching
 					if f.getBlock(hash) == nil {
@@ -405,7 +405,7 @@ func (f *Fetcher) loop() {
 			for hash, announces := range f.fetched {
 				// Pick a random peer to retrieve from, reset all others
 				announce := announces[rand.Intn(len(announces))]
-				f.fortimdash(hash)
+				f.forGetHash(hash)
 
 				// If the block still didn't arrive, queue for completion
 				if f.getBlock(hash) == nil {
@@ -451,7 +451,7 @@ func (f *Fetcher) loop() {
 					if header.Number.Uint64() != announce.number {
 						log.Trace("Invalid block number fetched", "peer", announce.origin, "hash", header.Hash(), "announced", announce.number, "provided", header.Number)
 						f.dropPeer(announce.origin)
-						f.fortimdash(hash)
+						f.forGetHash(hash)
 						continue
 					}
 					// Only keep if not imported by other means
@@ -474,7 +474,7 @@ func (f *Fetcher) loop() {
 						incomplete = append(incomplete, announce)
 					} else {
 						log.Trace("Block already imported, discarding header", "peer", announce.origin, "number", header.Number, "hash", header.Hash())
-						f.fortimdash(hash)
+						f.forGetHash(hash)
 					}
 				} else {
 					// Fetcher doesn't know about it, add to the return list
@@ -535,7 +535,7 @@ func (f *Fetcher) loop() {
 
 								blocks = append(blocks, block)
 							} else {
-								f.fortimdash(hash)
+								f.forGetHash(hash)
 							}
 						}
 					}
@@ -606,14 +606,14 @@ func (f *Fetcher) enqueue(peer string, block *types.Block) {
 	if count > blockLimit {
 		log.Debug("Discarded propagated block, exceeded allowance", "peer", peer, "number", block.Number(), "hash", hash, "limit", blockLimit)
 		propBroadcastDOSMeter.Mark(1)
-		f.fortimdash(hash)
+		f.forGetHash(hash)
 		return
 	}
 	// Discard any past or too distant blocks
 	if dist := int64(block.NumberU64()) - int64(f.chainHeight()); dist < -maxUncleDist || dist > maxQueueDist {
 		log.Debug("Discarded propagated block, too far away", "peer", peer, "number", block.Number(), "hash", hash, "distance", dist)
 		propBroadcastDropMeter.Mark(1)
-		f.fortimdash(hash)
+		f.forGetHash(hash)
 		return
 	}
 	// Schedule the block for future importing
@@ -681,9 +681,9 @@ func (f *Fetcher) insert(peer string, block *types.Block) {
 	}()
 }
 
-// fortimdash removes all traces of a block announcement from the fetcher's
+// forGetHash removes all traces of a block announcement from the fetcher's
 // internal state.
-func (f *Fetcher) fortimdash(hash common.Hash) {
+func (f *Fetcher) forGetHash(hash common.Hash) {
 	// Remove all pending announces and decrement DOS counters
 	for _, announce := range f.announced[hash] {
 		f.announces[announce.origin]--

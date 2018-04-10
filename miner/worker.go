@@ -57,7 +57,7 @@ type Agent interface {
 	SetReturnCh(chan<- *Result)
 	Stop()
 	Start()
-	timdashRate() int64
+	GetHashRate() int64
 }
 
 // Work is the workers current environment and holds

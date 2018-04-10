@@ -35,7 +35,7 @@ import (
 	"github.com/tim-coin/tim/tim/gasprice"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
-	"github.com/tim-coin/tim/internal/ethapi"
+	"github.com/tim-coin/tim/internal/timapi"
 	"github.com/tim-coin/tim/light"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/node"
@@ -72,7 +72,7 @@ type Lighttim struct {
 	accountManager *accounts.Manager
 
 	networkId     uint64
-	netRPCService *ethapi.PublicNetAPI
+	netRPCService *timapi.PublicNetAPI
 
 	wg sync.WaitGroup
 }
@@ -173,19 +173,19 @@ func (s *LightDummyAPI) Mining() bool {
 // APIs returns the collection of RPC services the tim package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
 func (s *Lighttim) APIs() []rpc.API {
-	return append(ethapi.GetAPIs(s.ApiBackend), []rpc.API{
+	return append(timapi.GetAPIs(s.ApiBackend), []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "tim",
 			Version:   "1.0",
 			Service:   &LightDummyAPI{},
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "tim",
 			Version:   "1.0",
 			Service:   downloader.NewPublicDownloaderAPI(s.protocolManager.downloader, s.eventMux),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "tim",
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.ApiBackend, true),
 			Public:    true,
@@ -220,7 +220,7 @@ func (s *Lighttim) Protocols() []p2p.Protocol {
 func (s *Lighttim) Start(srvr *p2p.Server) error {
 	s.startBloomHandlers()
 	log.Warn("Light client mode is an experimental feature")
-	s.netRPCService = ethapi.NewPublicNetAPI(srvr, s.networkId)
+	s.netRPCService = timapi.NewPublicNetAPI(srvr, s.networkId)
 	// search the topic belonging to the oldest supported protocol because
 	// servers always advertise all supported protocols
 	protocolVersion := ClientProtocolVersions[len(ClientProtocolVersions)-1]

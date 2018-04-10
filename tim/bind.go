@@ -24,7 +24,7 @@ import (
 	"github.com/tim-coin/tim/common"
 	"github.com/tim-coin/tim/common/hexutil"
 	"github.com/tim-coin/tim/core/types"
-	"github.com/tim-coin/tim/internal/ethapi"
+	"github.com/tim-coin/tim/internal/timapi"
 	"github.com/tim-coin/tim/rlp"
 	"github.com/tim-coin/tim/rpc"
 )
@@ -37,18 +37,18 @@ import (
 // object. These should be rewritten to internal Go method calls when the Go API
 // is refactored to support a clean library use.
 type ContractBackend struct {
-	eapi  *ethapi.PublictimAPI        // Wrapper around the tim object to access metadata
-	bcapi *ethapi.PublicBlockChainAPI      // Wrapper around the blockchain to access chain data
-	txapi *ethapi.PublicTransactionPoolAPI // Wrapper around the transaction pool to access transaction data
+	eapi  *timapi.PublictimAPI        // Wrapper around the tim object to access metadata
+	bcapi *timapi.PublicBlockChainAPI      // Wrapper around the blockchain to access chain data
+	txapi *timapi.PublicTransactionPoolAPI // Wrapper around the transaction pool to access transaction data
 }
 
 // NewContractBackend creates a new native contract backend using an existing
 // tim object.
-func NewContractBackend(apiBackend ethapi.Backend) *ContractBackend {
+func NewContractBackend(apiBackend timapi.Backend) *ContractBackend {
 	return &ContractBackend{
-		eapi:  ethapi.NewPublictimAPI(apiBackend),
-		bcapi: ethapi.NewPublicBlockChainAPI(apiBackend),
-		txapi: ethapi.NewPublicTransactionPoolAPI(apiBackend, new(ethapi.AddrLocker)),
+		eapi:  timapi.NewPublictimAPI(apiBackend),
+		bcapi: timapi.NewPublicBlockChainAPI(apiBackend),
+		txapi: timapi.NewPublicTransactionPoolAPI(apiBackend, new(timapi.AddrLocker)),
 	}
 }
 
@@ -78,8 +78,8 @@ func (b *ContractBackend) PendingCallContract(ctx context.Context, msg tim.CallM
 	return out, err
 }
 
-func toCallArgs(msg tim.CallMsg) ethapi.CallArgs {
-	args := ethapi.CallArgs{
+func toCallArgs(msg tim.CallMsg) timapi.CallArgs {
+	args := timapi.CallArgs{
 		To:   msg.To,
 		From: msg.From,
 		Data: msg.Data,

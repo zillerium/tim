@@ -60,7 +60,7 @@ func (b *LesApiBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNum
 		return b.eth.blockchain.CurrentHeader(), nil
 	}
 
-	return b.eth.blockchain.timheaderByNumberOdr(ctx, uint64(blockNr))
+	return b.eth.blockchain.TimheaderByNumberOdr(ctx, uint64(blockNr))
 }
 
 func (b *LesApiBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {

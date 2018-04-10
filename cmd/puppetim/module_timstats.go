@@ -130,7 +130,7 @@ func (info *timstatsInfos) String() string {
 
 // checktimstats does a health-check against an timstats server to verify whether
 // it's running, and if yes, gathering a collection of useful infos about it.
-func checktimstats(client *sshClient, network string) (*timstatsInfos, error) {
+func checkTimstats(client *sshClient, network string) (*timstatsInfos, error) {
 	// Inspect a possible timstats container on the host
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_timstats_1", network))
 	if err != nil {

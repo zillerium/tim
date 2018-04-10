@@ -61,12 +61,12 @@ var (
 		utils.DataDirFlag,
 		utils.KeyStoreDirFlag,
 		utils.NoUSBFlag,
-		utils.thashCacheDirFlag,
-		utils.thashCachesInMemoryFlag,
-		utils.thashCachesOnDiskFlag,
-		utils.thashDatasetDirFlag,
-		utils.thashDatasetsInMemoryFlag,
-		utils.thashDatasetsOnDiskFlag,
+		utils.ThashCacheDirFlag,
+		utils.ThashCachesInMemoryFlag,
+		utils.ThashCachesOnDiskFlag,
+		utils.ThashDatasetDirFlag,
+		utils.ThashDatasetsInMemoryFlag,
+		utils.ThashDatasetsOnDiskFlag,
 		utils.TxPoolNoLocalsFlag,
 		utils.TxPoolJournalFlag,
 		utils.TxPoolRejournalFlag,
@@ -106,7 +106,7 @@ var (
 		utils.VMEnableDebugFlag,
 		utils.NetworkIdFlag,
 		utils.RPCCORSDomainFlag,
-		utils.timstatsURLFlag,
+		utils.TimstatsURLFlag,
 		utils.MetricsEnabledFlag,
 		utils.FakePoWFlag,
 		utils.NoCompactionFlag,
@@ -273,7 +273,7 @@ func startNode(ctx *cli.Context, stack *node.Node) {
 	// Start auxiliary services if enabled
 	if ctx.GlobalBool(utils.MiningEnabledFlag.Name) || ctx.GlobalBool(utils.DeveloperFlag.Name) {
 		// Mining only makes sense if a full tim node is running
-		var tim *eth.tim
+		var tim *eth.Tim
 		if err := stack.Service(&tim); err != nil {
 			utils.Fatalf("tim service not running: %v", err)
 		}

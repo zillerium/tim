@@ -40,7 +40,7 @@ import (
 	"github.com/tim-coin/tim/tim/gasprice"
 	"github.com/tim-coin/tim/timdb"
 	"github.com/tim-coin/tim/event"
-	"github.com/tim-coin/tim/internal/ethapi"
+	"github.com/tim-coin/tim/internal/timapi"
 	"github.com/tim-coin/tim/log"
 	"github.com/tim-coin/tim/miner"
 	"github.com/tim-coin/tim/node"
@@ -58,7 +58,7 @@ type LesServer interface {
 }
 
 // tim implements the tim full node service.
-type tim struct {
+type Tim struct {
 	config      *Config
 	chainConfig *params.ChainConfig
 
@@ -89,21 +89,21 @@ type tim struct {
 	etherbase common.Address
 
 	networkId     uint64
-	netRPCService *ethapi.PublicNetAPI
+	netRPCService *timapi.PublicNetAPI
 
 	lock sync.RWMutex // Protects the variadic fields (e.g. gas price and etherbase)
 }
 
-func (s *tim) AddLesServer(ls LesServer) {
+func (s *Tim) AddLesServer(ls LesServer) {
 	s.lesServer = ls
 	ls.SetBloomBitsIndexer(s.bloomIndexer)
 }
 
 // New creates a new tim object (including the
 // initialisation of the common tim object)
-func New(ctx *node.ServiceContext, config *Config) (*tim, error) {
+func New(ctx *node.ServiceContext, config *Config) (*Tim, error) {
 	if config.SyncMode == downloader.LightSync {
-		return nil, errors.New("can't run eth.tim in light sync mode, use les.Lighttim")
+		return nil, errors.New("can't run eth.Tim in light sync mode, use les.Lighttim")
 	}
 	if !config.SyncMode.IsValid() {
 		return nil, fmt.Errorf("invalid sync mode %d", config.SyncMode)
@@ -119,7 +119,7 @@ func New(ctx *node.ServiceContext, config *Config) (*tim, error) {
 	}
 	log.Info("Initialised chain configuration", "config", chainConfig)
 
-	eth := &tim{
+	eth := &Tim{
 		config:         config,
 		chainDb:        chainDb,
 		chainConfig:    chainConfig,
@@ -203,7 +203,7 @@ func CreateDB(ctx *node.ServiceContext, config *Config, name string) (timdb.Data
 		return nil, err
 	}
 	if db, ok := db.(*timdb.LDBDatabase); ok {
-		db.Meter("eth/db/chaindata/")
+		db.Meter("tim/db/chaindata/")
 	}
 	return db, nil
 }
@@ -226,8 +226,8 @@ func CreateConsensusEngine(ctx *node.ServiceContext, config *Config, chainConfig
 		log.Warn("thash used in shared mode")
 		return thash.NewShared()
 	default:
-		engine := thash.New(ctx.ResolvePath(config.thashCacheDir), config.thashCachesInMem, config.thashCachesOnDisk,
-			config.thashDatasetDir, config.thashDatasetsInMem, config.thashDatasetsOnDisk)
+		engine := thash.New(ctx.ResolvePath(config.ThashCacheDir), config.ThashCachesInMem, config.ThashCachesOnDisk,
+			config.ThashDatasetDir, config.ThashDatasetsInMem, config.ThashDatasetsOnDisk)
 		engine.SetThreads(-1) // Disable CPU mining
 		return engine
 	}
@@ -235,8 +235,8 @@ func CreateConsensusEngine(ctx *node.ServiceContext, config *Config, chainConfig
 
 // APIs returns the collection of RPC services the tim package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
-func (s *tim) APIs() []rpc.API {
-	apis := ethapi.GetAPIs(s.ApiBackend)
+func (s *Tim) APIs() []rpc.API {
+	apis := timapi.GetAPIs(s.ApiBackend)
 
 	// Append any APIs exposed explicitly by the consensus engine
 	apis = append(apis, s.engine.APIs(s.BlockChain())...)
@@ -244,17 +244,17 @@ func (s *tim) APIs() []rpc.API {
 	// Append all the local APIs and return
 	return append(apis, []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "tim",
 			Version:   "1.0",
 			Service:   NewPublictimAPI(s),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "tim",
 			Version:   "1.0",
 			Service:   NewPublicMinerAPI(s),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "tim",
 			Version:   "1.0",
 			Service:   downloader.NewPublicDownloaderAPI(s.protocolManager.downloader, s.eventMux),
 			Public:    true,
@@ -264,7 +264,7 @@ func (s *tim) APIs() []rpc.API {
 			Service:   NewPrivateMinerAPI(s),
 			Public:    false,
 		}, {
-			Namespace: "eth",
+			Namespace: "tim",
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.ApiBackend, false),
 			Public:    true,
@@ -290,11 +290,11 @@ func (s *tim) APIs() []rpc.API {
 	}...)
 }
 
-func (s *tim) ResetWithGenesisBlock(gb *types.Block) {
+func (s *Tim) ResetWithGenesisBlock(gb *types.Block) {
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *tim) Etherbase() (eb common.Address, err error) {
+func (s *Tim) Etherbase() (eb common.Address, err error) {
 	s.lock.RLock()
 	etherbase := s.etherbase
 	s.lock.RUnlock()
@@ -311,7 +311,7 @@ func (s *tim) Etherbase() (eb common.Address, err error) {
 }
 
 // set in js console via admin interface or wrapper from cli flags
-func (self *tim) SetEtherbase(etherbase common.Address) {
+func (self *Tim) SetEtherbase(etherbase common.Address) {
 	self.lock.Lock()
 	self.etherbase = etherbase
 	self.lock.Unlock()
@@ -319,7 +319,7 @@ func (self *tim) SetEtherbase(etherbase common.Address) {
 	self.miner.SetEtherbase(etherbase)
 }
 
-func (s *tim) StartMining(local bool) error {
+func (s *Tim) StartMining(local bool) error {
 	eb, err := s.Etherbase()
 	if err != nil {
 		log.Error("Cannot start mining without etherbase", "err", err)
@@ -344,24 +344,24 @@ func (s *tim) StartMining(local bool) error {
 	return nil
 }
 
-func (s *tim) StopMining()         { s.miner.Stop() }
-func (s *tim) IsMining() bool      { return s.miner.Mining() }
-func (s *tim) Miner() *miner.Miner { return s.miner }
+func (s *Tim) StopMining()         { s.miner.Stop() }
+func (s *Tim) IsMining() bool      { return s.miner.Mining() }
+func (s *Tim) Miner() *miner.Miner { return s.miner }
 
-func (s *tim) AccountManager() *accounts.Manager  { return s.accountManager }
-func (s *tim) BlockChain() *core.BlockChain       { return s.blockchain }
-func (s *tim) TxPool() *core.TxPool               { return s.txPool }
-func (s *tim) EventMux() *event.TypeMux           { return s.eventMux }
-func (s *tim) Engine() consensus.Engine           { return s.engine }
-func (s *tim) ChainDb() timdb.Database            { return s.chainDb }
-func (s *tim) IsListening() bool                  { return true } // Always listening
-func (s *tim) EthVersion() int                    { return int(s.protocolManager.SubProtocols[0].Version) }
-func (s *tim) NetVersion() uint64                 { return s.networkId }
-func (s *tim) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
+func (s *Tim) AccountManager() *accounts.Manager  { return s.accountManager }
+func (s *Tim) BlockChain() *core.BlockChain       { return s.blockchain }
+func (s *Tim) TxPool() *core.TxPool               { return s.txPool }
+func (s *Tim) EventMux() *event.TypeMux           { return s.eventMux }
+func (s *Tim) Engine() consensus.Engine           { return s.engine }
+func (s *Tim) ChainDb() timdb.Database            { return s.chainDb }
+func (s *Tim) IsListening() bool                  { return true } // Always listening
+func (s *Tim) EthVersion() int                    { return int(s.protocolManager.SubProtocols[0].Version) }
+func (s *Tim) NetVersion() uint64                 { return s.networkId }
+func (s *Tim) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
 
 // Protocols implements node.Service, returning all the currently configured
 // network protocols to start.
-func (s *tim) Protocols() []p2p.Protocol {
+func (s *Tim) Protocols() []p2p.Protocol {
 	if s.lesServer == nil {
 		return s.protocolManager.SubProtocols
 	}
@@ -370,12 +370,12 @@ func (s *tim) Protocols() []p2p.Protocol {
 
 // Start implements node.Service, starting all internal goroutines needed by the
 // tim protocol implementation.
-func (s *tim) Start(srvr *p2p.Server) error {
+func (s *Tim) Start(srvr *p2p.Server) error {
 	// Start the bloom bits servicing goroutines
 	s.startBloomHandlers()
 
 	// Start the RPC service
-	s.netRPCService = ethapi.NewPublicNetAPI(srvr, s.NetVersion())
+	s.netRPCService = timapi.NewPublicNetAPI(srvr, s.NetVersion())
 
 	// Figure out a max peers count based on the server limits
 	maxPeers := srvr.MaxPeers
@@ -395,7 +395,7 @@ func (s *tim) Start(srvr *p2p.Server) error {
 
 // Stop implements node.Service, terminating all internal goroutines used by the
 // tim protocol.
-func (s *tim) Stop() error {
+func (s *Tim) Stop() error {
 	if s.stopDbUpgrade != nil {
 		s.stopDbUpgrade()
 	}

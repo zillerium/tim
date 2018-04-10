@@ -158,8 +158,8 @@ type LightChain interface {
 	// HasHeader verifies a header's presence in the local chain.
 	HasHeader(h common.Hash, number uint64) bool
 
-	// timheaderByHash retrieves a header from the local chain.
-	timheaderByHash(common.Hash) *types.Header
+	// TimheaderByHash retrieves a header from the local chain.
+	TimheaderByHash(common.Hash) *types.Header
 
 	// CurrentHeader retrieves the head header from the local chain.
 	CurrentHeader() *types.Header
@@ -413,7 +413,7 @@ func (d *Downloader) syncWithPeer(p *peerConnection, hash common.Hash, td *big.I
 		return errTooOld
 	}
 
-	log.Debug("Synchronising with the network", "peer", p.id, "eth", p.version, "head", hash, "td", td, "mode", d.mode)
+	log.Debug("Synchronising with the network", "peer", p.id, "tim", p.version, "head", hash, "td", td, "mode", d.mode)
 	defer func(start time.Time) {
 		log.Debug("Synchronisation terminated", "elapsed", time.Since(start))
 	}(time.Now())
@@ -735,7 +735,7 @@ func (d *Downloader) findAncestor(p *peerConnection, height uint64) (uint64, err
 					end = check
 					break
 				}
-				header := d.lightchain.timheaderByHash(headers[0].Hash()) // Independent of sync mode, header surely exists
+				header := d.lightchain.TimheaderByHash(headers[0].Hash()) // Independent of sync mode, header surely exists
 				if header.Number.Uint64() != check {
 					p.log.Debug("Received non requested header", "number", header.Number, "hash", header.Hash(), "request", check)
 					return 0, errBadPeer
@@ -781,7 +781,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 	defer timeout.Stop()
 
 	var ttl time.Duration
-	timheaders := func(from uint64) {
+	Timheaders := func(from uint64) {
 		request = time.Now()
 
 		ttl = d.requestTTL()
@@ -796,7 +796,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 		}
 	}
 	// Start pulling the header chain skeleton until all is done
-	timheaders(from)
+	Timheaders(from)
 
 	for {
 		select {
@@ -815,7 +815,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 			// If the skeleton's finished, pull any remaining head headers directly from the origin
 			if packet.Items() == 0 && skeleton {
 				skeleton = false
-				timheaders(from)
+				Timheaders(from)
 				continue
 			}
 			// If no more headers are inbound, notify the content fetchers and return
@@ -850,7 +850,7 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 				}
 				from += uint64(len(headers))
 			}
-			timheaders(from)
+			Timheaders(from)
 
 		case <-timeout.C:
 			// Header retrieval timed out, consider the peer bad and drop

@@ -34,19 +34,19 @@ func TestHeaderStorage(t *testing.T) {
 
 	// Create a test header to move around the database and make sure it's really new
 	header := &types.Header{Number: big.NewInt(42), Extra: []byte("test header")}
-	if entry := timheader(db, header.Hash(), header.Number.Uint64()); entry != nil {
+	if entry := Timheader(db, header.Hash(), header.Number.Uint64()); entry != nil {
 		t.Fatalf("Non existent header returned: %v", entry)
 	}
 	// Write and verify the header in the database
 	if err := WriteHeader(db, header); err != nil {
 		t.Fatalf("Failed to write header into database: %v", err)
 	}
-	if entry := timheader(db, header.Hash(), header.Number.Uint64()); entry == nil {
+	if entry := Timheader(db, header.Hash(), header.Number.Uint64()); entry == nil {
 		t.Fatalf("Stored header not found")
 	} else if entry.Hash() != header.Hash() {
 		t.Fatalf("Retrieved header mismatch: have %v, want %v", entry, header)
 	}
-	if entry := timheaderRLP(db, header.Hash(), header.Number.Uint64()); entry == nil {
+	if entry := TimheaderRLP(db, header.Hash(), header.Number.Uint64()); entry == nil {
 		t.Fatalf("Stored header RLP not found")
 	} else {
 		hasher := sha3.NewKeccak256()
@@ -58,7 +58,7 @@ func TestHeaderStorage(t *testing.T) {
 	}
 	// Delete the header and verify the execution
 	DeleteHeader(db, header.Hash(), header.Number.Uint64())
-	if entry := timheader(db, header.Hash(), header.Number.Uint64()); entry != nil {
+	if entry := Timheader(db, header.Hash(), header.Number.Uint64()); entry != nil {
 		t.Fatalf("Deleted header returned: %v", entry)
 	}
 }
@@ -117,7 +117,7 @@ func TestBlockStorage(t *testing.T) {
 	if entry := GetBlock(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Non existent block returned: %v", entry)
 	}
-	if entry := timheader(db, block.Hash(), block.NumberU64()); entry != nil {
+	if entry := Timheader(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Non existent header returned: %v", entry)
 	}
 	if entry := GetBody(db, block.Hash(), block.NumberU64()); entry != nil {
@@ -132,7 +132,7 @@ func TestBlockStorage(t *testing.T) {
 	} else if entry.Hash() != block.Hash() {
 		t.Fatalf("Retrieved block mismatch: have %v, want %v", entry, block)
 	}
-	if entry := timheader(db, block.Hash(), block.NumberU64()); entry == nil {
+	if entry := Timheader(db, block.Hash(), block.NumberU64()); entry == nil {
 		t.Fatalf("Stored header not found")
 	} else if entry.Hash() != block.Header().Hash() {
 		t.Fatalf("Retrieved header mismatch: have %v, want %v", entry, block.Header())
@@ -147,7 +147,7 @@ func TestBlockStorage(t *testing.T) {
 	if entry := GetBlock(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Deleted block returned: %v", entry)
 	}
-	if entry := timheader(db, block.Hash(), block.NumberU64()); entry != nil {
+	if entry := Timheader(db, block.Hash(), block.NumberU64()); entry != nil {
 		t.Fatalf("Deleted header returned: %v", entry)
 	}
 	if entry := GetBody(db, block.Hash(), block.NumberU64()); entry != nil {
@@ -255,7 +255,7 @@ func TestHeadStorage(t *testing.T) {
 	blockFast := types.NewBlockWithHeader(&types.Header{Extra: []byte("test block fast")})
 
 	// Check that no head entries are in a pristine database
-	if entry := timdeadHeaderHash(db); entry != (common.Hash{}) {
+	if entry := TimheadHeaderHash(db); entry != (common.Hash{}) {
 		t.Fatalf("Non head header entry returned: %v", entry)
 	}
 	if entry := timdeadBlockHash(db); entry != (common.Hash{}) {
@@ -275,7 +275,7 @@ func TestHeadStorage(t *testing.T) {
 		t.Fatalf("Failed to write fast head block hash: %v", err)
 	}
 	// Check that both heads are present, and different (i.e. two heads maintained)
-	if entry := timdeadHeaderHash(db); entry != blockHead.Hash() {
+	if entry := TimheadHeaderHash(db); entry != blockHead.Hash() {
 		t.Fatalf("Head header hash mismatch: have %v, want %v", entry, blockHead.Hash())
 	}
 	if entry := timdeadBlockHash(db); entry != blockFull.Hash() {

@@ -558,7 +558,7 @@ func (f *lightFetcher) checkAnnouncedHeaders(fp *fetcherPeerInfo, headers []*typ
 			}
 			// we ran out of recently delivered headers but have not reached a node known by this peer yet, continue matching
 			td = f.chain.GetTd(header.ParentHash, header.Number.Uint64()-1)
-			header = f.chain.timheader(header.ParentHash, header.Number.Uint64()-1)
+			header = f.chain.Timheader(header.ParentHash, header.Number.Uint64()-1)
 		} else {
 			header = headers[i]
 			td = tds[i]
@@ -627,7 +627,7 @@ func (f *lightFetcher) checkSyncedHeaders(p *peer) {
 		p.Log().Debug("Synchronisation failed")
 		go f.pm.removePeer(p.id)
 	} else {
-		header := f.chain.timheader(n.hash, n.number)
+		header := f.chain.Timheader(n.hash, n.number)
 		f.newHeaders([]*types.Header{header}, []*big.Int{td})
 	}
 }
@@ -648,7 +648,7 @@ func (f *lightFetcher) checkKnownNode(p *peer, n *fetcherTreeNode) bool {
 		p.Log().Debug("Unknown peer to check known nodes")
 		return false
 	}
-	header := f.chain.timheader(n.hash, n.number)
+	header := f.chain.Timheader(n.hash, n.number)
 	if !f.checkAnnouncedHeaders(fp, []*types.Header{header}, []*big.Int{td}) {
 		p.Log().Debug("Inconsistent announcement")
 		go f.pm.removePeer(p.id)

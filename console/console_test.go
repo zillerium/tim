@@ -73,7 +73,7 @@ func (p *hookedPrompter) SetWordCompleter(completer WordCompleter) {}
 type tester struct {
 	workspace string
 	stack     *node.Node
-	tim  *eth.tim
+	tim  *eth.Tim
 	console   *Console
 	input     *hookedPrompter
 	output    *bytes.Buffer
@@ -127,7 +127,7 @@ func newTester(t *testing.T, confOverride func(*eth.Config)) *tester {
 		t.Fatalf("failed to create JavaScript console: %v", err)
 	}
 	// Create the final tester and return
-	var tim *eth.tim
+	var tim *eth.Tim
 	stack.Service(&tim)
 
 	return &tester{

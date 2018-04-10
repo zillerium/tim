@@ -94,8 +94,8 @@ func (a *RemoteAgent) Stop() {
 	close(a.workCh)
 }
 
-// timdashRate returns the accumulated hashrate of all identifier combined
-func (a *RemoteAgent) timdashRate() (tot int64) {
+// GetHashRate returns the accumulated hashrate of all identifier combined
+func (a *RemoteAgent) GetHashRate() (tot int64) {
 	a.hashrateMu.RLock()
 	defer a.hashrateMu.RUnlock()
 

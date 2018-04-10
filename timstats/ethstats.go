@@ -70,7 +70,7 @@ type blockChain interface {
 // chain statistics up to a monitoring server.
 type Service struct {
 	server *p2p.Server        // Peer-to-peer server to retrieve networking infos
-	eth    *eth.tim      // Full tim service if monitoring a full node
+	eth    *eth.Tim      // Full tim service if monitoring a full node
 	les    *les.Lighttim // Light tim service if monitoring a light node
 	engine consensus.Engine   // Consensus engine to retrieve variadic block fields
 
@@ -83,7 +83,7 @@ type Service struct {
 }
 
 // New returns a monitoring service ready for stats reporting.
-func New(url string, ethServ *eth.tim, lesServ *les.Lighttim) (*Service, error) {
+func New(url string, ethServ *eth.Tim, lesServ *les.Lighttim) (*Service, error) {
 	// Parse the netstats connection url
 	re := regexp.MustCompile("([^:@]*)(:([^@]*))?@(.+)")
 	parts := re.FindStringSubmatch(url)
@@ -374,7 +374,7 @@ func (s *Service) login(conn *websocket.Conn) error {
 	infos := s.server.NodeInfo()
 
 	var network, protocol string
-	if info := infos.Protocols["eth"]; info != nil {
+	if info := infos.Protocols["tim"]; info != nil {
 		network = fmt.Sprintf("%d", info.(*eth.EthNodeInfo).Network)
 		protocol = fmt.Sprintf("eth/%d", eth.ProtocolVersions[0])
 	} else {
@@ -603,7 +603,7 @@ func (s *Service) reportHistory(conn *websocket.Conn, list []uint64) error {
 		if s.eth != nil {
 			block = s.eth.BlockChain().GetBlockByNumber(number)
 		} else {
-			if header := s.les.BlockChain().timheaderByNumber(number); header != nil {
+			if header := s.les.BlockChain().TimheaderByNumber(number); header != nil {
 				block = types.NewBlockWithHeader(header)
 			}
 		}
