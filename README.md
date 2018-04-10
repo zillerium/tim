@@ -50,13 +50,13 @@ own timd instance.
 
 ### Full node on the main tim network
 
-By far the most common scenario is people wanting to simply interact with the tim network:
+Generally there cannot be a full node in public. Once the network reaches a million TPS, the global blocksize will be in gigabytes. It is completely safe to run as distributed node and statistical blocks. By far the most common scenario is people wanting to simply interact with the tim network:
 create accounts; transfer funds; deploy and interact with contracts. For this particular use-case
 the user doesn't care about years-old historical data, so we can fast-sync quickly to the current
 state of the network. To do so:
 
 ```
-$ timd --fast --cache=512 console
+$ timd --fast --cache=512 console --sync=1
 ```
 
 This command will:
@@ -71,6 +71,7 @@ This command will:
    as well as timd's own [management APIs](https://github.com/tim-coin/tim/wiki/Management-APIs).
    This too is optional and if you leave it out you can always attach to an already running timd instance
    with `timd attach`.
+ * Sync `--sync`  with 1 or more graphs to get copies of their merkle tree. The value of 1 will connect with 1 near and 1 far(if available) graph.
 
 ### Full node on the tim test network
 
