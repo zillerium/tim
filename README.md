@@ -266,12 +266,12 @@ resources (consider running on a single thread, no need for multiple ones either
 instance for mining, run it with all your usual flags, extended by:
 
 ```
-$ timd <usual-flags> --mine  --minertype=<G><B><C> --minerthreads=1 --timsbase=0x0000000000000000000000000000000000000000
+$ timd <usual-flags> --mine=<G><B><C> --minerthreads=1 --timsbase=0x0000000000000000000000000000000000000000
 ```
 
 Which will start mining bocks and transactions on a single CPU thread, crediting all proceedings to
-the account specified by `--timsbase`. You can further tune the mining by changing the default gas
-limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`). You can select miner type (`--minertype`). 1 will start a graph miner, 2 will start a block consensus miner, and 3 will start challenger.
+the account specified by `--timsbase`. You can select miner type (`--mine`). 1 will start a graph miner, 2 will start a block consensus miner, and 3 will start challenger. You can further tune the mining by changing the default gas
+limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`).
 
 ## Contribution
 
