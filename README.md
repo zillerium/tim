@@ -251,9 +251,12 @@ $ timd --datadir=path/to/custom/data/folder --bootnodes=<bootnode-enode-url-from
 need to configure a miner to process transactions and create new blocks for you.*
 
 #### Running a private miner
-
-Mining on the public tim network is a complex task as it's only feasible using GPUs, requiring
-an OpenCL or CUDA enabled `timminer` instance. For information on such a setup, please consult the
+There can be 3 types of miners on TIM.
+  * Graph Miner
+  * Consensus Miner
+  * Challenger
+  
+Mining on the public tim network is a easy task and it requires a medium sized computer and good quality internet. If you have low bandwidth internet, you can choose to run consensus mining and challenger mining. For information on such a setup, please consult the
 [TimMining subreddit](https://www.reddit.com/r/TIMMining/) and the [Tim miner](https://github.com/jollysean/cpp-tim)
 repository.
 
