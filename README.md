@@ -253,9 +253,9 @@ need to configure a miner to process transactions and create new blocks for you.
 #### Running a private miner
 There can be 3 types of miners on TIM.
   * Graph Miner
-  * Consensus Miner
+  * Block Consensus Miner
   * Challenger
-  
+
 Mining on the public tim network is a easy task and it requires a medium sized computer and good quality internet. If you have low bandwidth internet, you can choose to run consensus mining and challenger mining. For information on such a setup, please consult the
 [TimMining subreddit](https://www.reddit.com/r/TIMMining/) and the [Tim miner](https://github.com/jollysean/cpp-tim)
 repository.
@@ -266,12 +266,12 @@ resources (consider running on a single thread, no need for multiple ones either
 instance for mining, run it with all your usual flags, extended by:
 
 ```
-$ timd <usual-flags> --mine --minerthreads=1 --timsbase=0x0000000000000000000000000000000000000000
+$ timd <usual-flags> --mine  --minertype=<G><B><C> --minerthreads=1 --timsbase=0x0000000000000000000000000000000000000000
 ```
 
 Which will start mining bocks and transactions on a single CPU thread, crediting all proceedings to
 the account specified by `--timsbase`. You can further tune the mining by changing the default gas
-limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`).
+limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`). You can select miner type (`--minertype`) as one or all of three. 100 will start a graph miner. 111 will start all three miners.
 
 ## Contribution
 
