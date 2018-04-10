@@ -77,7 +77,7 @@ This command will:
 Transitioning towards developers, if you'd like to play around with creating tim contracts, you
 almost certainly would like to do that without any real money involved until you get the hang of the
 entire system. In other words, instead of attaching to the main network, you want to join the **test**
-network with your node, which is fully equivalent to the main network, but with play-Ether only.
+network with your node, which is fully equivalent to the main network, but with play-TIM only.
 
 ```
 $ timd --testnet --fast --cache=512 console
@@ -149,15 +149,15 @@ HTTP based JSON-RPC API options:
   * `--rpc` Enable the HTTP-RPC server
   * `--rpcaddr` HTTP-RPC server listening interface (default: "localhost")
   * `--rpcport` HTTP-RPC server listening port (default: 8545)
-  * `--rpcapi` API's offered over the HTTP-RPC interface (default: "eth,net,web3")
+  * `--rpcapi` API's offered over the HTTP-RPC interface (default: "tim,net,web3")
   * `--rpccorsdomain` Comma separated list of domains from which to accept cross origin requests (browser enforced)
   * `--ws` Enable the WS-RPC server
   * `--wsaddr` WS-RPC server listening interface (default: "localhost")
   * `--wsport` WS-RPC server listening port (default: 8546)
-  * `--wsapi` API's offered over the WS-RPC interface (default: "eth,net,web3")
+  * `--wsapi` API's offered over the WS-RPC interface (default: "tim,net,web3")
   * `--wsorigins` Origins from which to accept websockets requests
   * `--ipcdisable` Disable the IPC-RPC server
-  * `--ipcapi` API's offered over the IPC-RPC interface (default: "admin,debug,eth,miner,net,personal,shh,txpool,web3")
+  * `--ipcapi` API's offered over the IPC-RPC interface (default: "admin,debug,tim,miner,net,personal,shh,txpool,web3")
   * `--ipcpath` Filename for IPC socket/pipe within the datadir (explicit paths escape it)
 
 You'll need to use your own programming environments' capabilities (libraries, tools, etc) to connect
@@ -253,8 +253,8 @@ need to configure a miner to process transactions and create new blocks for you.
 #### Running a private miner
 
 Mining on the public tim network is a complex task as it's only feasible using GPUs, requiring
-an OpenCL or CUDA enabled `ethminer` instance. For information on such a setup, please consult the
-[EtherMining subreddit](https://www.reddit.com/r/EtherMining/) and the [Genoil miner](https://github.com/Genoil/cpp-tim)
+an OpenCL or CUDA enabled `timminer` instance. For information on such a setup, please consult the
+[TimMining subreddit](https://www.reddit.com/r/TIMMining/) and the [Tim miner](https://github.com/jollysean/cpp-tim)
 repository.
 
 In a private network setting however, a single CPU miner instance is more than enough for practical
@@ -263,11 +263,11 @@ resources (consider running on a single thread, no need for multiple ones either
 instance for mining, run it with all your usual flags, extended by:
 
 ```
-$ timd <usual-flags> --mine --minerthreads=1 --etherbase=0x0000000000000000000000000000000000000000
+$ timd <usual-flags> --mine --minerthreads=1 --timsbase=0x0000000000000000000000000000000000000000
 ```
 
 Which will start mining bocks and transactions on a single CPU thread, crediting all proceedings to
-the account specified by `--etherbase`. You can further tune the mining by changing the default gas
+the account specified by `--timsbase`. You can further tune the mining by changing the default gas
 limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`).
 
 ## Contribution
@@ -288,7 +288,7 @@ Please make sure your contributions adhere to our coding guidelines:
  * Code must be documented adhering to the official Go [commentary](https://golang.org/doc/effective_go.html#commentary) guidelines.
  * Pull requests need to be based on and opened against the `master` branch.
  * Commit messages should be prefixed with the package(s) they modify.
-   * E.g. "eth, rpc: make trace configs optional"
+   * E.g. "tim, rpc: make trace configs optional"
 
 Please see the [Developers' Guide](https://github.com/tim-coin/tim/wiki/Developers'-Guide)
 for more details on configuring your environment, managing project dependencies and testing procedures.

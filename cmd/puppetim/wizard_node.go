@@ -92,19 +92,19 @@ func (w *wizard) deployNode(boot bool) {
 	// If the node is a miner/signer, load up needed credentials
 	if !boot {
 		if w.conf.genesis.Config.Thash != nil {
-			// thash based miners only need an etherbase to mine against
+			// thash based miners only need an timbase to mine against
 			fmt.Println()
-			if infos.etherbase == "" {
+			if infos.timbase == "" {
 				fmt.Printf("What address should the miner user?\n")
 				for {
 					if address := w.readAddress(); address != nil {
-						infos.etherbase = address.Hex()
+						infos.timbase = address.Hex()
 						break
 					}
 				}
 			} else {
-				fmt.Printf("What address should the miner user? (default = %s)\n", infos.etherbase)
-				infos.etherbase = w.readDefaultAddress(common.HexToAddress(infos.etherbase)).Hex()
+				fmt.Printf("What address should the miner user? (default = %s)\n", infos.timbase)
+				infos.timbase = w.readDefaultAddress(common.HexToAddress(infos.timbase)).Hex()
 			}
 		} else if w.conf.genesis.Config.Clique != nil {
 			// If a previous signer was already set, offer to reuse it
