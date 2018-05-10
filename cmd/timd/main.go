@@ -141,7 +141,7 @@ func init() {
 	// Initialize the CLI app and start timd
 	app.Action = timd
 	app.HideVersion = true // we have a command to print the version
-	app.Copyright = "Copyright 2017-2018 The tim Authors"
+	app.Copyright = "Copyright 2017-2018 The TIM Authors"
 	app.Commands = []cli.Command{
 		// See chaincmd.go:
 		initCommand,

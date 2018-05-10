@@ -331,7 +331,7 @@ func DefaultTestnetGenesisBlock() *Genesis {
 }
 
 // DefaultRinkebyGenesisBlock returns the Rinkeby network genesis block.
-func DefaultRinkebyGenesisBlock() *Genesis {
+/*func DefaultRinkebyGenesisBlock() *Genesis {
 	return &Genesis{
 		Config:     params.RinkebyChainConfig,
 		Timestamp:  1492009146,
@@ -340,7 +340,7 @@ func DefaultRinkebyGenesisBlock() *Genesis {
 		Difficulty: big.NewInt(1),
 		Alloc:      decodePrealloc(rinkebyAllocData),
 	}
-}
+}*/
 
 // DeveloperGenesisBlock returns the 'timd --dev' genesis block. Note, this must
 // be seeded with the

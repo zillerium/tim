@@ -24,8 +24,8 @@ import (
 )
 
 var (
-	MainnetGenesisHash = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3") // Mainnet genesis hash to enforce below configs on
-	TestnetGenesisHash = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d") // Testnet genesis hash to enforce below configs on
+	MainnetGenesisHash = common.HexToHash("0x4bdac8141f2540023680923e0fe4d74a2540e3ae90623718e47d66d1ca4a212e") // Mainnet genesis hash to enforce below configs on
+	TestnetGenesisHash = common.HexToHash("0x4bdac8141f2540023680923e0fe4d74a2540e3ae90623718e47d66d1ca4a212e") // Testnet genesis hash to enforce below configs on
 )
 
 var (
@@ -60,7 +60,7 @@ var (
 	}
 
 	// RinkebyChainConfig contains the chain parameters to run a node on the Rinkeby test network.
-	RinkebyChainConfig = &ChainConfig{
+	/*RinkebyChainConfig = &ChainConfig{
 		ChainId:        big.NewInt(4),
 		HomesteadBlock: big.NewInt(1),
 		DAOForkBlock:   nil,
@@ -75,7 +75,7 @@ var (
 			Period: 15,
 			Epoch:  30000,
 		},
-	}
+	}*/
 
 	// AllthashProtocolChanges contains every protocol change (EIPs) introduced
 	// and accepted by the tim core developers into the thash consensus.
