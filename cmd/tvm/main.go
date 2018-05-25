@@ -1,4 +1,4 @@
-// Copyright 2014 The tim Authors
+// Copyright 2015 The go-ethereum Authors - Modified by TIM Authors - Notified with Courtesy
 // This file is part of tim.
 //
 // tim is free software: you can redistribute it and/or modify

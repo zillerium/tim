@@ -1,4 +1,4 @@
-// Copyright 2015 The tim Authors
+// Copyright 2015 The go-ethereum Authors - Modified by TIM Authors - Notified with Courtesy
 // This file is part of the tim library.
 //
 // The tim library is free software: you can redistribute it and/or modify
@@ -428,5 +428,17 @@ func hashAtDistance(a common.Hash, n int) (b common.Hash) {
 	for i := pos + 1; i < len(a); i++ {
 		b[i] = byte(rand.Intn(255))
 	}
+	return b
+}
+
+
+// hashAtDistance returns a hash such that geodist(a, b) == n
+func geohashAtDistance(a common.Hash, n int) (b common.Hash) {
+	if n == 0 {
+		return a
+	}
+	// add nvec matrix hash at position n in all directions
+	b = a + ghash(n)
+
 	return b
 }
