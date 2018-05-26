@@ -117,7 +117,7 @@ var dashboardContent = `
 											<pre>timd --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=1024 --syncmode=full{{if .timstats}} --timstats='{{.timstats}}'{{end}} --bootnodes={{.BootnodesFullFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download timd from <a href="https://timd.tim.org/downloads/" target="about:blank">https://timd.tim.org/downloads/</a>.</p>
+										<p>You can download timd from <a href="https://timd.ethereum.org/downloads/" target="about:blank">https://timd.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -136,7 +136,7 @@ var dashboardContent = `
 											<pre>timd --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=512{{if .timstats}} --timstats='{{.timstats}}'{{end}} --bootnodes={{.BootnodesFullFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download timd from <a href="https://timd.tim.org/downloads/" target="about:blank">https://timd.tim.org/downloads/</a>.</p>
+										<p>You can download timd from <a href="https://timd.ethereum.org/downloads/" target="about:blank">https://timd.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -158,7 +158,7 @@ var dashboardContent = `
 											<pre>timd --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --syncmode=light{{if .timstats}} --timstats='{{.timstats}}'{{end}} --bootnodes={{.BootnodesLightFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download timd from <a href="https://timd.tim.org/downloads/" target="about:blank">https://timd.tim.org/downloads/</a>.</p>
+										<p>You can download timd from <a href="https://timd.ethereum.org/downloads/" target="about:blank">https://timd.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -177,7 +177,7 @@ var dashboardContent = `
 											<pre>timd --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=32 --syncmode=light{{if .timstats}} --timstats='{{.timstats}}'{{end}} --bootnodes={{.BootnodesLightFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download timd from <a href="https://timd.tim.org/downloads/" target="about:blank">https://timd.tim.org/downloads/</a>.</p>
+										<p>You can download timd from <a href="https://timd.ethereum.org/downloads/" target="about:blank">https://timd.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -322,7 +322,7 @@ try! node?.start();
 										<p>Puppetim is a tool to aid you in creating a new tim network down to the genesis block, bootnodes, signers, timstats server, crypto faucet, wallet browsers, block explorer, dashboard and more; without the hassle that it would normally entail to manually configure all these services one by one.</p>
 										<p>Puppetim uses ssh to dial in to remote servers, and builds its network components out of docker containers using docker-compose. The user is guided through the process via a command line wizard that does the heavy lifting and topology configuration automatically behind the scenes.</p>
 										<br/>
-										<p>Puppetim is distributed as part of the <a href="https://timd.tim.org/downloads/" target="about:blank">timd &amp; Tools</a> bundles, but can also be installed separately via:<pre>go get github.com/tim-coin/tim/cmd/puppetim</pre></p>
+										<p>Puppetim is distributed as part of the <a href="https://timd.ethereum.org/downloads/" target="about:blank">timd &amp; Tools</a> bundles, but can also be installed separately via:<pre>go get github.com/tim-coin/tim/cmd/puppetim</pre></p>
 										<br/>
 										<p><em>Copyright 2017. The Ethereum Authors - Modified by Tim.</em></p>
 									</div>

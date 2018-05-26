@@ -533,7 +533,7 @@ type debExecutable struct {
 func newDebMetadata(distro, author string, env build.Environment, t time.Time) debMetadata {
 	if author == "" {
 		// No signing key, use default author.
-		author = "tim Builds <fjl@tim.org>"
+		author = "tim Builds <fjl@ethereum.org>"
 	}
 	return debMetadata{
 		Env:         env,
