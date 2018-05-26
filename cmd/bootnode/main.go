@@ -1,4 +1,4 @@
-// Copyright 2015 The tim Authors
+// Copyright 2015 The Ethereum Authors - Modified by Tim
 // This file is part of tim.
 //
 // tim is free software: you can redistribute it and/or modify

@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/tim-coin/tim](https://badges.gitter.im/tim-coin/tim.svg)](https://gitter.im/tim-coin/tim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Official golang implementation of the tim protocol.
+Official golang implementation of the tim protocol.(Modified by TIM - Copyright notices maintained in respective files for Golang, Google, Zack Guo, Snappy, John, Twitter, Prometheus,Ethereum )
 
 [![API Reference](
 https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667

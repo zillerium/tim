@@ -1,4 +1,4 @@
-// Copyright 2015 The tim Authors
+// Copyright 2015 The Ethereum Authors - Modified by Tim
 // This file is part of tim.
 //
 // tim is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ import (
 var AppHelpTemplate = `NAME:
    {{.App.Name}} - {{.App.Usage}}
 
-   Copyright 2013-2017 The tim Authors
+   Copyright 2013-2017 The Ethereum Authors - Modified by Tim
 
 USAGE:
    {{.App.HelpName}} [options]{{if .App.Commands}} command [command options]{{end}} {{if .App.ArgsUsage}}{{.App.ArgsUsage}}{{else}}[arguments...]{{end}}

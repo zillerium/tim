@@ -1,4 +1,4 @@
-// Copyright 2014 The tim Authors
+// Copyright 2014 The Ethereum Authors - Modified by Tim
 // This file is part of tim.
 //
 // tim is free software: you can redistribute it and/or modify
@@ -141,7 +141,7 @@ func init() {
 	// Initialize the CLI app and start timd
 	app.Action = timd
 	app.HideVersion = true // we have a command to print the version
-	app.Copyright = "Copyright 2017-2018 The tim Authors"
+	app.Copyright = "Copyright 2017-2018 The Ethereum Authors - Modified by Tim"
 	app.Commands = []cli.Command{
 		// See chaincmd.go:
 		initCommand,

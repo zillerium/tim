@@ -1,4 +1,4 @@
-// Copyright 2017 The tim Authors
+// Copyright 2018 The Ethereum Authors - Modified by Tim
 // This file is part of tim.
 //
 // tim is free software: you can redistribute it and/or modify
@@ -324,7 +324,7 @@ try! node?.start();
 										<br/>
 										<p>Puppetim is distributed as part of the <a href="https://timd.tim.org/downloads/" target="about:blank">timd &amp; Tools</a> bundles, but can also be installed separately via:<pre>go get github.com/tim-coin/tim/cmd/puppetim</pre></p>
 										<br/>
-										<p><em>Copyright 2017. The tim Authors.</em></p>
+										<p><em>Copyright 2017. The Ethereum Authors - Modified by Tim.</em></p>
 									</div>
 									<div style="display: inline-block; vertical-align: bottom; width: 217px;">
 										<img src="puppetim.png" style="height: 256px; margin: 16px 16px 16px 16px"></img>

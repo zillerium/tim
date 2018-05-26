@@ -1,4 +1,4 @@
-// Copyright 2016 The tim Authors
+// Copyright 2016 The Ethereum Authors - Modified by Tim
 // This file is part of tim.
 //
 // tim is free software: you can redistribute it and/or modify
@@ -165,7 +165,7 @@ var app = utils.NewApp(gitCommit, "tim Swarm")
 func init() {
 	app.Action = bzzd
 	app.HideVersion = true // we have a command to print the version
-	app.Copyright = "Copyright 2013-2016 The tim Authors"
+	app.Copyright = "Copyright 2013-2016 The Ethereum Authors - Modified by Tim"
 	app.Commands = []cli.Command{
 		{
 			Action:    version,
