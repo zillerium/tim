@@ -9,7 +9,7 @@ https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/6874
 )](https://godoc.org/github.com/tim-coin/tim)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tim-coin/tim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-## Alpha Binaries are available for Mac OSX and Ubuntu 14+ LTS
+## [Alpha](https://github.com/tim-coin/alpha) Binaries are available for Mac OSX and Ubuntu 14+ LTS
 
 
 Binary archives are published at http://timdev.io/downloads/.
