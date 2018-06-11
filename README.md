@@ -21,7 +21,7 @@ Binary archives are published at http://timdev.io/downloads/.
 ## Running the binary
 
 For prerequisites and detailed build instructions please read the
-[Installation Instructions](https://github.com/tim-coin/tim/wiki/Building-alpha)
+[Installation Instructions](https://github.com/tim-coin/tim/wiki/Building-Environment-for-Alpha)
 on the wiki.
 
 ## Network Go-Live in November 2018
