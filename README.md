@@ -14,27 +14,22 @@ https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/6874
 
 Binary archives are published at http://timdev.io/downloads/.
 
-## Network Go-Live in November 2018
 
-## Building the source
+
+
+
+## Running the binary
 
 For prerequisites and detailed build instructions please read the
-[Installation Instructions](https://github.com/tim-coin/tim/wiki/Building-tim)
+[Installation Instructions](https://github.com/tim-coin/tim/wiki/Building-alpha)
 on the wiki.
 
-Building timd requires both a Go (version 1.7 or later) and a C compiler.
-You can install them using your favourite package manager.
-Once the dependencies are installed, run
+## Network Go-Live in November 2018
 
-    make timd
 
-or, to build the full suite of utilities:
+## Planned Executables - TIM will be interoperable with Go-Ethereum libraries for ease of development
 
-    make all
-
-## Executables
-
-The tim project comes with several wrappers/executables found in the `cmd` directory.
+The tim project will come with several wrappers/executables found in the `cmd` directory.
 
 | Command    | Description |
 |:----------:|-------------|
