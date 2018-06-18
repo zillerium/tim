@@ -12,7 +12,7 @@ https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/6874
 ## [Alpha](https://github.com/tim-coin/alpha) Binaries are available for Mac OSX and Ubuntu 14+ LTS
 
 
-Binary archives are published at http://timdev.io/downloads/.
+Binary archives are published at https://github.com/tim-coin/tim/tree/master/cmd.
 
 
 
